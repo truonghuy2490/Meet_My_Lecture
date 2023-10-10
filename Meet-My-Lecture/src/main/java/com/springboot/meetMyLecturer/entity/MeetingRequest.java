@@ -1,18 +1,22 @@
 package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
-@Getter
-@Setter
-@Table(name = "Meeting_Requests", uniqueConstraints = {
-        @UniqueConstraint(columnNames = ("")),
-        @UniqueConstraint(columnNames = (""))
-})
+@Table(
+        name = "tbl_meeting_request"
+//        uniqueConstraints = {
+//            @UniqueConstraint(
+//                    name = "",
+//                    columnNames = ""),
+//            @UniqueConstraint(
+//                    name = "",
+//                    columnNames = "")}
+)
 public class MeetingRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

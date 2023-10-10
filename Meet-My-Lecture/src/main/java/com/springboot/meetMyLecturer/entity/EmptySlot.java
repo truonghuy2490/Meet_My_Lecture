@@ -1,43 +1,46 @@
 package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDateTime;
 
-@Data
+
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Getter
-@Setter
-@Table(name = "Empty_Slots", uniqueConstraints = {
-        @UniqueConstraint(columnNames = ("")),
-        @UniqueConstraint(columnNames = (""))
+@Table(
+        name = "tbl_emptySlot",
+        uniqueConstraints = {
+            @UniqueConstraint(
+                    name = "empty_slot_name",
+                    columnNames = "name")
 })
 public class EmptySlot {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long slotId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Time timeStart;
+    @Column(name = "time_start_slot", nullable = false)
+    private Time timeStart; // slot may'
+
+    @Column(name = "period_time_slot", nullable = false)
     private Time duration;
-    private Date date;
-    private String status;
+
     private String roomId;
+    private String status;
     private String description;
 
-    public EmptySlot(Time timeStart, Time duration, Date date, String status, String roomId, String description) {
-        this.timeStart = timeStart;
-        this.duration = duration;
-        this.date = date;
-        this.status = status;
-        this.roomId = roomId;
-        this.description = description;
-    }
+    @CreationTimestamp
+    private LocalDateTime dateCreate;
+    @UpdateTimestamp
+    private LocalDateTime dateUpdate;
+    private boolean active;
 
-    public EmptySlot() {
 
-    }
 }

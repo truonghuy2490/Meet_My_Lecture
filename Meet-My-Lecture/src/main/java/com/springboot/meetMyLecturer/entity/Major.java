@@ -7,12 +7,7 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Getter
-@Setter
-@Table(name = "Majors", uniqueConstraints = {
-        @UniqueConstraint(columnNames = ("")),
-        @UniqueConstraint(columnNames = (""))
-})
+@Table(name = "Majors")
 public class Major {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

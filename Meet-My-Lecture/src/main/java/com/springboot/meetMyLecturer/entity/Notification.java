@@ -9,16 +9,12 @@ import java.util.Date;
 
 @Data
 @Entity
-@Getter
-@Setter
-@Table(name = "Lecturers", uniqueConstraints = {
-        @UniqueConstraint(columnNames = ("")),
-        @UniqueConstraint(columnNames = (""))
-})
+@Table(name = "Lecturers")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int notiId;
+
     private String notiContent;
     private Date notiDate;
 

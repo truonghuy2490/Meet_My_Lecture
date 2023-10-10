@@ -7,8 +7,6 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Getter
-@Setter
 @Table(name = "Feedbacks", uniqueConstraints = {
         @UniqueConstraint(columnNames = ("")),
         @UniqueConstraint(columnNames = (""))
