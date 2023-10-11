@@ -24,7 +24,11 @@ public class StudentController {
     public ResponseEntity<?> searchSubject(@RequestParam(name = "keyword") String keyword){
         List<Subject> subjectList = studentService.searchSubject(keyword);
         try{
-            return ResponseEntity.ok().body(subjectList);
+            if(!subjectList.isEmpty()){
+                return ResponseEntity.ok().body(subjectList);
+            }else{
+                return  ResponseEntity.notFound().build();
+            }
 
         }catch(Exception e){
             return ResponseEntity.internalServerError().body("Error at:" + e.getMessage());
@@ -38,7 +42,11 @@ public class StudentController {
 
             List<User> lecturerList = userRepository.findUser(name);
 
-            return ResponseEntity.ok().body(lecturerList);
+            if(!lecturerList.isEmpty()){
+                return ResponseEntity.ok().body(lecturerList);
+            }else{
+                return  ResponseEntity.notFound().build();
+            }
 
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Error at:" + e.getMessage());
