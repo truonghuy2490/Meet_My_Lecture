@@ -5,27 +5,25 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collection;
 import java.util.Locale;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(
-        name = "tbl_role",
-        uniqueConstraints = {
+@Table(name = "role", uniqueConstraints = {
                 @UniqueConstraint(
                     name = "role-name",
-                    columnNames = "name"
+                    columnNames = "role_name"
                 )
         }
 )
 
 public class Role {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.AUTO
-    )
-    private String roleId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int roleId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "role_name", nullable = false)
     private String roleName;
 }

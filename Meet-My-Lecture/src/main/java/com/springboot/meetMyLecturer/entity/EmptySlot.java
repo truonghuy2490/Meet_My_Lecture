@@ -2,45 +2,51 @@ package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDateTime;
 
 
-
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        name = "tbl_emptySlot",
-        uniqueConstraints = {
-            @UniqueConstraint(
-                    name = "empty_slot_name",
-                    columnNames = "name")
-})
+@Table(name = "empty_slot")
 public class EmptySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int slotId;
 
-    @Column(name = "time_start_slot", nullable = false)
-    private Time timeStart; // slot may'
 
-    @Column(name = "period_time_slot", nullable = false)
-    private Time duration;
+    private int studentId;
+
+    @Column(name = "lecturer_id", nullable = false)
+    private int lecturerId;
+
+    private String subjectId;
+
+    private int weeklySlotId;
 
     private String roomId;
+
     private String status;
+
     private String description;
 
-    @CreationTimestamp
-    private LocalDateTime dateCreate;
-    @UpdateTimestamp
-    private LocalDateTime dateUpdate;
-    private boolean active;
+    @Column(name = "time_start", nullable = false)
+    private Time timeStart;
+
+    @Column(name = "duration", nullable = false)
+    private Time duration;
+
+    private Date dateStart;
+
+    private Date bookedDate;
+
+    private int code;
+
+
 
 
 }

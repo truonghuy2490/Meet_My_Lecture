@@ -15,7 +15,12 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int notiId;
 
+    private int userId;
+
+    private int slotId;
+
     private String notiContent;
+
     private Date notiDate;
 
 }

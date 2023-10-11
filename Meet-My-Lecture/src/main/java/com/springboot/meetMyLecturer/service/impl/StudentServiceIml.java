@@ -17,6 +17,6 @@ public class StudentServiceIml implements StudentService {
 
     @Override
     public List<Subject> searchSubject(String keyword) {
-        return subjectRepository.findSubjectBySubjectIdOrSubjectNameContains(keyword);
+        return subjectRepository.findSubjectBySubjectIdContains(keyword);
     }
 }

@@ -1,30 +1,29 @@
 package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(
-        name = "tbl_users"
-
-)
+@Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.AUTO
-    )
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int userId;
 
     @Column(name = "user_name", nullable = false)
     private String userName;
+
     @Column(name = "email", nullable = false)
     private String email;
+
     @Column(name = "role_id", nullable = false)
-    private String roleId;
-    @Column(name = "gender", nullable = false)
-    private String gender;
+    private int roleId;
+
+    private int absentCount;
 
 }

@@ -8,10 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmptySlotServiceImpl implements EmptySlotService {
-    private EmptySlotRepository emptySlotRepository;
 
-    public EmptySlotServiceImpl(EmptySlotRepository emptySlotRepository) {
-        this.emptySlotRepository = emptySlotRepository;
-    }
 
 }

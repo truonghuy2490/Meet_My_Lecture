@@ -9,21 +9,26 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(
-        name = "Subjects",
-        uniqueConstraints = {
+@Table(name = "Subject", uniqueConstraints = {
             @UniqueConstraint(
-                    name = "subject_name",
-                    columnNames = "name")
+                    name = "subject_name_unique",
+                    columnNames = "subject_name")
         }
 )
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int subjectId;
+    private String subjectId;
 
     @Column(name = "subject_name",nullable = false)
     private String subjectName;
+
+    @Column(name = "major_id",nullable = false)
+    private  int majorId;
+
+    @Column(name = "admin_id",nullable = false)
+    private  int adminId;
+
 
 
 }

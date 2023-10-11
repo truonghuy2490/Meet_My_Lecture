@@ -7,22 +7,22 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(
-        name = "tbl_meeting_request"
-//        uniqueConstraints = {
-//            @UniqueConstraint(
-//                    name = "",
-//                    columnNames = ""),
-//            @UniqueConstraint(
-//                    name = "",
-//                    columnNames = "")}
-)
+@Table(name = "meeting_request")
 public class MeetingRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int requestId;
 
+    @Column(name = "student_id", nullable = false)
+    private int studentId;
+
+    @Column(name = "lecturer_id", nullable = false)
+    private int lecturerId;
+
+    private int slotId;
+
     private String requestContent;
+
     private String requestStatus;
 
 }
