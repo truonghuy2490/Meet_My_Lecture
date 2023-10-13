@@ -1,35 +1,35 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.entity.Subject;
-import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.StudentService;
+import com.springboot.meetMyLecturer.service.SubjectService;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/student")
-public class StudentController {
+@RequestMapping("/api/v1/student/search")
+public class SearchController {
 
     @Autowired
     StudentService studentService;
 
     @Autowired
-    UserService userService;
+    SubjectService subjectService;
 
-    @Autowired
-    UserRepository userRepository;
 
-    @GetMapping("/search")
+
+    @GetMapping("/lecturer")
     public ResponseEntity<?> searchLecturer (@RequestParam String name){
         try{
 
-            List<UserDTO> lecturerList = userService.searchLecturers(name);
+            List<UserDTO> lecturerList = studentService.searchLecturers(name);
 
             if(!lecturerList.isEmpty()){
                 return ResponseEntity.ok().body(lecturerList);
@@ -40,6 +40,12 @@ public class StudentController {
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Error at:" + e.getMessage());
         }
+    }
+
+    @GetMapping("/subject/{id}")
+    public ResponseEntity<List<SubjectResponseDTO>> getSubjectByLecturerId (@PathVariable int id){
+        List<SubjectResponseDTO> subjectResponseDTOS = subjectService.getSubjectByLecturerId(id);
+        return new ResponseEntity<>(subjectResponseDTOS,HttpStatus.FOUND);
     }
 
 }

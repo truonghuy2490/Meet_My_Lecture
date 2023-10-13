@@ -10,6 +10,4 @@ public interface StudentService {
 
     List<UserDTO> searchLecturers (String name);
 
-    List<SubjectResponseDTO> getSubjectByLecturerId(int id);
-
 }

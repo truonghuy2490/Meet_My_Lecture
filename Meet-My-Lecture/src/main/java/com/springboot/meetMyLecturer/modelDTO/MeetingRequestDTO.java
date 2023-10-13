@@ -5,7 +5,10 @@ import lombok.Data;
 
 @Data
 public class MeetingRequestDTO {
-    private int requestId;
+
+    private UserDTO student;
+
+    private UserDTO lecturer;
 
     private String requestContent;
 

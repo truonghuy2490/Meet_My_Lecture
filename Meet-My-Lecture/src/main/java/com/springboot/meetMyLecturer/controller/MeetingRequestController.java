@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.controller;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
+import com.springboot.meetMyLecturer.service.impl.MeetingRequestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,18 @@ import java.util.List;
 @RequestMapping("api/v1/requests")
 public class MeetingRequestController {
     @Autowired
-    MeetingRequestService meetingRequestService;
+    MeetingRequestServiceImpl meetingRequestService;
 
     @PutMapping
     public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(){
         return null;
+    }
+
+    @PostMapping("student/{studentId}/lecturer/{lecturerId}")
+    public ResponseEntity<MeetingRequestDTO> createRequest(@PathVariable int studentId,
+                                                           @PathVariable int lecturerId
+            ,@RequestBody MeetingRequest meetingRequest){
+            MeetingRequestDTO meetingRequestDTO = meetingRequestService.createRequest(studentId,lecturerId,meetingRequest);
+        return new ResponseEntity<>(meetingRequestDTO,HttpStatus.CREATED);
     }
 }

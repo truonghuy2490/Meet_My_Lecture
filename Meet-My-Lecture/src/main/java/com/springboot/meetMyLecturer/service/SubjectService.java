@@ -10,5 +10,7 @@ public interface SubjectService {
 
     List<SubjectDTO> searchSubject (String keyword);
 
+    List<SubjectResponseDTO> getSubjectByLecturerId(int id);
+
 
 }

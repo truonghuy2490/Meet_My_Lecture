@@ -40,17 +40,6 @@ public class StudentServiceImpl implements StudentService {
         return userDTOList;
     }
 
-    @Override
-    public List<SubjectResponseDTO> getSubjectByLecturerId(int id) {
-        List<Subject> subjectList = subjectRepository.findSubjectsByUser_UserId(id);
-        List<SubjectResponseDTO> subjectResponseDTOS = subjectList.stream().map(
-                subject -> {
-                    SubjectResponseDTO dto = modelMapper.map(subject,SubjectResponseDTO.class);
-                    return dto;
-                }).collect(Collectors.toList());
-        return subjectResponseDTOS;
-    }
-
 }
 
 

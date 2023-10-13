@@ -6,6 +6,7 @@ import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
+import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.SubjectService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     @Override
@@ -48,6 +52,16 @@ public class SubjectServiceImpl implements SubjectService {
         }).collect(Collectors.toList());
 
         return subjectDTOS;
+    }
 
+    @Override
+    public List<SubjectResponseDTO> getSubjectByLecturerId(int id) {
+            List<Subject> subjectList = subjectRepository.findSubjectsByUser_UserId(id);
+            List<SubjectResponseDTO> subjectResponseDTOS = subjectList.stream().map(
+                    subject -> {
+                        SubjectResponseDTO dto = modelMapper.map(subject, SubjectResponseDTO.class);
+                        return dto;
+                    }).collect(Collectors.toList());
+            return subjectResponseDTOS;
     }
 }
