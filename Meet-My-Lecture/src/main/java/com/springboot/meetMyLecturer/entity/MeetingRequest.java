@@ -11,13 +11,16 @@ import lombok.*;
 public class MeetingRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "request_id")
     private int requestId;
 
-    @Column(name = "student_id", nullable = false)
-    private int studentId;
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private User student;
 
-    @Column(name = "lecturer_id", nullable = false)
-    private int lecturerId;
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private User lecturer;
 
     private int slotId;
 

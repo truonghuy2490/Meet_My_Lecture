@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Data
 @Entity
 @Getter
@@ -18,16 +20,33 @@ import lombok.Setter;
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "subject_id")
     private String subjectId;
 
     @Column(name = "subject_name",nullable = false)
     private String subjectName;
 
-    @Column(name = "major_id",nullable = false)
-    private  int majorId;
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = false)
+    private User user;
 
-    @Column(name = "admin_id",nullable = false)
-    private  int adminId;
+    @ManyToOne
+    @JoinColumn(name = "major_id", nullable = false)
+    private Major major;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private Set<EmptySlot> emptySlots;
+
+    @ManyToMany(mappedBy = "subjectSet")
+    private Set<User> userSet;
+
+    @ManyToMany(mappedBy = "subjectSet")
+    private Set<Semester> semesterSet;
+
+    @OneToMany(mappedBy = "subject")
+    private Set<SubjectLecturerStudent> subjectLecturerStudentSet;
+
+
 
 
 

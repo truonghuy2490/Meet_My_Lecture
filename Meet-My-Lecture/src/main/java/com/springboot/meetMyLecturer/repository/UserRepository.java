@@ -10,7 +10,9 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    @Query( "select u from User u join Role r on u.roleId = r.roleId where u.userName like %:name% and r.roleName ='LECTURER' ")
-    List<User> findUser(String name);
+    @Query( "select u from User u join Role r on u.role.roleId = r.roleId where u.userName like %:name% and r.roleName ='LECTURER' ")
+    List<User> findUserByUserName(String name);
+
+    User findByUserId(int id);
 
 }

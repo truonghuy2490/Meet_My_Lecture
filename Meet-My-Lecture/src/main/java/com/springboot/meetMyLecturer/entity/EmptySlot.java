@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Set;
 
 
 @Data
@@ -16,20 +17,32 @@ import java.sql.Time;
 public class EmptySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "slot_id")
     private int slotId;
 
 
-    private int studentId;
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private User lecturer;
 
-    @Column(name = "lecturer_id", nullable = false)
-    private int lecturerId;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private User student;
 
-    private String subjectId;
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
 
-    private int weeklySlotId;
+    @ManyToOne
+    @JoinColumn(name = "weekly_slot_id")
+    private WeeklyEmptySlot weeklySlot;
+
+    @OneToMany(mappedBy = "emptySlot", cascade = CascadeType.ALL)
+    private Set<Notification> notifications;
 
     private String roomId;
 
+    @Column(name = "status", nullable = false)
     private String status;
 
     private String description;

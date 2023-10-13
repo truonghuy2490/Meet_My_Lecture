@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Entity
@@ -13,6 +14,7 @@ import java.util.Date;
 public class Semester {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "semester_id")
     private int semesterId;
 
     @Column(name = "semester_name", nullable = false)
@@ -22,7 +24,18 @@ public class Semester {
 
     private Date dateEnd;
 
-    @Column(name = "admin_id", nullable = false)
-    private int adminId;
+    @ManyToOne
+    @JoinColumn(name = "admin_id", nullable = false)
+    private User user;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "subject_semester",
+            joinColumns = @JoinColumn(name = "semester_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
+    )
+    private Set<Subject> subjectSet;
+
+    @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
+    private Set<WeeklyEmptySlot> weeklyEmptySlots;
 
 }

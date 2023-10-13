@@ -93,12 +93,12 @@ CREATE TABLE notification (
 CREATE TABLE teaching_schedule (
                                    teaching_schedule_id INT PRIMARY KEY,
                                    lecturer_id INT,
-                                   subject VARCHAR(10),
+                                   subject_id VARCHAR(10),
                                    room_id INT,
                                    date DATE,
                                    time TIME,
                                    FOREIGN KEY (lecturer_id) REFERENCES user(user_id),
-                                   FOREIGN KEY (subject) REFERENCES subject(subject_id)
+                                   FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
 );
 
 CREATE TABLE subject_lecturer_student (
@@ -179,7 +179,7 @@ INSERT INTO notification (noti_id, noti_date, noti_content, user_id, slot_id) VA
                                                                                   (2, '2023-01-10', 'Meeting request approved.', 2, 2);
 
 -- Insert data into the teaching_schedule table
-INSERT INTO teaching_schedule (teaching_schedule_id, lecturer_id, subject, room_id, date, time) VALUES
+INSERT INTO teaching_schedule (teaching_schedule_id, lecturer_id, subject_id, room_id, date, time)VALUES
                                                                                                     (1, 2, 'CS101', 101, '2023-01-02', '08:00:00'),
                                                                                                     (2, 2, 'CS201', 102, '2023-01-09', '10:00:00');
 
