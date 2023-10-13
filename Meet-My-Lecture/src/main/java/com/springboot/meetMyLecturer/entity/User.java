@@ -39,6 +39,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Subject> subjects;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user", nullable = false)
+//    private EmptySlot emptySlot;
     @OneToMany(mappedBy = "lecturer")
     private Set<EmptySlot> emptySlots;
 

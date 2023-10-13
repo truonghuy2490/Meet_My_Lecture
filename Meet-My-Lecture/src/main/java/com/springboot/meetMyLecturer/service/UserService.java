@@ -11,4 +11,6 @@ public interface UserService {
 
     List<UserDTO> searchLecturers(String name);
 
+    List<UserDTO> getUserByEmptySlotId(Long slotId);
+
 }

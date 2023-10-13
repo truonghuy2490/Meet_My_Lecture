@@ -32,7 +32,7 @@ public class UserController {
     public MapDTO mapDTO;
 
     @GetMapping("/getUsers")
-    public ResponseEntity<?> getUsers(@RequestParam int id){
+    public ResponseEntity<?> getUsers(@RequestParam Long id){
         User user = userRepository.findByUserId(id);
         return ResponseEntity.ok().body(mapDTO.mapToDTO(user));
     }

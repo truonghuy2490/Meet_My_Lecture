@@ -5,6 +5,7 @@ import com.springboot.meetMyLecturer.exception.ResourceNoFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,15 @@ import java.util.stream.Collectors;
 public class MeetingRequestServiceImpl implements MeetingRequestService {
     @Autowired
     MeetingRequestRepository meetingRequestRepository;
+
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
     public List<MeetingRequestDTO> getAllRequest() {
 
         List<MeetingRequest> meetingRequests = meetingRequestRepository.findAll();
-        return meetingRequests.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
+        return meetingRequests.stream().map(meetingRequest -> mapToDTO(meetingRequest)).collect(Collectors.toList());
     }
 
     @Override
@@ -37,19 +42,10 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
     }
 
-    private MeetingRequestDTO mapToDTO(MeetingRequest meetingRequest){
-        MeetingRequestDTO meetingRequestDTO = new MeetingRequestDTO();
-        meetingRequestDTO.setRequestId(meetingRequest.getRequestId());
-        meetingRequestDTO.setRequestContent(meetingRequest.getRequestContent());
-        meetingRequestDTO.setRequestStatus(meetingRequest.getRequestStatus());
-        return meetingRequestDTO;
+    public MeetingRequestDTO mapToDTO(MeetingRequest meetingRequest) {
+        return modelMapper.map(meetingRequest, MeetingRequestDTO.class);
     }
-    private MeetingRequest mapToEntity(MeetingRequestDTO meetingRequestDTO){
-        MeetingRequest meetingRequest = new MeetingRequest();
-        meetingRequestDTO.setRequestId(meetingRequest.getRequestId());
-        meetingRequestDTO.setRequestContent(meetingRequest.getRequestContent());
-        meetingRequestDTO.setRequestStatus(meetingRequest.getRequestStatus());
-
-        return meetingRequest;
+    public MeetingRequest mapToEntity(MeetingRequestDTO meetingRequestDTO) {
+        return modelMapper.map(meetingRequestDTO, MeetingRequest.class);
     }
 }
