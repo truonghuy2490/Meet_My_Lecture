@@ -3,13 +3,12 @@ package com.springboot.meetMyLecturer.controller;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
+import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.service.SubjectService;
+import com.springboot.meetMyLecturer.service.impl.SubjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,10 +17,10 @@ import java.util.List;
 public class SubjectController {
 
     @Autowired
-    SubjectService subjectService;
-    @GetMapping("/search")
-    public ResponseEntity<?> searchSubject(@RequestParam(name = "keyword") String keyword){
-        List<Subject> subjectList = subjectService.searchSubject(keyword);
+    SubjectServiceImpl subjectService;
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<?> searchSubject(@PathVariable String keyword){
+        List<SubjectDTO> subjectList = subjectService.searchSubject(keyword);
 
         try{
             if(!subjectList.isEmpty()){
@@ -34,4 +33,6 @@ public class SubjectController {
         }
 
     }
+
 }
+

@@ -1,7 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.modelMapper.MapDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -23,15 +22,6 @@ public class UserController {
 
     @Autowired
     public RoleRepository roleRepository;
-
-    @Autowired
-    public MapDTO mapDTO;
-
-    @GetMapping("/getUsers")
-    public ResponseEntity<?> getUsers(@RequestParam int id){
-        User user = userRepository.findByUserId(id);
-        return ResponseEntity.ok().body(mapDTO.mapToDTO(user));
-    }
 
     @DeleteMapping("/deleteUser")
     public ResponseEntity<?> deleteUser(@RequestParam int id){

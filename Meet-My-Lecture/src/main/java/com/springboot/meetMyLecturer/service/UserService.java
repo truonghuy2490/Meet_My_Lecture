@@ -9,6 +9,4 @@ public interface UserService {
 
     UserDTO registerUser(int roleId, User user);
 
-    List<UserDTO> searchLecturers(String name);
-
 }
