@@ -2,8 +2,10 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.StudentService;
+import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ public class StudentController {
 
     @Autowired
     StudentService studentService;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     UserRepository userRepository;
@@ -36,11 +41,11 @@ public class StudentController {
 
     }
 
-    @GetMapping("/searchLecturers")
+    @GetMapping("/search")
     public ResponseEntity<?> searchLecturer (@RequestParam String name){
         try{
 
-            List<User> lecturerList = userRepository.findUserByUserName(name);
+            List<UserDTO> lecturerList = userService.searchLecturers(name);
 
             if(!lecturerList.isEmpty()){
                 return ResponseEntity.ok().body(lecturerList);

@@ -1,16 +1,15 @@
 package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
-@Data
-@Entity
-@Getter
 @Setter
+@Getter
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Subject", uniqueConstraints = {
             @UniqueConstraint(
                     name = "subject_name_unique",
@@ -34,7 +33,7 @@ public class Subject {
     @JoinColumn(name = "major_id", nullable = false)
     private Major major;
 
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "subject")
     private Set<EmptySlot> emptySlots;
 
     @ManyToMany(mappedBy = "subjectSet")

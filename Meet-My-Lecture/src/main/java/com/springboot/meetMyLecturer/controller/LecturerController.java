@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/lecturer")
 public class LecturerController {
 
-    @GetMapping("/getSubjectByLecId/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<?> getSubjectByLecId(@PathVariable int id){
+
         return null;
     }
 

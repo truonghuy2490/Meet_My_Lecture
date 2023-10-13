@@ -1,15 +1,16 @@
 package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.Set;
 
-@Data
+@Setter
+@Getter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Semester")
 public class Semester {
     @Id
@@ -28,14 +29,13 @@ public class Semester {
     @JoinColumn(name = "admin_id", nullable = false)
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "subject_semester",
             joinColumns = @JoinColumn(name = "semester_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private Set<Subject> subjectSet;
 
-    @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "semester")
     private Set<WeeklyEmptySlot> weeklyEmptySlots;
-
 }
