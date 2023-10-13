@@ -18,7 +18,6 @@ public class WeeklyEmptySlot {
     @Column(name = "weekly_slot_id")
     private int weeklySlotId;
 
-    private int semesterId;
 
     @Column(name = "first_day_of_week", nullable = false)
     private Date firstDateOfWeek;

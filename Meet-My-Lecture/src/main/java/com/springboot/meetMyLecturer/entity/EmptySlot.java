@@ -37,6 +37,10 @@ public class EmptySlot {
     @JoinColumn(name = "weekly_slot_id")
     private WeeklyEmptySlot weeklySlot;
 
+    @OneToOne
+    @JoinColumn(name = "slot_id")
+    private MeetingRequest meetingRequest;
+
     @OneToMany(mappedBy = "emptySlot", cascade = CascadeType.ALL)
     private Set<Notification> notifications;
 

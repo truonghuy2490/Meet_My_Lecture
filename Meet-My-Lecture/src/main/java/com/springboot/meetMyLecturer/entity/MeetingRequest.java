@@ -22,8 +22,6 @@ public class MeetingRequest {
     @JoinColumn(name = "lecturer_id", nullable = false)
     private User lecturer;
 
-    private int slotId;
-
     private String requestContent;
 
     private String requestStatus;
