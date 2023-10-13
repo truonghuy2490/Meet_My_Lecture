@@ -40,7 +40,7 @@ public class StudentController {
     public ResponseEntity<?> searchLecturer (@RequestParam String name){
         try{
 
-            List<User> lecturerList = userRepository.findUser(name);
+            List<User> lecturerList = userRepository.findUserByUserName(name);
 
             if(!lecturerList.isEmpty()){
                 return ResponseEntity.ok().body(lecturerList);

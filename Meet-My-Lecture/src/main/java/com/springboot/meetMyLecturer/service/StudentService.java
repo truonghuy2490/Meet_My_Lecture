@@ -5,7 +5,6 @@ import com.springboot.meetMyLecturer.entity.Subject;
 import java.util.List;
 
 public interface StudentService {
-
     List<Subject> searchSubject (String keyword);
 
 }

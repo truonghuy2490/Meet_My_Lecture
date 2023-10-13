@@ -17,11 +17,16 @@ public class TeachingSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "teaching_schedule_id")
     private int teachingScheduleId;
 
-    private int lecturerId;
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private User lecturer;
 
-    private String subjectId;
+    @ManyToOne
+    @JoinColumn(name = "subject_id", nullable = false)
+    private Subject subject;
 
     private int roomId;
 

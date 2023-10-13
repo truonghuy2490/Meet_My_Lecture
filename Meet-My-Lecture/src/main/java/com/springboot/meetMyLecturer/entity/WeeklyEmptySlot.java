@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.Year;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Entity
@@ -14,6 +15,7 @@ import java.util.Date;
 public class WeeklyEmptySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "weekly_slot_id")
     private int weeklySlotId;
 
     private int semesterId;
@@ -26,6 +28,9 @@ public class WeeklyEmptySlot {
 
     @Column(name = "year", nullable = false)
     private Year year;
+
+    @OneToMany(mappedBy = "weeklySlot", cascade = CascadeType.ALL)
+    private Set<EmptySlot> emptySlots;
 
 
 }
