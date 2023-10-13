@@ -10,6 +10,9 @@ import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceIml implements UserService {
 
@@ -30,4 +33,10 @@ public class UserServiceIml implements UserService {
 
         return mapDTO.mapToDTO(user);
     }
-}
+
+    @Override
+    public List<UserDTO> searchLecturers(String name) {
+        List<User> lecturerList = userRepository.findUserByUserName(name);
+        return lecturerList.stream().map(user -> mapDTO.mapToDTO(user)).collect(Collectors.toList());
+        }
+    }

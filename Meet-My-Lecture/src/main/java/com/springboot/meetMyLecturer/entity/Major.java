@@ -25,7 +25,7 @@ public class Major {
     @JoinColumn(name = "admin_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "major")
     private Set<Subject> subjects;
 
 
