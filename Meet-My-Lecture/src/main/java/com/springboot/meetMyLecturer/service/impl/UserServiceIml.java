@@ -2,7 +2,7 @@ package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.Role;
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.map.MapDTO;
+import com.springboot.meetMyLecturer.modelMapper.MapDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;

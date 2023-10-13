@@ -1,0 +1,23 @@
+package com.springboot.meetMyLecturer.service.impl;
+
+import com.springboot.meetMyLecturer.entity.Subject;
+import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
+import com.springboot.meetMyLecturer.repository.SubjectRepository;
+import com.springboot.meetMyLecturer.service.SubjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class SubjectServiceIml implements SubjectService {
+
+    @Autowired
+    SubjectRepository subjectRepository;
+    @Override
+    public List<Subject> searchSubject(String keyword) {
+        return subjectRepository.findSubjectBySubjectIdContains(keyword);
+    }
+}

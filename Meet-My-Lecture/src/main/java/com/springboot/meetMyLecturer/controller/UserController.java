@@ -1,8 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.entity.Role;
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.map.MapDTO;
+import com.springboot.meetMyLecturer.modelMapper.MapDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -11,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/user")

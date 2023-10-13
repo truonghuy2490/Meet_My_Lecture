@@ -1,8 +1,7 @@
-package com.springboot.meetMyLecturer.map;
+package com.springboot.meetMyLecturer.modelMapper;
 
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component

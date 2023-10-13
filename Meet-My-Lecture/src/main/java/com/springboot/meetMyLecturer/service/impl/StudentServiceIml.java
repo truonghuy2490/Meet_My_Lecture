@@ -11,12 +11,7 @@ import java.util.List;
 @Service
 public class StudentServiceIml implements StudentService {
 
-    @Autowired
-    SubjectRepository subjectRepository;
 
 
-    @Override
-    public List<Subject> searchSubject(String keyword) {
-        return subjectRepository.findSubjectBySubjectIdContains(keyword);
-    }
+
 }

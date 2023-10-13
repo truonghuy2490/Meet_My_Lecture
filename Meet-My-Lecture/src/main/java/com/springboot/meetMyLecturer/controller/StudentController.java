@@ -25,22 +25,6 @@ public class StudentController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/searchSubjects")
-    public ResponseEntity<?> searchSubject(@RequestParam(name = "keyword") String keyword){
-        List<Subject> subjectList = studentService.searchSubject(keyword);
-        try{
-            if(!subjectList.isEmpty()){
-                return ResponseEntity.ok().body(subjectList);
-            }else{
-                return  ResponseEntity.notFound().build();
-            }
-
-        }catch(Exception e){
-            return ResponseEntity.internalServerError().body("Error at:" + e.getMessage());
-        }
-
-    }
-
     @GetMapping("/search")
     public ResponseEntity<?> searchLecturer (@RequestParam String name){
         try{
