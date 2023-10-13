@@ -2,22 +2,25 @@ package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "Lecturers")
+@Table(name = "Notification")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "noti_id")
     private int notiId;
 
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    private int slotId;
+    @ManyToOne
+    @JoinColumn(name = "slot_id", nullable = false)
+    private EmptySlot emptySlot;
 
     private String notiContent;
 

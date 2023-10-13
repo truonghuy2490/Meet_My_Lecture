@@ -1,16 +1,14 @@
 package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "role", uniqueConstraints = {
                 @UniqueConstraint(
                     name = "role-name",
@@ -22,8 +20,14 @@ import java.util.Set;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "role_id")
     private int roleId;
 
     @Column(name = "role_name", nullable = false)
     private String roleName;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private List<User> users;
+
+
 }
