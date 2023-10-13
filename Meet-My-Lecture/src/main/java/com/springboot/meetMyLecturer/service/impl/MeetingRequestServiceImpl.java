@@ -5,6 +5,7 @@ import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,12 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         List<MeetingRequest> meetingRequests = meetingRequestRepository.findAll();
         return meetingRequests.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
     }
+
+    @Override
+    public ResponseEntity<MeetingRequestDTO> updateRequest(MeetingRequestDTO meetingRequestDTO) {
+        return null;
+    }
+
     private MeetingRequestDTO mapToDTO(MeetingRequest meetingRequest){
         MeetingRequestDTO meetingRequestDTO = new MeetingRequestDTO();
         meetingRequestDTO.setRequestId(meetingRequest.getRequestId());
