@@ -33,7 +33,7 @@ public class WeeklyEmptySlot {
     private Set<EmptySlot> emptySlots;
 
     @ManyToOne
-    @JoinColumn(name = "weekly_slot_id")
+    @JoinColumn(name = "semester_id")
     private Semester semester;
 
 
