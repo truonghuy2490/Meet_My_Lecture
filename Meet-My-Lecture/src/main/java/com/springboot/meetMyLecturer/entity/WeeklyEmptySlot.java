@@ -32,5 +32,9 @@ public class WeeklyEmptySlot {
     @OneToMany(mappedBy = "weeklySlot", cascade = CascadeType.ALL)
     private Set<EmptySlot> emptySlots;
 
+    @ManyToOne
+    @JoinColumn(name = "semester_id")
+    private Semester semester;
+
 
 }

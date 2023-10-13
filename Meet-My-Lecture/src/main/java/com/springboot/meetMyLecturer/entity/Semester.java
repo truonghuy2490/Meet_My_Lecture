@@ -35,4 +35,7 @@ public class Semester {
     )
     private Set<Subject> subjectSet;
 
+    @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
+    private Set<WeeklyEmptySlot> weeklyEmptySlots;
+
 }
