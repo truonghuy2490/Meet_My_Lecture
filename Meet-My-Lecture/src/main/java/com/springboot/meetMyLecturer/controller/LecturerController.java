@@ -12,8 +12,9 @@ public class LecturerController {
 
     @GetMapping("{id}")
     public ResponseEntity<?> getSubjectByLecId(@PathVariable int id){
-
         return null;
     }
+
+
 
 }

@@ -16,12 +16,19 @@ public class MeetingRequestController {
     @Autowired
     MeetingRequestService meetingRequestService;
 
-    @GetMapping
+    @GetMapping // GET ALL MEETING REQUESTS
     public List<MeetingRequestDTO> getAllRequestsMeeting (){
         return meetingRequestService.getAllRequest();
     }
-    @PutMapping
-    public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(){
-        return null;
+
+    @PutMapping("/{id}")  // UPDATE MEETING REQUEST
+    public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(
+            @RequestBody MeetingRequestDTO meetingRequestDTO,
+            @PathVariable Long id)
+    {
+        MeetingRequestDTO responseRequest = meetingRequestService.updateRequest(meetingRequestDTO, id);
+        return new ResponseEntity<>(responseRequest, HttpStatus.OK);
     }
+
+
 }

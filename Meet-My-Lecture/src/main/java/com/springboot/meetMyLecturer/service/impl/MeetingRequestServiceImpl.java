@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
+import com.springboot.meetMyLecturer.exception.ResourceNoFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
@@ -23,8 +24,17 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     }
 
     @Override
-    public ResponseEntity<MeetingRequestDTO> updateRequest(MeetingRequestDTO meetingRequestDTO) {
-        return null;
+    public MeetingRequestDTO updateRequest(MeetingRequestDTO meetingRequestDTO, Long id) {
+        MeetingRequest meetingRequest = meetingRequestRepository.findById(id).orElseThrow(() -> new ResourceNoFoundException("Request Meeting", "id", id));
+
+        meetingRequest.setRequestId(meetingRequestDTO.getRequestId());
+        meetingRequest.setRequestStatus(meetingRequestDTO.getRequestStatus());
+        meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
+
+        MeetingRequest updateRequestMeeting = meetingRequestRepository.save(meetingRequest);
+
+        return mapToDTO(updateRequestMeeting);
+
     }
 
     private MeetingRequestDTO mapToDTO(MeetingRequest meetingRequest){
