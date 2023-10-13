@@ -37,12 +37,12 @@ public class EmptySlot {
     @JoinColumn(name = "weekly_slot_id")
     private WeeklyEmptySlot weeklySlot;
 
-    @OneToOne
-    @JoinColumn(name = "slot_id")
-    private MeetingRequest meetingRequest;
-
-    @OneToMany(mappedBy = "emptySlot", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "emptySlot")
     private Set<Notification> notifications;
+
+    @OneToOne
+    @JoinColumn(name = "meeting_request_id")
+    private MeetingRequest meetingRequest;
 
     private String roomId;
 
@@ -62,8 +62,5 @@ public class EmptySlot {
     private Date bookedDate;
 
     private int code;
-
-
-
 
 }

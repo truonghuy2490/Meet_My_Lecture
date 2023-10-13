@@ -26,4 +26,8 @@ public class MeetingRequest {
 
     private String requestStatus;
 
+    @OneToOne(mappedBy = "meetingRequest")
+    private EmptySlot emptySlot;
+
+
 }
