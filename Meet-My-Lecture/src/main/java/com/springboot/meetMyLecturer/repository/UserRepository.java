@@ -17,6 +17,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 
 
-
+    User findByUserId(int id);
 
 }

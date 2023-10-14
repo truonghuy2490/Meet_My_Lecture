@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -20,8 +21,10 @@ public class EmptySlot {
     @Column(name = "slot_id")
     private int slotId;
 
+//    @OneToMany(mappedBy = "emptySlot", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<User> users = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "lecturer_id", nullable = false)
     private User lecturer;
 
