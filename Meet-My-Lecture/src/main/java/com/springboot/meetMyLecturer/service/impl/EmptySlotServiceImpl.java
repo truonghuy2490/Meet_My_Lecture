@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 public class EmptySlotServiceImpl implements EmptySlotService {
 
     @Autowired
-    ModelMapper modelMapper;
-
-    @Autowired
     EmptySlotRepository emptySlotRepository;
 
     @Autowired
@@ -38,9 +35,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     }
 
     @Override // can fix , vua sua ben controller
-    public EmptySlotDTO creatEmptySlot(Long userId, EmptySlot emptySlot) {
+    public EmptySlotDTO creatEmptySlot(int userId, EmptySlot emptySlot) {
         EmptySlotDTO emptySlotDTO = mapToDTO(emptySlot);
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findUserByUserId(userId);
         emptySlot.setLecturer(user);
 
         UserDTO userDTO = new UserDTO();

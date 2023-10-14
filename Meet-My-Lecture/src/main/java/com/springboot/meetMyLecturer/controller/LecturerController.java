@@ -55,13 +55,13 @@ public class LecturerController {
         return emptySlotService.getAllEmptySlot();
     }
     @GetMapping("slots/{slotId}/users")
-    public List<UserDTO> getUserByEmptySlotId(@PathVariable(value = "slotId") Long slotId){
+    public List<UserDTO> getUserByEmptySlotId(@PathVariable(value = "slotId") int slotId){
         return userService.getUserByEmptySlotId(slotId);
     }
 
     // SLOT : CREATE EMPTY SLOT
     @PostMapping("slots/{userId}/users")
-    public ResponseEntity<EmptySlotDTO> createEmptySlot(@PathVariable(value = "userId") Long userId,
+    public ResponseEntity<EmptySlotDTO> createEmptySlot(@PathVariable(value = "userId") int userId,
                                                         @RequestBody EmptySlot emptySlot) {
 
         EmptySlotDTO emptySlotDTO = emptySlotService.creatEmptySlot(userId, emptySlot);

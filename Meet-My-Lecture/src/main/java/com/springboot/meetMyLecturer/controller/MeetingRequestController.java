@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/requests")
 public class MeetingRequestController {
@@ -25,5 +27,11 @@ public class MeetingRequestController {
             ,@RequestBody MeetingRequest meetingRequest){
             MeetingRequestDTO meetingRequestDTO = meetingRequestService.createRequest(studentId,lecturerId,meetingRequest);
         return new ResponseEntity<>(meetingRequestDTO,HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MeetingRequestDTO>> getAllRequest(){
+        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequest();
+        return new ResponseEntity<>(meetingRequestDTOList,HttpStatus.FOUND);
     }
 }

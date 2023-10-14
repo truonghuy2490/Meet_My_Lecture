@@ -42,9 +42,7 @@ public class SubjectServiceImpl implements SubjectService {
             dto.setSubjectName(subject.getSubjectName());
 
             Set<UserDTO> userDTOs = users.stream().map(user -> {
-                UserDTO userDTO = new UserDTO();
-                userDTO.setUserId(user.getUserId());
-                userDTO.setUserName(user.getUserName());
+                UserDTO userDTO = modelMapper.map(user,UserDTO.class);
                 return userDTO;
             }).collect(Collectors.toSet());
             dto.setUserDTO(userDTOs);

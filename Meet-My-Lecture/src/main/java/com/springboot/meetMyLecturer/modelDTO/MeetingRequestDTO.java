@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class MeetingRequestDTO {
 
+    private int meetingRequestId;
+
     private UserDTO student;
 
     private UserDTO lecturer;

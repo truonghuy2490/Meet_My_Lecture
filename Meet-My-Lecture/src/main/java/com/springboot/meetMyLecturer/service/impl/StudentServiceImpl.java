@@ -15,14 +15,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    @Autowired
-    ModelMapper modelMapper;
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    MapToDTO mapToDTO;
+
+    @Autowired
+    ModelMapper modelMapper;
 
 
     @Override
