@@ -1,8 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
-import com.springboot.meetMyLecturer.entity.Subject;
+
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;

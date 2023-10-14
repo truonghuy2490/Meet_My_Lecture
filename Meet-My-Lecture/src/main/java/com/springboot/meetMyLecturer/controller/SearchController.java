@@ -2,10 +2,8 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
-import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
-import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
