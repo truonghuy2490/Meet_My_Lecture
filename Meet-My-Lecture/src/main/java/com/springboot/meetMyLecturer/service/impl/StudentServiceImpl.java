@@ -1,8 +1,11 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 
+import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.StudentService;
@@ -23,12 +26,14 @@ public class StudentServiceImpl implements StudentService {
     SubjectRepository subjectRepository;
 
     @Autowired
-    MapToDTO mapToDTO;
+    EmptySlotRepository emptySlotRepository;
+
 
     @Autowired
     ModelMapper modelMapper;
 
 
+    //student search lecturer
     @Override
     public List<UserDTO> searchLecturers(String name) {
 
@@ -41,6 +46,25 @@ public class StudentServiceImpl implements StudentService {
                 return dto;
                 }).collect(Collectors.toList());
         return userDTOList;
+    }
+
+
+    //student view booked slots
+    @Override
+    public List<EmptySlotDTO> viewBookedSlot(Long userId) {
+        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByUser_UserId(userId);
+
+        List<EmptySlotDTO> emptySlotDTOList = emptySlotList.stream().map(
+                emptySlot -> {
+                    EmptySlotDTO emptySlotDTO = modelMapper.map(emptySlot,EmptySlotDTO.class);
+                    UserDTO lecturerDTO = modelMapper.map(emptySlot.getLecturer(),UserDTO.class);
+                    UserDTO studentDTO = modelMapper.map(emptySlot.getStudent(),UserDTO.class);
+                    emptySlotDTO.setStudent(studentDTO);
+                    emptySlotDTO.setLecturer(lecturerDTO);
+                    return emptySlotDTO;
+                }).collect(Collectors.toList());
+
+        return emptySlotDTOList;
     }
 
 }

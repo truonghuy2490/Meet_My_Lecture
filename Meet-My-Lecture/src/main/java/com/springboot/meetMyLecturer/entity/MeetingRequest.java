@@ -26,8 +26,8 @@ public class MeetingRequest {
 
     private String requestStatus;
 
-    @OneToOne(mappedBy = "meetingRequest")
-    private EmptySlot emptySlot;
-
+    @ManyToOne
+    @JoinColumn(name = "subject_id", nullable = false)
+    private Subject subject;
 
 }

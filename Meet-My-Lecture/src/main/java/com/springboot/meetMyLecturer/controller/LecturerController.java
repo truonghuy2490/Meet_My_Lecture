@@ -61,7 +61,7 @@ public class LecturerController {
 
     // SLOT : CREATE EMPTY SLOT
     @PostMapping("slots/{userId}/users")
-    public ResponseEntity<EmptySlotDTO> createEmptySlot(@PathVariable(value = "userId") int userId,
+    public ResponseEntity<EmptySlotDTO> createEmptySlot(@PathVariable(value = "userId") Long userId,
                                                         @RequestBody EmptySlot emptySlot) {
 
         EmptySlotDTO emptySlotDTO = emptySlotService.creatEmptySlot(userId, emptySlot);

@@ -1,10 +1,11 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
+import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.modelDTO.*;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
+import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.modelmapper.ModelMapper;
@@ -22,18 +23,25 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    SubjectRepository subjectRepository;
+
 
     @Autowired
     ModelMapper modelMapper;
 
 
+    //student create request
     @Override
-    public MeetingRequestDTO createRequest(int studentId, int lecturerId, MeetingRequest meetingRequest) {
+    public MeetingRequestDTO createRequest(int studentId, int lecturerId,String subjectId, MeetingRequest meetingRequest) {
         MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest,MeetingRequestDTO.class);
 
         User student = userRepository.findUserByUserId(studentId);
         User lecturer = userRepository.findUserByUserId(lecturerId);
+        Subject subject = subjectRepository.findSubjectBySubjectId(subjectId);
 
+
+        meetingRequest.setSubject(subject);
         meetingRequest.setStudent(student);
         meetingRequest.setLecturer(lecturer);
 
@@ -41,13 +49,17 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         UserDTO lecturerDTO = modelMapper.map(lecturer,UserDTO.class);
         UserDTO studentDTO = modelMapper.map(student,UserDTO.class);
+        SubjectResponseRequestDTO subjectDTO = modelMapper.map(subject, SubjectResponseRequestDTO.class);
 
         meetingRequestDTO.setLecturer(lecturerDTO);
         meetingRequestDTO.setStudent(studentDTO);
+        meetingRequestDTO.setSubject(subjectDTO);
 
 
         return meetingRequestDTO;
     }
+
+    //lecturer get all requests
 
     @Override
     public List<MeetingRequestDTO> getAllRequest() {
@@ -62,9 +74,11 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
                     UserDTO studentDTO = modelMapper.map(meetingRequest.getStudent(),UserDTO.class);
                     UserDTO lecturerDTO = modelMapper.map(meetingRequest.getLecturer(),UserDTO.class);
+                    SubjectResponseRequestDTO subjectDTO = modelMapper.map(meetingRequest.getSubject(), SubjectResponseRequestDTO.class);
 
                     dto.setStudent(studentDTO);
                     dto.setLecturer(lecturerDTO);
+                    dto.setSubject(subjectDTO);
 
                     return dto;
                 }).collect(Collectors.toList());

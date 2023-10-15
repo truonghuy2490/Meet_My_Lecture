@@ -3,7 +3,7 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
-import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectResponseRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -53,13 +53,13 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<SubjectResponseDTO> getSubjectByLecturerId(int id) {
+    public List<SubjectResponseRequestDTO> getSubjectByLecturerId(int id) {
             List<Subject> subjectList = subjectRepository.findSubjectsByUser_UserId(id);
-            List<SubjectResponseDTO> subjectResponseDTOS = subjectList.stream().map(
+            List<SubjectResponseRequestDTO> subjectResponseRequestDTOS = subjectList.stream().map(
                     subject -> {
-                        SubjectResponseDTO dto = modelMapper.map(subject, SubjectResponseDTO.class);
+                        SubjectResponseRequestDTO dto = modelMapper.map(subject, SubjectResponseRequestDTO.class);
                         return dto;
                     }).collect(Collectors.toList());
-            return subjectResponseDTOS;
+            return subjectResponseRequestDTOS;
     }
 }

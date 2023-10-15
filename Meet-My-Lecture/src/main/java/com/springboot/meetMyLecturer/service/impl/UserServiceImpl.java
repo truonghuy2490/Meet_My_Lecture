@@ -1,8 +1,13 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.entity.Major;
 import com.springboot.meetMyLecturer.entity.Role;
 import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.MajorProfileDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.modelDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.repository.MajorRepository;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -24,6 +29,9 @@ public class UserServiceImpl implements UserService {
     public UserRepository userRepository;
 
     @Autowired
+    public MajorRepository majorRepository;
+
+    @Autowired
     ModelMapper modelMapper;
 
 
@@ -38,14 +46,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> searchLecturers(String name) {
-        List<User> lecturerList = userRepository.findLecturerByUserName(name);
-        return lecturerList.stream().map(user -> modelMapper.map(user,UserDTO.class)).collect(Collectors.toList());
-        }
-
-    @Override
     public List<UserDTO> getUserByEmptySlotId(int slotId) {
         return null;
+    }
+
+    @Override
+    public UserProfileDTO viewProfile(long userId) {
+        User user = userRepository.findUserByUserId(userId);
+
+        UserProfileDTO userDTO = modelMapper.map(user, UserProfileDTO.class);
+        MajorProfileDTO majorProfileDTO = modelMapper.map(user.getMajor(),MajorProfileDTO.class);
+        userDTO.setMajor(majorProfileDTO);
+        return userDTO;
+    }
+
+    @Override
+    public UserProfileDTO updateProfile(long userId, int majorId, User userUpdate) {
+        User user = userRepository.findUserByUserId(userId);
+        Major major = majorRepository.findMajorByMajorId(majorId);
+
+        user.setMajor(userUpdate.getMajor());
+        user.setEmail(userUpdate.getEmail());
+        user.setUserName(userUpdate.getUserName());
+        user.setMajor(major);
+
+        User userUpdated = userRepository.save(user);
+        MajorProfileDTO majorProfileDTO = modelMapper.map(userUpdated.getMajor(),MajorProfileDTO.class);
+
+        UserProfileDTO userProfileDTO = modelMapper.map(userUpdated,UserProfileDTO.class);
+        userProfileDTO.setMajor(majorProfileDTO);
+
+
+
+        return userProfileDTO ;
     }
 
 

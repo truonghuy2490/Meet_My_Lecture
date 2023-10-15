@@ -10,6 +10,6 @@ public interface MeetingRequestService {
     List<MeetingRequestDTO> getAllRequest();
     MeetingRequestDTO updateRequest(MeetingRequestDTO meetingRequestDTO, Long id);
 
-    MeetingRequestDTO createRequest(int studentId, int lecturerId,MeetingRequest meetingRequest);
+    MeetingRequestDTO createRequest(int studentId, int lecturerId, String subjectId,MeetingRequest meetingRequest);
 
 }

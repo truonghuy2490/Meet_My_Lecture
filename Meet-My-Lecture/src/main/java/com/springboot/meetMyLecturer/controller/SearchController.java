@@ -1,6 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectResponseRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -41,9 +41,9 @@ public class SearchController {
     }
 
     @GetMapping("/subject/{id}")
-    public ResponseEntity<List<SubjectResponseDTO>> getSubjectByLecturerId (@PathVariable int id){
-        List<SubjectResponseDTO> subjectResponseDTOS = subjectService.getSubjectByLecturerId(id);
-        return new ResponseEntity<>(subjectResponseDTOS,HttpStatus.FOUND);
+    public ResponseEntity<List<SubjectResponseRequestDTO>> getSubjectByLecturerId (@PathVariable int id){
+        List<SubjectResponseRequestDTO> subjectResponseRequestDTOS = subjectService.getSubjectByLecturerId(id);
+        return new ResponseEntity<>(subjectResponseRequestDTOS,HttpStatus.FOUND);
     }
 
 }

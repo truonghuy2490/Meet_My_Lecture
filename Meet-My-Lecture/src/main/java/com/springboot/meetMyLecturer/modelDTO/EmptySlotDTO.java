@@ -26,7 +26,7 @@ public class EmptySlotDTO {
 
     private Date bookedDate;
 
-    private int code;
+    private UserDTO student;
 
-    private UserDTO users;
+    private UserDTO lecturer;
 }

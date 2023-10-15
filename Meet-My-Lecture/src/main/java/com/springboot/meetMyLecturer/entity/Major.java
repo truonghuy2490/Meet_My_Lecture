@@ -23,10 +23,17 @@ public class Major {
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    private User user;
+    private User admin;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "subject_major",
+            joinColumns = @JoinColumn(name = "major_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
+    )
+    private Set<Subject> subjectSet;
 
     @OneToMany(mappedBy = "major")
-    private Set<Subject> subjects;
+    private Set<User> student;
 
 
 

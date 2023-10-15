@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.modelDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -25,7 +26,7 @@ public class UserController {
 
 
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam int id){
+    public ResponseEntity<?> deleteUser(@RequestParam long id){
         userRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
@@ -36,4 +37,17 @@ public class UserController {
 
         return new  ResponseEntity<>(userService.registerUser(roleId,userRegister), HttpStatus.CREATED);
     }
+
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<UserProfileDTO> viewProfile(@PathVariable long userId){
+        UserProfileDTO userDTO = userService.viewProfile(userId);
+        return new ResponseEntity<>(userDTO, HttpStatus.FOUND);
+    }
+
+    @PutMapping("profile/{userId}/major/{majorId}")
+    public ResponseEntity<UserProfileDTO> editProfile(@PathVariable long userId,@PathVariable int majorId, @RequestBody User user){
+        UserProfileDTO userProfileDTO = userService.updateProfile(userId,majorId, user);
+        return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
+    }
+
 }

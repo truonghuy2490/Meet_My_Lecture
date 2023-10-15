@@ -1,19 +1,13 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
-import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.exception.ResourceNoFoundException;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
-import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +29,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     }
 
     @Override // can fix , vua sua ben controller
-    public EmptySlotDTO creatEmptySlot(int userId, EmptySlot emptySlot) {
+    public EmptySlotDTO creatEmptySlot(Long userId, EmptySlot emptySlot) {
         EmptySlotDTO emptySlotDTO = mapToDTO(emptySlot);
         User user = userRepository.findUserByUserId(userId);
         emptySlot.setLecturer(user);
@@ -43,7 +37,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         UserDTO userDTO = new UserDTO();
 
         userDTO.setUserId(userId);
-        emptySlotDTO.setUsers(userDTO);
+        emptySlotDTO.setLecturer(userDTO);
 
 //        EmptySlot slot = mapToEntity(emptySlotDTO);
 //
@@ -65,7 +59,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlotDTO.setStatus(emptySlot.getStatus());
         emptySlotDTO.setDescription(emptySlot.getDescription());
         emptySlotDTO.setRoomId(emptySlot.getRoomId());
-        emptySlotDTO.setCode(emptySlot.getCode());
 
         return emptySlotDTO;
     }
@@ -81,7 +74,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setStatus(emptySlotDTO.getStatus());
         emptySlot.setDescription(emptySlotDTO.getDescription());
         emptySlot.setRoomId(emptySlotDTO.getRoomId());
-        emptySlot.setCode(emptySlotDTO.getCode());
 
         return emptySlot;
     }

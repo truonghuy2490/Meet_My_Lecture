@@ -21,11 +21,12 @@ public class MeetingRequestController {
         return null;
     }
 
-    @PostMapping("student/{studentId}/lecturer/{lecturerId}")
+    @PostMapping("student/{studentId}/lecturer/{lecturerId}/subject/{subjectId}")
     public ResponseEntity<MeetingRequestDTO> createRequest(@PathVariable int studentId,
-                                                           @PathVariable int lecturerId
+                                                           @PathVariable int lecturerId,
+                                                           @PathVariable String subjectId
             ,@RequestBody MeetingRequest meetingRequest){
-            MeetingRequestDTO meetingRequestDTO = meetingRequestService.createRequest(studentId,lecturerId,meetingRequest);
+            MeetingRequestDTO meetingRequestDTO = meetingRequestService.createRequest(studentId,lecturerId,subjectId,meetingRequest);
         return new ResponseEntity<>(meetingRequestDTO,HttpStatus.CREATED);
     }
 
@@ -34,4 +35,6 @@ public class MeetingRequestController {
         List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequest();
         return new ResponseEntity<>(meetingRequestDTOList,HttpStatus.FOUND);
     }
+
+
 }
