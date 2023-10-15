@@ -16,7 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
 
     @Column(name = "user_name", nullable = false)
     private String userName;
@@ -28,9 +28,13 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @ManyToOne
+    @JoinColumn(name = "major_id")
+    private Major major;
+
     private int absentCount;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "admin")
     private Set<Major> majors;
 
     @OneToMany(mappedBy = "user")
@@ -59,8 +63,8 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "lecturer_subject",
-            joinColumns = @JoinColumn(name = "lecturer_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "subject_id")
+            joinColumns = @JoinColumn(name = "lecturer_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private Set<Subject> subjectSet;
 

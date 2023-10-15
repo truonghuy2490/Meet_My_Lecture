@@ -29,9 +29,8 @@ public class Subject {
     @JoinColumn(name = "admin_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "major_id", nullable = false)
-    private Major major;
+    @ManyToMany(mappedBy = "subjectSet")
+    private Set<Major> majorSet;
 
     @OneToMany(mappedBy = "subject")
     private Set<EmptySlot> emptySlots;
@@ -45,8 +44,7 @@ public class Subject {
     @OneToMany(mappedBy = "subject")
     private Set<SubjectLecturerStudent> subjectLecturerStudentSet;
 
-
-
-
+    @OneToMany(mappedBy = "subject")
+    private Set<MeetingRequest> meetingRequests;
 
 }

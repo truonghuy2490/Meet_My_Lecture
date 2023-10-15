@@ -1,61 +1,37 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.entity.Subject;
-import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
-import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.StudentService;
-import com.springboot.meetMyLecturer.service.UserService;
+import com.springboot.meetMyLecturer.service.impl.StudentServiceImpl;
+import com.springboot.meetMyLecturer.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/student")
+@RequestMapping("/api/v1/students")
 public class StudentController {
 
     @Autowired
-    StudentService studentService;
+    StudentServiceImpl studentService;
 
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @GetMapping("/searchSubjects")
-    public ResponseEntity<?> searchSubject(@RequestParam(name = "keyword") String keyword){
-        List<Subject> subjectList = studentService.searchSubject(keyword);
-        try{
-            if(!subjectList.isEmpty()){
-                return ResponseEntity.ok().body(subjectList);
-            }else{
-                return  ResponseEntity.notFound().build();
-            }
-
-        }catch(Exception e){
-            return ResponseEntity.internalServerError().body("Error at:" + e.getMessage());
-        }
-
+    @GetMapping("/bookedSlot/{userId}")
+    public ResponseEntity<List<EmptySlotDTO>> viewBookedSlot(@PathVariable Long userId){
+            List<EmptySlotDTO> emptySlotDTOList = studentService.viewBookedSlot(userId);
+            return new ResponseEntity<>(emptySlotDTOList,HttpStatus.FOUND);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> searchLecturer (@RequestParam String name){
-        try{
 
-            List<UserDTO> lecturerList = userService.searchLecturers(name);
 
-            if(!lecturerList.isEmpty()){
-                return ResponseEntity.ok().body(lecturerList);
-            }else{
-                return  ResponseEntity.notFound().build();
-            }
 
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error at:" + e.getMessage());
-        }
-    }
+
+
 
 }
