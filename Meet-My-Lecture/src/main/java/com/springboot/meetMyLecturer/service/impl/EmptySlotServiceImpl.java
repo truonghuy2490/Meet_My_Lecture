@@ -37,7 +37,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return emptySlots.stream().map(emptySlot -> mapToDTO(emptySlot)).collect(Collectors.toList());
     }
 
-    @Override // can fix , vua sua ben controller
+    @Override
     public EmptySlotDTO creatEmptySlot(Long userId, EmptySlot emptySlot) {
         EmptySlotDTO emptySlotDTO = mapToDTO(emptySlot);
         User user = userRepository.findByUserId(userId);
@@ -55,38 +55,19 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 //        EmptySlotDTO responeseEmptySlotDTO = mapToDTO(newEmptySlot);
 
         return emptySlotDTO;
-
     }
+
+
+
+
+
     // convert entity to DTO
     public EmptySlotDTO mapToDTO(EmptySlot emptySlot) {
-        EmptySlotDTO emptySlotDTO = new EmptySlotDTO();
-        emptySlotDTO.setSlotId(emptySlot.getSlotId());
-        emptySlotDTO.setTimeStart(emptySlot.getTimeStart());
-        emptySlotDTO.setDuration(emptySlot.getDuration());
-        emptySlotDTO.setDateStart(emptySlot.getDateStart());
-        emptySlotDTO.setBookedDate(emptySlot.getBookedDate());
-        emptySlotDTO.setStatus(emptySlot.getStatus());
-        emptySlotDTO.setDescription(emptySlot.getDescription());
-        emptySlotDTO.setRoomId(emptySlot.getRoomId());
-        emptySlotDTO.setCode(emptySlot.getCode());
-
-        return emptySlotDTO;
+        return modelMapper.map(emptySlot, EmptySlotDTO.class);
     }
     // convert DTO to entity
     public EmptySlot mapToEntity(EmptySlotDTO emptySlotDTO) {
-        EmptySlot emptySlot = new EmptySlot();
-
-        emptySlot.setSlotId(emptySlotDTO.getSlotId());
-        emptySlot.setTimeStart(emptySlotDTO.getTimeStart());
-        emptySlot.setDuration(emptySlotDTO.getDuration());
-        emptySlot.setDateStart(emptySlotDTO.getDateStart());
-        emptySlot.setBookedDate(emptySlotDTO.getBookedDate());
-        emptySlot.setStatus(emptySlotDTO.getStatus());
-        emptySlot.setDescription(emptySlotDTO.getDescription());
-        emptySlot.setRoomId(emptySlotDTO.getRoomId());
-        emptySlot.setCode(emptySlotDTO.getCode());
-
-        return emptySlot;
+        return modelMapper.map(emptySlotDTO, EmptySlot.class);
     }
 
 }

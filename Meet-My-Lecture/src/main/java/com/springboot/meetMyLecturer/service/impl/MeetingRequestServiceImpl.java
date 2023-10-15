@@ -23,7 +23,6 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
     @Override
     public List<MeetingRequestDTO> getAllRequest() {
-
         List<MeetingRequest> meetingRequests = meetingRequestRepository.findAll();
         return meetingRequests.stream().map(meetingRequest -> mapToDTO(meetingRequest)).collect(Collectors.toList());
     }
@@ -38,7 +37,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         MeetingRequest updateRequestMeeting = meetingRequestRepository.save(meetingRequest);
 
-        return mapToDTO(updateRequestMeeting);
+        return modelMapper.map(updateRequestMeeting, MeetingRequestDTO.class);
 
     }
 
