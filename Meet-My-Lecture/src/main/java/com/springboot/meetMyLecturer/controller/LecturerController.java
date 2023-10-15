@@ -43,7 +43,7 @@ public class LecturerController {
     @PutMapping("requests/{id}")
     public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(
             @RequestBody MeetingRequestDTO meetingRequestDTO,
-            @PathVariable Long id)
+            @PathVariable int id)
     {
         MeetingRequestDTO responseRequest = meetingRequestService.updateRequest(meetingRequestDTO, id);
         return new ResponseEntity<>(responseRequest, HttpStatus.OK);

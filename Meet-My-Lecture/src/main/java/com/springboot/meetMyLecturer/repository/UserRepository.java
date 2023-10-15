@@ -8,12 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query( "select u from User u join Role r on u.role.roleId = r.roleId where u.userName like %:name% and r.roleName ='LECTURER' ")
-    List<User> findLecturerByUserName(String name);
+    List<User> findLecturerByLectrureName(String name);
 
-    User findUserByUserId(long id);
-
-
+    User findByUserId(Long id);
+//    List<User> findUserByEmptySlots_Empty(Long slotId);
 }
