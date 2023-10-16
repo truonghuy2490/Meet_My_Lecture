@@ -40,6 +40,20 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     }
 
     @Override
+    public List<EmptySlotDTO> getAllEmptySlotByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
+        );
+        List<EmptySlot> slots = emptySlotRepository.findEmptySlotsByLecturer_UserId(userId);
+        if(slots.isEmpty()){
+            throw new RuntimeException("There no empty slot by this user");
+        }
+        return slots.stream().map(
+                slot -> mapper.map(slot, EmptySlotDTO.class)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
     public EmptySlotDTO creatEmptySlot(Long lecturerId, EmptySlot emptySlot) {
 
         EmptySlotDTO emptySlotDTO = mapper.map(emptySlot, EmptySlotDTO.class);

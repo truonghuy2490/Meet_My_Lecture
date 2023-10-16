@@ -29,10 +29,10 @@ public class EmptySlotController {
     public List<EmptySlotDTO> getAllEmptySlot(){
         return slotService.getAllEmptySlot();
     }
-    @GetMapping("lecturer/{slotId}") // get slot by userID
-    public List<UserDTO> getUserByEmptySlotId(@PathVariable Long slotId){
-        return userService.getUserByEmptySlotId(slotId);
-    }
+//    @GetMapping("lecturer/{slotId}") // get slot by userID
+//    public List<UserDTO> getUserByEmptySlotId(@PathVariable Long slotId){
+//        return userService.getUserByEmptySlotId(slotId);
+//    }
 
     // SLOT : CREATE EMPTY SLOT
     @PostMapping("lecturer/{lecturerId}")
@@ -53,5 +53,11 @@ public class EmptySlotController {
     ){
         EmptySlotDTO emptySlotDTO = slotService.assignRequestToSlot(requestId, slotId);
         return new ResponseEntity<>(emptySlotDTO, HttpStatus.OK);
+    }
+    @GetMapping("lecturer/{lecturerId}")
+    public List<EmptySlotDTO> getAllEmptySlotByUserId(
+            @PathVariable Long lecturerId
+    ){
+        return slotService.getAllEmptySlotByUserId(lecturerId);
     }
 }

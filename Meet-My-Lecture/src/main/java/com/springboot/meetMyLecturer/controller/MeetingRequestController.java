@@ -56,4 +56,11 @@ public class MeetingRequestController {
         return new ResponseEntity<>(meetingRequestDTO, HttpStatus.OK);
     }
 
+    @GetMapping("lecturer/{lecturerId}")
+    public List<MeetingRequestDTO> getAllRequestByLecturerId(
+            @PathVariable Long lecturerId
+    ){
+        List<MeetingRequestDTO> requestDTOList = meetingRequestService.getRequestByUserId(lecturerId);
+        return requestDTOList;
+    }
 }

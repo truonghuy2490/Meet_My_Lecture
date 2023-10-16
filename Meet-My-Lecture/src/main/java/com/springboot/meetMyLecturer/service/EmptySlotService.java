@@ -8,7 +8,10 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import java.util.List;
 
 public interface EmptySlotService {
-    List<EmptySlotDTO> getAllEmptySlot();
+    List<EmptySlotDTO> getAllEmptySlot(); // dung de test thoi
+
+    List<EmptySlotDTO> getAllEmptySlotByUserId(Long userId);
+
     EmptySlotDTO creatEmptySlot(Long lectureId, EmptySlot emptySlot);
     EmptySlotDTO assignRequestToSlot(Long meetingRequestId, Long slotId);
 }
