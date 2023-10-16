@@ -62,10 +62,7 @@ public class UserServiceImpl implements UserService {
         );
 
         UserProfileDTO userDTO = modelMapper.map(user, UserProfileDTO.class);
-        MajorProfileDTO majorProfileDTO = modelMapper.map(user.getMajor(),MajorProfileDTO.class);
-        RoleDTO roleDTO = modelMapper.map(user.getRole(), RoleDTO.class);
-        userDTO.setRole(roleDTO);
-        userDTO.setMajor(majorProfileDTO);
+
         return userDTO;
     }
 
@@ -85,18 +82,15 @@ public class UserServiceImpl implements UserService {
         user.setMajor(major);
 
         User userUpdated = userRepository.save(user);
-        MajorProfileDTO majorProfileDTO = modelMapper.map(userUpdated.getMajor(),MajorProfileDTO.class);
 
         UserProfileDTO userProfileDTO = modelMapper.map(userUpdated,UserProfileDTO.class);
-        RoleDTO roleDTO = modelMapper.map(userUpdated.getRole(),RoleDTO.class);
-        userProfileDTO.setRole(roleDTO);
-        userProfileDTO.setMajor(majorProfileDTO);
+
         return userProfileDTO ;
     }
 
     //get all users
     @Override
-    public List<String> getAllUsers() {
+    public List<String> getAllUsers(){
         List<String> userList = userRepository.findUserNotAdmin();
         if(userList.isEmpty()){
             throw new RuntimeException("There are no users");
@@ -104,18 +98,14 @@ public class UserServiceImpl implements UserService {
         return  userList;
     }
 
-    //view profile by email for admin
+    //view profile by userId for admin
     @Override
-    public UserProfileDTO viewProfileByEmail(String email) {
-        Optional<User> user = Optional.ofNullable(userRepository.findUserByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("User", "email", email)
+    public UserProfileDTO viewProfileByUserId(Long userId) {
+        Optional<User> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
         ));
 
         UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
-        MajorProfileDTO majorProfileDTO = modelMapper.map(user.get().getMajor(),MajorProfileDTO.class);
-        RoleDTO roleDTO = modelMapper.map(user.get().getRole(), RoleDTO.class);
-        userProfileDTO.setRole(roleDTO);
-        userProfileDTO.setMajor(majorProfileDTO);
 
         return userProfileDTO;
     }

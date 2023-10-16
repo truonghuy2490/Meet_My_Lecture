@@ -35,11 +35,12 @@ public class MeetingRequestController {
         return new ResponseEntity<>(meetingRequestDTO,HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<MeetingRequestDTO>> getAllRequest(){
-        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequest();
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<MeetingRequestDTO>> getAllRequestByUserId(@PathVariable Long userId){
+        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequestByUserId(userId);
         return new ResponseEntity<>(meetingRequestDTOList,HttpStatus.FOUND);
     }
+
 
     @DeleteMapping("/{requestId}")
     public ResponseEntity<String> deleteRequest(@PathVariable Long requestId){

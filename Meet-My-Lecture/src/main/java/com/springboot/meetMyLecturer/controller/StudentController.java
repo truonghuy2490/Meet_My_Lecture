@@ -17,7 +17,7 @@ import java.util.List;
 public class StudentController {
 
     @Autowired
-    StudentServiceImpl studentService;
+    StudentService studentService;
 
     @Autowired
     UserServiceImpl userService;

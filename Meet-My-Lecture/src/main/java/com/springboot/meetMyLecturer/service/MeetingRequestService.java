@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface MeetingRequestService {
-    List<MeetingRequestDTO> getAllRequest();
+    List<MeetingRequestDTO> getAllRequestByUserId(Long userId);
+
+    List<MeetingRequestDTO> getAllRequests();
     MeetingRequestDTO updateRequest(MeetingRequest meetingRequest, String subjectId, Long id);
 
     MeetingRequestDTO createRequest(Long studentId, Long lecturerId, String subjectId,MeetingRequest meetingRequest);

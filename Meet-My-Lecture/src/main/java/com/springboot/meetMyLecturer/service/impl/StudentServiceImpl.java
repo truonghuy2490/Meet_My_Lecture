@@ -55,17 +55,11 @@ public class StudentServiceImpl implements StudentService {
     //student view booked slots
     @Override
     public List<EmptySlotDTO> viewBookedSlot(Long userId) {
-        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByUser_UserId(userId);
+        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByStudent_UserId(userId);
 
         List<EmptySlotDTO> emptySlotDTOList = emptySlotList.stream().map(
                 emptySlot -> {
                     EmptySlotDTO emptySlotDTO = modelMapper.map(emptySlot,EmptySlotDTO.class);
-                    UserDTO lecturerDTO = modelMapper.map(emptySlot.getLecturer(),UserDTO.class);
-                    UserDTO studentDTO = modelMapper.map(emptySlot.getStudent(),UserDTO.class);
-                    SubjectResponseDTO subjectResponseDTO = modelMapper.map(emptySlot.getSubject(), SubjectResponseDTO.class);
-                    emptySlotDTO.setStudent(studentDTO);
-                    emptySlotDTO.setLecturer(lecturerDTO);
-                    emptySlotDTO.setSubject(subjectResponseDTO);
                     return emptySlotDTO;
                 }).collect(Collectors.toList());
 
@@ -90,12 +84,6 @@ public class StudentServiceImpl implements StudentService {
         emptySlot.setSubject(subject);
 
         EmptySlotDTO emptySlotDTO = modelMapper.map(emptySlot, EmptySlotDTO.class);
-
-        UserDTO studentDTO = modelMapper.map(student,UserDTO.class);
-        emptySlotDTO.setStudent(studentDTO);
-
-        SubjectResponseDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseDTO.class);
-        emptySlotDTO.setSubject(subjectResponseDTO);
 
         emptySlotRepository.save(emptySlot);
 
