@@ -40,23 +40,5 @@ public class LecturerController {
         return meetingRequestService.getAllRequest();
     }
 
-    // SLOT : GET ALL SLOT
-    @GetMapping("slots")
-    public List<EmptySlotDTO> getAllEmptySlot(){
-        return emptySlotService.getAllEmptySlot();
-    }
-    @GetMapping("slots/{slotId}/users")
-    public List<UserDTO> getUserByEmptySlotId(@PathVariable Long slotId){
-        return userService.getUserByEmptySlotId(slotId);
-    }
 
-    // SLOT : CREATE EMPTY SLOT
-    @PostMapping("slots/{userId}/users")
-    public ResponseEntity<EmptySlotDTO> createEmptySlot(@PathVariable(value = "userId") Long userId,
-                                                        @RequestBody EmptySlot emptySlot) {
-
-        EmptySlotDTO emptySlotDTO = emptySlotService.creatEmptySlot(userId, emptySlot);
-
-        return ResponseEntity.ok(emptySlotDTO);
-    }
 }

@@ -27,7 +27,7 @@ public class MeetingRequest {
     private String requestContent;
 
     private String requestStatus;
-
+    @Column(name = "create_at")
     private Date createAt;
 
     @ManyToOne

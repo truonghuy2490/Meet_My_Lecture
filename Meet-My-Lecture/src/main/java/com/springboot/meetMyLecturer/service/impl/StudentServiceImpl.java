@@ -40,7 +40,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<UserDTO> searchLecturers(String name) {
 
-        List<User> lecturerList = userRepository.findLecturerByLectrureName(name);
+        List<User> lecturerList = userRepository.findLecturerByUserName(name);
         if(lecturerList.isEmpty()){
             return null;
         }
