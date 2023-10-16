@@ -1,4 +1,4 @@
-package com.springboot.meetMyLecturer.exception;
+package com.springboot.meetMyLecturer.modelDTO;
 
 import java.util.Date;
 

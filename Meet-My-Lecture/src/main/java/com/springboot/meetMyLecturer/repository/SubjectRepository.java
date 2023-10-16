@@ -15,6 +15,4 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
     @Query("select s from Subject s join LecturerSubject ls on ls.subject.subjectId = s.subjectId and ls.lecturer.userId = :id ")
     List<Subject> findSubjectsByUser_UserId(long id);
 
-    Subject findSubjectBySubjectId(String subjectId);
-
 }

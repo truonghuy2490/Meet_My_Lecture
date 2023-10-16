@@ -2,6 +2,8 @@ package com.springboot.meetMyLecturer.modelDTO;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class MeetingRequestDTO {
 
@@ -11,9 +13,11 @@ public class MeetingRequestDTO {
 
     private UserDTO lecturer;
 
-    private SubjectResponseRequestDTO subject;
+    private SubjectResponseDTO subject;
 
     private String requestContent;
 
     private String requestStatus;
+
+    private Date createAt;
 }

@@ -2,8 +2,11 @@ package com.springboot.meetMyLecturer.service.impl;
 
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
+import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
@@ -59,12 +62,50 @@ public class StudentServiceImpl implements StudentService {
                     EmptySlotDTO emptySlotDTO = modelMapper.map(emptySlot,EmptySlotDTO.class);
                     UserDTO lecturerDTO = modelMapper.map(emptySlot.getLecturer(),UserDTO.class);
                     UserDTO studentDTO = modelMapper.map(emptySlot.getStudent(),UserDTO.class);
+                    SubjectResponseDTO subjectResponseDTO = modelMapper.map(emptySlot.getSubject(), SubjectResponseDTO.class);
                     emptySlotDTO.setStudent(studentDTO);
                     emptySlotDTO.setLecturer(lecturerDTO);
+                    emptySlotDTO.setSubject(subjectResponseDTO);
                     return emptySlotDTO;
                 }).collect(Collectors.toList());
 
         return emptySlotDTOList;
+    }
+
+    //student book an empty slot
+    @Override
+    public EmptySlotDTO bookEmptySlot(Long emptySlotId, Long studentId, String subjectId) {
+        EmptySlot emptySlot = emptySlotRepository.findById(emptySlotId).orElseThrow(
+                () -> new ResourceNotFoundException("Emoty Slot", "id", String.valueOf(emptySlotId))
+        );
+
+        User student = userRepository.findById(studentId).orElseThrow(
+                () -> new ResourceNotFoundException("Student", "id", String.valueOf(studentId))
+        );
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
+                () -> new ResourceNotFoundException("Subject", "id", subjectId)
+        );
+
+        emptySlot.setStudent(student);
+        emptySlot.setSubject(subject);
+
+        EmptySlotDTO emptySlotDTO = modelMapper.map(emptySlot, EmptySlotDTO.class);
+
+        UserDTO studentDTO = modelMapper.map(student,UserDTO.class);
+        emptySlotDTO.setStudent(studentDTO);
+
+        SubjectResponseDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseDTO.class);
+        emptySlotDTO.setSubject(subjectResponseDTO);
+
+        emptySlotRepository.save(emptySlot);
+
+        return emptySlotDTO;
+    }
+
+    @Override
+    public String deleteBookedSlot(Long bookedSlotId) {
+        emptySlotRepository.deleteById(bookedSlotId);
+        return "This booked slot has been deleted!";
     }
 
 }

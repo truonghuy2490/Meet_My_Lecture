@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MeetingRequestRepository extends JpaRepository<MeetingRequest, Integer> {
+public interface MeetingRequestRepository extends JpaRepository<MeetingRequest, Long> {
 
 }

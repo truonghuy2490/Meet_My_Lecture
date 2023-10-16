@@ -8,13 +8,19 @@ import java.util.List;
 
 public interface UserService {
 
-    UserDTO registerUser(int roleId, User user);
+    UserDTO registerUser(Long roleId, User user);
 
-    List<UserDTO> getUserByEmptySlotId(int slotId);
+    List<UserDTO> getUserByEmptySlotId(Long slotId);
 
-    UserProfileDTO viewProfile(long userId);
+    UserProfileDTO viewProfile(Long userId);
 
-    UserProfileDTO updateProfile(long userId, int majorId, User user);
+    UserProfileDTO updateProfile(Long userId, Long majorId, User user);
+
+    List<String> getAllUsers();
+
+    UserProfileDTO viewProfileByEmail(String email);
+
+    String deleteUser(Long userId);
 
 
 

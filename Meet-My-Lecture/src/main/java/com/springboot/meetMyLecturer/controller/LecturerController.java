@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
+import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
@@ -39,23 +40,13 @@ public class LecturerController {
         return meetingRequestService.getAllRequest();
     }
 
-    // REQUESTS : UPDATE MEETING REQUEST
-    @PutMapping("requests/{id}")
-    public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(
-            @RequestBody MeetingRequestDTO meetingRequestDTO,
-            @PathVariable int id)
-    {
-        MeetingRequestDTO responseRequest = meetingRequestService.updateRequest(meetingRequestDTO, id);
-        return new ResponseEntity<>(responseRequest, HttpStatus.OK);
-    }
-
     // SLOT : GET ALL SLOT
     @GetMapping("slots")
     public List<EmptySlotDTO> getAllEmptySlot(){
         return emptySlotService.getAllEmptySlot();
     }
     @GetMapping("slots/{slotId}/users")
-    public List<UserDTO> getUserByEmptySlotId(@PathVariable(value = "slotId") int slotId){
+    public List<UserDTO> getUserByEmptySlotId(@PathVariable Long slotId){
         return userService.getUserByEmptySlotId(slotId);
     }
 

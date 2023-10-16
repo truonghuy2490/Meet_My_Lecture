@@ -12,4 +12,8 @@ public interface StudentService {
 
     List<EmptySlotDTO> viewBookedSlot(Long userId);
 
+    EmptySlotDTO bookEmptySlot(Long emptySlotId, Long studentId, String subjectId);
+
+    String deleteBookedSlot(Long bookedSlotId);
+
 }

@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface MeetingRequestService {
     List<MeetingRequestDTO> getAllRequest();
-    MeetingRequestDTO updateRequest(MeetingRequestDTO meetingRequestDTO, long id);
+    MeetingRequestDTO updateRequest(MeetingRequest meetingRequest, String subjectId, Long id);
 
-    MeetingRequestDTO createRequest(int studentId, int lecturerId, String subjectId,MeetingRequest meetingRequest);
+    MeetingRequestDTO createRequest(Long studentId, Long lecturerId, String subjectId,MeetingRequest meetingRequest);
 
+    String deleteRequest(Long requestId);
 }
