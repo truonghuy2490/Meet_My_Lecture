@@ -2,7 +2,7 @@ package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.exception.ResourceNoFoundException;
+//import com.springboot.meetMyLecturer.exception.ResourceNoFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -34,18 +34,28 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
     @Override
     public MeetingRequestDTO updateRequest(MeetingRequestDTO meetingRequestDTO, long id) {
-
-        MeetingRequest meetingRequest = meetingRequestRepository.findById(id).orElseThrow(() -> new ResourceNoFoundException("Request Meeting", "id", id));
-
-        meetingRequest.setRequestId(meetingRequestDTO.getRequestId());
-        meetingRequest.setRequestStatus(meetingRequestDTO.getRequestStatus());
-        meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
-
-        MeetingRequest updateRequestMeeting = meetingRequestRepository.save(meetingRequest);
-
-        return modelMapper.map(updateRequestMeeting, MeetingRequestDTO.class);
-
+        return null;
     }
+
+    @Override
+    public MeetingRequestDTO createRequest(int studentId, int lecturerId, String subjectId, MeetingRequest meetingRequest) {
+        return null;
+    }
+
+//    @Override
+//    public MeetingRequestDTO updateRequest(MeetingRequestDTO meetingRequestDTO, long id) {
+//
+//        MeetingRequest meetingRequest = meetingRequestRepository.findById(id).orElseThrow(() -> new ResourceNoFoundException("Request Meeting", "id", id));
+//
+//        meetingRequest.setRequestId(meetingRequestDTO.getRequestId());
+//        meetingRequest.setRequestStatus(meetingRequestDTO.getRequestStatus());
+//        meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
+//
+//        MeetingRequest updateRequestMeeting = meetingRequestRepository.save(meetingRequest);
+//
+//        return modelMapper.map(updateRequestMeeting, MeetingRequestDTO.class);
+//
+//    }
 
     public MeetingRequestDTO mapToDTO(MeetingRequest meetingRequest) {
         return modelMapper.map(meetingRequest, MeetingRequestDTO.class);

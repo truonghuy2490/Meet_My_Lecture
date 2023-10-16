@@ -29,9 +29,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     }
 
     @Override // can fix , vua sua ben controller
-    public EmptySlotDTO creatEmptySlot(Long userId, EmptySlot emptySlot) {
+    public EmptySlotDTO creatEmptySlot(long userId, EmptySlot emptySlot) {
         EmptySlotDTO emptySlotDTO = mapToDTO(emptySlot);
-        User user = userRepository.findUserByUserId(userId);
+        User user = userRepository.findByUserId(userId);
         emptySlot.setLecturer(user);
 
         UserDTO userDTO = new UserDTO();

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface EmptySlotService {
     List<EmptySlotDTO> getAllEmptySlot();
-    EmptySlotDTO creatEmptySlot(Long userId, EmptySlot emptySlot);
+    EmptySlotDTO creatEmptySlot(long userId, EmptySlot emptySlot);
 }

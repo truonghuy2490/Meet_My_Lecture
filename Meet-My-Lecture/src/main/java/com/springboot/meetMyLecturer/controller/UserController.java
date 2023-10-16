@@ -26,7 +26,7 @@ public class UserController {
 
 
     @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam long id){
+    public ResponseEntity<?> deleteUser(@RequestParam int id){
         userRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

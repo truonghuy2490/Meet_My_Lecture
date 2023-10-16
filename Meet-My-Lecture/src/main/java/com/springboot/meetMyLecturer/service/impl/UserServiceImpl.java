@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileDTO viewProfile(long userId) {
-        User user = userRepository.findUserByUserId(userId);
+        User user = userRepository.findByUserId(userId);
 
         UserProfileDTO userDTO = modelMapper.map(user, UserProfileDTO.class);
         MajorProfileDTO majorProfileDTO = modelMapper.map(user.getMajor(),MajorProfileDTO.class);
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileDTO updateProfile(long userId, int majorId, User userUpdate) {
-        User user = userRepository.findUserByUserId(userId);
+        User user = userRepository.findByUserId(userId);
         Major major = majorRepository.findMajorByMajorId(majorId);
 
         user.setMajor(userUpdate.getMajor());
