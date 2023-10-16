@@ -90,7 +90,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     @Override
     public List<MeetingRequestDTO> getAllRequestByUserId(Long userId) {
 
-        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findAll();
+        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findMeetingRequestByStudent_UserId(userId);
 
         List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestList.stream().map(
                 meetingRequest -> {

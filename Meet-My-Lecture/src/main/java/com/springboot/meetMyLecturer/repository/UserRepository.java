@@ -18,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.userName from User u join Role r on r.roleId = u.role.roleId and r.roleName !='Admin' ")
     List<String> findUserNotAdmin();
 
+    List<User> findUsersByEmail(String email);
 
 
 }

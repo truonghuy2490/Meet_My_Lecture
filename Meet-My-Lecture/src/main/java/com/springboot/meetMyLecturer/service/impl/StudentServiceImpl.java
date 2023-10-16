@@ -55,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
     //student view booked slots
     @Override
     public List<EmptySlotDTO> viewBookedSlot(Long userId) {
-        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByUser_UserId(userId);
+        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByStudent_UserId(userId);
 
         List<EmptySlotDTO> emptySlotDTOList = emptySlotList.stream().map(
                 emptySlot -> {

@@ -27,6 +27,11 @@ public class AdminController {
         return new ResponseEntity<>(userDTOList, HttpStatus.FOUND);
     }
 
+    @GetMapping("/user-account")
+    public ResponseEntity<List<String>> getUserAccount(@RequestParam String userName){
+    return null;
+    }
+
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserProfileDTO> viewProfileUserByUserId(@PathVariable Long userId){
         UserProfileDTO userDTO = userService.viewProfileByUserId(userId);
