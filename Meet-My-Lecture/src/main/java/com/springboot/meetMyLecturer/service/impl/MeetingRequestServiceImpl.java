@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,9 +48,8 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
                 () -> new ResourceNotFoundException("Subject", "id", subjectId)
         );
 
-        LocalDateTime localDateTime = LocalDateTime.now();
-        LocalDate localDate = localDateTime.toLocalDate();
-        java.sql.Date date = java.sql.Date.valueOf(localDate);
+        Date currentDate = new Date();
+        java.sql.Date date = new java.sql.Date(currentDate.getTime());
 
         meetingRequest.setSubject(subject);
         meetingRequest.setStudent(student);
@@ -60,15 +60,6 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequestRepository.save(meetingRequest);
 
         MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest,MeetingRequestDTO.class);
-
-        UserDTO lecturerDTO = modelMapper.map(lecturer,UserDTO.class);
-        UserDTO studentDTO = modelMapper.map(student,UserDTO.class);
-        SubjectResponseDTO subjectDTO = modelMapper.map(subject, SubjectResponseDTO.class);
-
-        meetingRequestDTO.setLecturer(lecturerDTO);
-        meetingRequestDTO.setStudent(studentDTO);
-        meetingRequestDTO.setSubject(subjectDTO);
-        meetingRequestDTO.setRequestStatus(meetingRequest.getRequestStatus());
 
         return meetingRequestDTO;
     }
@@ -82,7 +73,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
     //lecturer get all requests
     @Override
-    public List<MeetingRequestDTO> getAllRequest() {
+    public List<MeetingRequestDTO> getAllRequestByUserId(Long userId) {
 
         List<MeetingRequest> meetingRequestList = meetingRequestRepository.findAll();
 
@@ -107,6 +98,21 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     }
 
     @Override
+    public List<MeetingRequestDTO> getAllRequests() {
+        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findAll();
+        if(meetingRequestList.isEmpty()){
+            throw new RuntimeException("There are no meeting requests!");
+        }
+        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestList.stream().map(
+                meetingRequest -> {
+                    MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest, MeetingRequestDTO.class);
+                    return meetingRequestDTO;
+                }
+        ).collect(Collectors.toList());
+        return meetingRequestDTOList;
+    }
+
+    @Override
     public MeetingRequestDTO updateRequest(MeetingRequest meetingRequest, String subjectId, Long requestId)
     {
         MeetingRequest meetingRequestDB = meetingRequestRepository.findById(requestId).orElseThrow(
@@ -124,7 +130,6 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequestDB,MeetingRequestDTO.class);
 
         SubjectResponseDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseDTO.class);
-        meetingRequestDTO.setSubject(subjectResponseDTO);
 
         return meetingRequestDTO;
     }

@@ -18,7 +18,7 @@ public interface UserService {
 
     List<String> getAllUsers();
 
-    UserProfileDTO viewProfileByEmail(String email);
+    UserProfileDTO viewProfileByUserId(Long userId);
 
     String deleteUser(Long userId);
 
