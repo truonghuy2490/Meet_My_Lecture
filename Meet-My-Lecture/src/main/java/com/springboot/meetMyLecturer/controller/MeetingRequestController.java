@@ -47,5 +47,13 @@ public class MeetingRequestController {
                 return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
+    @PutMapping("lecturer/{requestId}")
+    public ResponseEntity<MeetingRequestDTO> processRequest(
+            @RequestBody MeetingRequest meetingRequest,
+            @PathVariable Long requestId)
+    {
+        MeetingRequestDTO meetingRequestDTO = meetingRequestService.processRequest(meetingRequest, requestId);
+        return new ResponseEntity<>(meetingRequestDTO, HttpStatus.OK);
+    }
 
 }

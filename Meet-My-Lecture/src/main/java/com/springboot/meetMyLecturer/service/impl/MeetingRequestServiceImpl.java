@@ -81,10 +81,10 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     }
     // TRUOC KHI ASSIGN
     @Override
-    public MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long id) {
+    public MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long requestId) {
         MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest, MeetingRequestDTO.class);
-        MeetingRequest meetingRequestDB = meetingRequestRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(id))
+        MeetingRequest meetingRequestDB = meetingRequestRepository.findById(requestId).orElseThrow(
+                () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(requestId))
         );
         // SET STATUS
         meetingRequestDB.setRequestStatus(meetingRequestDTO.getRequestStatus());

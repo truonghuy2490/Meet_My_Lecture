@@ -14,5 +14,5 @@ public interface MeetingRequestService {
 
     String deleteRequest(Long requestId);
 
-    MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long id);
+    MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long requestId);
 }
