@@ -26,5 +26,8 @@ public class EmptySlotDTO {
     private UserDTO student;
 
     private UserDTO lecturer;
+
+    private MeetingRequestDTO request;
+
     private SubjectResponseDTO subject;
 }

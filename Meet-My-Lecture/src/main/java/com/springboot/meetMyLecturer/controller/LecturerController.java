@@ -34,23 +34,11 @@ public class LecturerController {
     @Autowired
     UserService userService;
 
-    // SLOT : GET ALL SLOT
-    @GetMapping("slots")
-    public List<EmptySlotDTO> getAllEmptySlot(){
-        return emptySlotService.getAllEmptySlot();
-    }
-    @GetMapping("slots/{slotId}/users")
-    public List<UserDTO> getUserByEmptySlotId(@PathVariable Long slotId){
-        return userService.getUserByEmptySlotId(slotId);
+    // REQUESTS : GET ALL MEETING REQUESTS
+    @GetMapping("requests")
+    public List<MeetingRequestDTO> getAllRequestsMeeting (){
+        return meetingRequestService.getAllRequest();
     }
 
-    // SLOT : CREATE EMPTY SLOT
-    @PostMapping("slots/{userId}/users")
-    public ResponseEntity<EmptySlotDTO> createEmptySlot(@PathVariable(value = "userId") Long userId,
-                                                        @RequestBody EmptySlot emptySlot) {
 
-        EmptySlotDTO emptySlotDTO = emptySlotService.creatEmptySlot(userId, emptySlot);
-
-        return ResponseEntity.ok(emptySlotDTO);
-    }
 }

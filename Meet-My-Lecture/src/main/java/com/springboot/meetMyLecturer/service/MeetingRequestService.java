@@ -15,4 +15,6 @@ public interface MeetingRequestService {
     MeetingRequestDTO createRequest(Long studentId, Long lecturerId, String subjectId,MeetingRequest meetingRequest);
 
     String deleteRequest(Long requestId);
+
+    MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long requestId);
 }

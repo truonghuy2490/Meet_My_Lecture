@@ -1,14 +1,19 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
+import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
+import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +21,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class EmptySlotServiceImpl implements EmptySlotService {
+    @Autowired
+    ModelMapper mapper;
 
     @Autowired
     EmptySlotRepository emptySlotRepository;
@@ -23,62 +30,53 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    MeetingRequestRepository meetingRequestRepository;
+
     @Override
     public List<EmptySlotDTO> getAllEmptySlot() {
         List<EmptySlot> emptySlots = emptySlotRepository.findAll();
-        return emptySlots.stream().map(emptySlot -> mapToDTO(emptySlot)).collect(Collectors.toList());
+        return emptySlots.stream().map(emptySlot -> mapper.map(emptySlot, EmptySlotDTO.class)).collect(Collectors.toList());
     }
 
-    @Override // can fix , vua sua ben controller
-    public EmptySlotDTO creatEmptySlot(Long userId, EmptySlot emptySlot) {
-        EmptySlotDTO emptySlotDTO = mapToDTO(emptySlot);
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
+    @Override
+    public EmptySlotDTO creatEmptySlot(Long lecturerId, EmptySlot emptySlot) {
+
+        EmptySlotDTO emptySlotDTO = mapper.map(emptySlot, EmptySlotDTO.class);
+        User user = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", String.valueOf(lecturerId))
         );
         emptySlot.setLecturer(user);
 
-        UserDTO userDTO = new UserDTO();
+        UserDTO userDTO = mapper.map(user, UserDTO.class);
 
-        userDTO.setUserId(userId);
         emptySlotDTO.setLecturer(userDTO);
+        emptySlotDTO.setStatus("Open");
 
-//        EmptySlot slot = mapToEntity(emptySlotDTO);
-//
-        EmptySlot newEmptySlot = emptySlotRepository.save(emptySlot);
-//
-//        EmptySlotDTO responeseEmptySlotDTO = mapToDTO(newEmptySlot);
+        EmptySlot newEmptySlot = emptySlotRepository.save(mapper.map(emptySlotDTO, EmptySlot.class));
 
-        return emptySlotDTO;
+        return mapper.map(newEmptySlot, EmptySlotDTO.class);
 
     }
-    // convert entity to DTO
-    public EmptySlotDTO mapToDTO(EmptySlot emptySlot) {
-        EmptySlotDTO emptySlotDTO = new EmptySlotDTO();
-        emptySlotDTO.setSlotId(emptySlot.getSlotId());
-        emptySlotDTO.setTimeStart(emptySlot.getTimeStart());
-        emptySlotDTO.setDuration(emptySlot.getDuration());
-        emptySlotDTO.setDateStart(emptySlot.getDateStart());
-        emptySlotDTO.setBookedDate(emptySlot.getBookedDate());
-        emptySlotDTO.setStatus(emptySlot.getStatus());
-        emptySlotDTO.setDescription(emptySlot.getDescription());
-        emptySlotDTO.setRoomId(emptySlot.getRoomId());
 
-        return emptySlotDTO;
-    }
-    // convert DTO to entity
-    public EmptySlot mapToEntity(EmptySlotDTO emptySlotDTO) {
-        EmptySlot emptySlot = new EmptySlot();
+    @Override
+    public EmptySlotDTO assignRequestToSlot(Long meetingRequestId, Long slotId) {
+       EmptySlot emptySlot = emptySlotRepository.findById(slotId).orElseThrow(
+               () -> new ResourceNotFoundException("Empty", "id", String.valueOf(slotId))
+       );
+       EmptySlotDTO emptySlotDTO = mapper.map(emptySlot, EmptySlotDTO.class);
+       MeetingRequest meetingRequest = meetingRequestRepository.findById(meetingRequestId).orElseThrow(
+               () -> new ResourceNotFoundException("Meeting Request", "id", String.valueOf(meetingRequestId))
+       );
+        MeetingRequestDTO meetingRequestDTO = mapper.map(meetingRequest, MeetingRequestDTO.class);
 
-        emptySlot.setSlotId(emptySlotDTO.getSlotId());
-        emptySlot.setTimeStart(emptySlotDTO.getTimeStart());
-        emptySlot.setDuration(emptySlotDTO.getDuration());
-        emptySlot.setDateStart(emptySlotDTO.getDateStart());
-        emptySlot.setBookedDate(emptySlotDTO.getBookedDate());
-        emptySlot.setStatus(emptySlotDTO.getStatus());
-        emptySlot.setDescription(emptySlotDTO.getDescription());
-        emptySlot.setRoomId(emptySlotDTO.getRoomId());
+       emptySlotDTO.setStudent(meetingRequestDTO.getStudent());
+       emptySlotDTO.setRequest(meetingRequestDTO);
+       emptySlotDTO.setSubject(meetingRequestDTO.getSubject());
 
-        return emptySlot;
+       emptySlotRepository.save(mapper.map(emptySlotDTO, EmptySlot.class));
+       return emptySlotDTO;
     }
 
+    // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
 }

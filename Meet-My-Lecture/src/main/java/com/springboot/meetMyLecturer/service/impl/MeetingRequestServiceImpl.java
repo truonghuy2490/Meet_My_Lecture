@@ -70,6 +70,21 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequestRepository.deleteById(requestId);
         return "This meeting request has been deleted!";
     }
+    // TRUOC KHI ASSIGN
+    @Override
+    public MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long requestId) {
+        MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest, MeetingRequestDTO.class);
+        MeetingRequest meetingRequestDB = meetingRequestRepository.findById(requestId).orElseThrow(
+                () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(requestId))
+        );
+        // SET STATUS
+        meetingRequestDB.setRequestStatus(meetingRequestDTO.getRequestStatus());
+
+        MeetingRequest responseRequest = meetingRequestRepository.save(modelMapper.map(meetingRequestDB, MeetingRequest.class));
+
+        return modelMapper.map(responseRequest, MeetingRequestDTO.class);
+    }
+    // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
 
     //lecturer get all requests
     @Override
