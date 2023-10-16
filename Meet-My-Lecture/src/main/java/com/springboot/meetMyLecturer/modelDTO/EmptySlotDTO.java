@@ -1,12 +1,9 @@
 package com.springboot.meetMyLecturer.modelDTO;
 
-import com.springboot.meetMyLecturer.entity.*;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.Set;
 
 @Data
 public class EmptySlotDTO {
@@ -29,4 +26,5 @@ public class EmptySlotDTO {
     private UserDTO student;
 
     private UserDTO lecturer;
+    private SubjectResponseDTO subject;
 }

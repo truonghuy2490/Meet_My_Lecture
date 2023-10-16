@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
@@ -31,7 +32,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     @Override // can fix , vua sua ben controller
     public EmptySlotDTO creatEmptySlot(Long userId, EmptySlot emptySlot) {
         EmptySlotDTO emptySlotDTO = mapToDTO(emptySlot);
-        User user = userRepository.findUserByUserId(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
+        );
         emptySlot.setLecturer(user);
 
         UserDTO userDTO = new UserDTO();

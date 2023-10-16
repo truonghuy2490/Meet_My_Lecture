@@ -28,6 +28,24 @@ public class StudentController {
             return new ResponseEntity<>(emptySlotDTOList,HttpStatus.FOUND);
     }
 
+    @PutMapping("/emptySlot/{emptySlotId}/student/{studentId}/subject/{subjectId}")
+    public ResponseEntity<EmptySlotDTO> bookEmptySlot(@PathVariable Long emptySlotId,
+                                                      @PathVariable Long studentId,
+                                                      @PathVariable String subjectId){
+        EmptySlotDTO emptySlotDTO = studentService.bookEmptySlot(emptySlotId, studentId, subjectId);
+
+        return new ResponseEntity<>(emptySlotDTO,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/bookedSlot/{bookedSlotId}")
+    public ResponseEntity<String> deleteBookedSlot (@PathVariable Long bookedSlotId){
+        String result = studentService.deleteBookedSlot(bookedSlotId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+
+
+
 
 
 

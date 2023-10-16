@@ -25,27 +25,21 @@ public class UserController {
     public RoleRepository roleRepository;
 
 
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam long id){
-        userRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/register/{roleId}")
-    public ResponseEntity<UserDTO> registerUser (@PathVariable(value = "roleId") int roleId, @RequestBody User userRegister){
+    public ResponseEntity<UserDTO> registerUser (@PathVariable Long roleId, @RequestBody User userRegister){
+        UserDTO userDTO = userService.registerUser(roleId,userRegister);
 
-
-        return new  ResponseEntity<>(userService.registerUser(roleId,userRegister), HttpStatus.CREATED);
+        return new  ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<UserProfileDTO> viewProfile(@PathVariable long userId){
+    public ResponseEntity<?> viewProfile(@PathVariable long userId){
         UserProfileDTO userDTO = userService.viewProfile(userId);
         return new ResponseEntity<>(userDTO, HttpStatus.FOUND);
     }
 
     @PutMapping("profile/{userId}/major/{majorId}")
-    public ResponseEntity<UserProfileDTO> editProfile(@PathVariable long userId,@PathVariable int majorId, @RequestBody User user){
+    public ResponseEntity<UserProfileDTO> editProfile(@PathVariable Long userId,@PathVariable Long majorId, @RequestBody User user){
         UserProfileDTO userProfileDTO = userService.updateProfile(userId,majorId, user);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }

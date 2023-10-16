@@ -69,10 +69,10 @@ public class User {
     private Set<Subject> subjectSet;
 
     @OneToMany(mappedBy = "student")
-    private Set<SubjectLecturerStudent> subjectLecturerStudentSet1;
+    private Set<SubjectLecturerStudent> subjectLecturerStudentStuSet;
 
     @OneToMany(mappedBy = "lecturer")
-    private Set<SubjectLecturerStudent> subjectLecturerStudentSet2;
+    private Set<SubjectLecturerStudent> subjectLecturerStudentLecSet;
 
 
 }

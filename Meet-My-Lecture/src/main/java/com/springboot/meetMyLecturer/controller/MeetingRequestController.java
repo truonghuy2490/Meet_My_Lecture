@@ -16,14 +16,19 @@ public class MeetingRequestController {
     @Autowired
     MeetingRequestServiceImpl meetingRequestService;
 
-    @PutMapping
-    public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(){
-        return null;
+    @PutMapping("/{requestId}/subject/{subjectId}")
+    public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(@PathVariable Long requestId,
+                                                                  @PathVariable String subjectId,
+                                                                  @RequestBody MeetingRequest meetingRequest)
+    {
+        MeetingRequestDTO meetingRequestDTO = meetingRequestService.updateRequest(meetingRequest, subjectId, requestId);
+
+        return new ResponseEntity<>(meetingRequestDTO,HttpStatus.OK);
     }
 
     @PostMapping("student/{studentId}/lecturer/{lecturerId}/subject/{subjectId}")
-    public ResponseEntity<MeetingRequestDTO> createRequest(@PathVariable int studentId,
-                                                           @PathVariable int lecturerId,
+    public ResponseEntity<MeetingRequestDTO> createRequest(@PathVariable Long studentId,
+                                                           @PathVariable Long lecturerId,
                                                            @PathVariable String subjectId
             ,@RequestBody MeetingRequest meetingRequest){
             MeetingRequestDTO meetingRequestDTO = meetingRequestService.createRequest(studentId,lecturerId,subjectId,meetingRequest);
@@ -34,6 +39,12 @@ public class MeetingRequestController {
     public ResponseEntity<List<MeetingRequestDTO>> getAllRequest(){
         List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequest();
         return new ResponseEntity<>(meetingRequestDTOList,HttpStatus.FOUND);
+    }
+
+    @DeleteMapping("/{requestId}")
+    public ResponseEntity<String> deleteRequest(@PathVariable Long requestId){
+        String result = meetingRequestService.deleteRequest(requestId);
+                return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
 

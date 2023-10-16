@@ -21,9 +21,6 @@ public class EmptySlot {
     @Column(name = "slot_id")
     private int slotId;
 
-//    @OneToMany(mappedBy = "emptySlot", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<User> users = new HashSet<>();
-
     @ManyToOne(optional = true)
     @JoinColumn(name = "lecturer_id", nullable = false)
     private User lecturer;
@@ -64,6 +61,6 @@ public class EmptySlot {
 
     private Date bookedDate;
 
-    private int code;
+    private Integer code;
 
 }
