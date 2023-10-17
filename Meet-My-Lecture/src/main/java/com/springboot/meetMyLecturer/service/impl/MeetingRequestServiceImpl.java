@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.exception.GlobalExceptionHandler;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.*;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
@@ -11,6 +12,7 @@ import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -83,6 +85,23 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         MeetingRequest responseRequest = meetingRequestRepository.save(modelMapper.map(meetingRequestDB, MeetingRequest.class));
 
         return modelMapper.map(responseRequest, MeetingRequestDTO.class);
+    }
+
+    @Override
+    public List<MeetingRequestDTO> getRequestByUserId(Long lecturerId) {
+        User user = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", String.valueOf(lecturerId))
+        );
+        List<MeetingRequest> requestList = meetingRequestRepository.findMeetingRequestByLecturerUserId(lecturerId);
+        if(requestList.isEmpty()){
+            throw new RuntimeException("There are no request");
+        }
+
+        return requestList.stream().map(
+                meetingRequest -> modelMapper.map(
+                        meetingRequest, MeetingRequestDTO.class
+                )
+        ).collect(Collectors.toList());
     }
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
 

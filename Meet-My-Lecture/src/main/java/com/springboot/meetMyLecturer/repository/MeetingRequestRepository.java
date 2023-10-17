@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface MeetingRequestRepository extends JpaRepository<MeetingRequest, Long> {
+    List<MeetingRequest> findMeetingRequestByLecturerUserId(Long lecturerID);
 
     List<MeetingRequest> findMeetingRequestByStudent_UserId(Long userId);
 
