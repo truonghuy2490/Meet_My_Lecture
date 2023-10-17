@@ -35,10 +35,10 @@ public class LecturerController {
     UserService userService;
 
     // REQUESTS : GET ALL MEETING REQUESTS
-    @GetMapping("requests")
+    /*@GetMapping("requests")
     public List<MeetingRequestDTO> getAllRequestsMeeting (){
         return meetingRequestService.getAllRequest();
-    }
+    }*/
 
 
 }
