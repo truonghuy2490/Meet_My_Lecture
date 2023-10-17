@@ -18,12 +18,13 @@ public class TeachingSchedule {
     private int teachingScheduleId;
 
     @ManyToOne
-    @JoinColumn(name = "lecturer_id", nullable = false)
+    @JoinColumn(name = "lecturer_id")
     private User lecturer;
 
     @ManyToOne
     @JoinColumn(name = "subject", nullable = false)
     private Subject subject;
+
     // moi add ne
     @Column(name = "date_of_week")
     private String dateOfWeek;

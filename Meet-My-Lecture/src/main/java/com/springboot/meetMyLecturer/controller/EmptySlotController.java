@@ -24,20 +24,23 @@ public class EmptySlotController {
 
 
 
-    // SLOT : GET ALL SLOT
     @GetMapping("")
     public List<EmptySlotDTO> getAllEmptySlot(){
         return slotService.getAllEmptySlot();
     }
-//    @GetMapping("lecturer/{slotId}") // get slot by userID
-//    public List<UserDTO> getUserByEmptySlotId(@PathVariable Long slotId){
-//        return userService.getUserByEmptySlotId(slotId);
-//    }
 
-    // SLOT : CREATE EMPTY SLOT
+    @GetMapping("lecturer/{lecturerId}")
+    public List<EmptySlotDTO> getAllEmptySlotByUserId(
+            @PathVariable Long lecturerId
+    ){
+        return slotService.getAllEmptySlotByUserId(lecturerId);
+    }
+
     @PostMapping("lecturer/{lecturerId}")
-    public ResponseEntity<EmptySlotDTO> createEmptySlot(@PathVariable Long lecturerId,
-                                                        @RequestBody EmptySlot emptySlot) {
+    public ResponseEntity<EmptySlotDTO> createEmptySlot(
+            @PathVariable Long lecturerId,
+            @RequestBody EmptySlot emptySlot
+    ) {
 
         EmptySlotDTO emptySlotDTO = slotService.creatEmptySlot(lecturerId, emptySlot);
 
@@ -54,10 +57,5 @@ public class EmptySlotController {
         EmptySlotDTO emptySlotDTO = slotService.assignRequestToSlot(requestId, slotId);
         return new ResponseEntity<>(emptySlotDTO, HttpStatus.OK);
     }
-    @GetMapping("lecturer/{lecturerId}")
-    public List<EmptySlotDTO> getAllEmptySlotByUserId(
-            @PathVariable Long lecturerId
-    ){
-        return slotService.getAllEmptySlotByUserId(lecturerId);
-    }
+
 }

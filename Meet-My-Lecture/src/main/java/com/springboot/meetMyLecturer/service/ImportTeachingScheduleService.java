@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ImportTeachingScheduleService {
     List<TeachingScheduleDTO> getTeachingScheduleByLectureId(Long lecturerId);
-    TeachingScheduleDTO createTeachingSchedule(TeachingSchedule teachingSchedule, Long lecturerId, String subjectId);
+    TeachingScheduleDTO createTeachingSchedule(TeachingSchedule teachingSchedule, Long lecturerId);
 }

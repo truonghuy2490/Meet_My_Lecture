@@ -8,15 +8,16 @@ import java.sql.Time;
 
 @Data
 public class TeachingScheduleDTO {
-    private int id;
+
+    private int teachingScheduleId;
 
     private String dateOfWeek;
 
-    private UserDTO lecture;
+    private UserDTO lecturer;
 
     private SubjectDTO subject;
 
-    private int room;
+    private int roomId;
 
     private String meetingURL;
 

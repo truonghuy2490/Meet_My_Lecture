@@ -11,29 +11,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/teaching-schedule")
+@RequestMapping("api/v1/schedule")
 public class TeachingScheduleController {
     @Autowired
     ImportTeachingScheduleService importTeachingScheduleService;
 
     @GetMapping("lecturer/{lecturerId}")
     public List<TeachingScheduleDTO> getTeachingScheduleByLectureId(
-            @PathVariable Long lecturerId)
+            @PathVariable Long lecturerId
+    )
     {
         return importTeachingScheduleService.getTeachingScheduleByLectureId(lecturerId);
     }
 
-    @PostMapping("lecturer/{lecturerId}/subject/{subjectId}")
+    @PostMapping("lecturer/{lecturerId}")
     public ResponseEntity<TeachingScheduleDTO> createTeachingScheduleByLecId(
             @PathVariable Long lecturerId,
-            @PathVariable String subjectId,
             @RequestBody TeachingSchedule teachingSchedule
     )
     {
         TeachingScheduleDTO teachingScheduleDTO = importTeachingScheduleService.createTeachingSchedule(
                 teachingSchedule,
-                lecturerId,
-                subjectId
+                lecturerId
         );
         return new ResponseEntity<>(teachingScheduleDTO, HttpStatus.CREATED);
     }
