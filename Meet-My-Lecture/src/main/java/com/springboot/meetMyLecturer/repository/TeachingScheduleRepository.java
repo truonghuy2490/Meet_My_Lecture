@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface TeachingScheduleRepository extends JpaRepository<TeachingSchedule, Long> {
-    List<TeachingSchedule> getTeachingScheduleByLecturer_UserId(Long lecturerId);
+
+    List<TeachingSchedule> getTeachingScheduleListByLecturer_UserId(Long lecturerId);
 }
