@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
-import java.util.Date;
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -16,22 +13,26 @@ import java.util.Date;
 public class TeachingSchedule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "teaching_schedule_id")
     private int teachingScheduleId;
 
     @ManyToOne
-    @JoinColumn(name = "lecturer_id", nullable = false)
+    @JoinColumn(name = "lecturer_id")
     private User lecturer;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false)
+    @JoinColumn(name = "subject", nullable = false)
     private Subject subject;
+
+    // moi add ne
+    @Column(name = "date_of_week")
+    private String dateOfWeek;
 
     private int roomId;
 
-    private Date date;
-
-    private Time time;
+    @ManyToOne
+    @JoinColumn(name = "slot_id", nullable = false)
+    private Slot slot;
 
 }
