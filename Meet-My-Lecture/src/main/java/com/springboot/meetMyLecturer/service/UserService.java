@@ -2,15 +2,26 @@ package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.modelDTO.UserProfileDTO;
 
 import java.util.List;
 
 public interface UserService {
 
-    UserDTO registerUser(int roleId, User user);
-
-    List<UserDTO> searchLecturers(String name);
+    UserDTO registerUser(Long roleId, User user);
 
     List<UserDTO> getUserByEmptySlotId(Long slotId);
+
+    UserProfileDTO viewProfile(Long userId);
+
+    UserProfileDTO updateProfile(Long userId, Long majorId, User user);
+
+    List<String> getAllUsers();
+
+    UserProfileDTO viewProfileByUserId(Long userId);
+
+    String deleteUser(Long userId);
+
+
 
 }

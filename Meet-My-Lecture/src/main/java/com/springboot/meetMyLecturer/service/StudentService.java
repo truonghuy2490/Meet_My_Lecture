@@ -1,12 +1,19 @@
 package com.springboot.meetMyLecturer.service;
 
-import com.springboot.meetMyLecturer.entity.Subject;
+
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 
 import java.util.List;
 
 public interface StudentService {
 
-    List<UserDTO> getAllStudent();
+    List<UserDTO> searchLecturers (String name);
+
+    List<EmptySlotDTO> viewBookedSlot(Long userId);
+
+    EmptySlotDTO bookEmptySlot(Long emptySlotId, Long studentId, String subjectId);
+
+    String deleteBookedSlot(Long bookedSlotId);
 
 }
