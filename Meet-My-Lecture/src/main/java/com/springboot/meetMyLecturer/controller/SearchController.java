@@ -40,7 +40,7 @@ public class SearchController {
         }
     }
 
-    @GetMapping("/subject/{id}")
+    @GetMapping("/subject/lecturer/{id}")
     public ResponseEntity<List<SubjectResponseDTO>> getSubjectByLecturerId (@PathVariable Long id){
         List<SubjectResponseDTO> subjectResponseDTOS = subjectService.getSubjectByLecturerId(id);
         return new ResponseEntity<>(subjectResponseDTOS,HttpStatus.FOUND);

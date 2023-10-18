@@ -33,11 +33,11 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     @Autowired
     MeetingRequestRepository meetingRequestRepository;
 
-//    @Override
-//    public List<EmptySlotDTO> getAllEmptySlot() {
-//        List<EmptySlot> emptySlots = emptySlotRepository.findAll();
-//        return emptySlots.stream().map(emptySlot -> mapper.map(emptySlot, EmptySlotDTO.class)).collect(Collectors.toList());
-//    }
+    @Override
+    public List<EmptySlotDTO> getAllEmptySlot() {
+        List<EmptySlot> emptySlots = emptySlotRepository.findAll();
+        return emptySlots.stream().map(emptySlot -> mapper.map(emptySlot, EmptySlotDTO.class)).collect(Collectors.toList());
+    }
 
     @Override
     public List<EmptySlotDTO> getAllEmptySlotByUserId(Long userId) {
