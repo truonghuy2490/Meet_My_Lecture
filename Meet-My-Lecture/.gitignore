@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore application properties files with sensitive data
+.mvn
+.gitignore
+Meet-My-Lecture.iml
+mvnw.cmd
+
+/src/main/resources
