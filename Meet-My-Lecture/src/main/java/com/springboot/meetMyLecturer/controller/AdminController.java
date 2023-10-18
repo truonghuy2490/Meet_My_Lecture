@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/admin")
 public class AdminController {
 
+
     @Autowired
     UserServiceImpl userService;
 
@@ -49,5 +50,6 @@ public class AdminController {
         List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequests();
         return new ResponseEntity<>(meetingRequestDTOList, HttpStatus.FOUND);
     }
+
 
 }

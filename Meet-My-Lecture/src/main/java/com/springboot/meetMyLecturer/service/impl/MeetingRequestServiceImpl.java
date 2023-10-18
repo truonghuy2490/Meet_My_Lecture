@@ -88,6 +88,11 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     }
 
     @Override
+
+    public List<MeetingRequestDTO> getAllRequest() {
+        List<MeetingRequest> meetingRequests = meetingRequestRepository.findAll();
+        return meetingRequests.stream().map(meetingRequest -> mapToDTO(meetingRequest)).collect(Collectors.toList());
+
     public List<MeetingRequestDTO> getRequestByUserId(Long lecturerId) {
         User user = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(lecturerId))
@@ -102,6 +107,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
                         meetingRequest, MeetingRequestDTO.class
                 )
         ).collect(Collectors.toList());
+
     }
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
 
@@ -121,9 +127,12 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
                     UserDTO lecturerDTO = modelMapper.map(meetingRequest.getLecturer(),UserDTO.class);
                     SubjectResponseDTO subjectDTO = modelMapper.map(meetingRequest.getSubject(), SubjectResponseDTO.class);
 
+
+
                     dto.setStudent(studentDTO);
                     dto.setLecturer(lecturerDTO);
                     dto.setSubject(subjectDTO);
+
 
                     return dto;
                 }).collect(Collectors.toList());

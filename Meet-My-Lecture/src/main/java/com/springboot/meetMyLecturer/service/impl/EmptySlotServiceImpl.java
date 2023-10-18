@@ -60,6 +60,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         User user = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(lecturerId))
         );
+
         emptySlot.setLecturer(user);
 
         UserDTO userDTO = mapper.map(user, UserDTO.class);
@@ -90,6 +91,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
        emptySlotRepository.save(mapper.map(emptySlotDTO, EmptySlot.class));
        return emptySlotDTO;
+
     }
 
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
