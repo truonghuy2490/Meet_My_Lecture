@@ -11,7 +11,7 @@ import java.util.List;
 public interface EmptySlotRepository extends JpaRepository<EmptySlot, Long> {
 
     @Query("select e from EmptySlot e where e.student.userId = :userId")
-    List<EmptySlot> findEmptySlotsByUser_UserId(Long userId);
+    List<EmptySlot> findEmptySlotsByStudent_UserId(Long userId);
 
 
 }
