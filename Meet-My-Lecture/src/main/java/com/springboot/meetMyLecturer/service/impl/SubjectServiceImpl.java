@@ -28,7 +28,7 @@ public class SubjectServiceImpl implements SubjectService {
     UserRepository userRepository;
 
 
-    // search subject by name
+    // search subject by subject name
     @Override
     public List<SubjectDTO> searchSubject(String keyword) {
         List<Subject> subjects = subjectRepository.findSubjectBySubjectIdContains(keyword);

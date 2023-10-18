@@ -31,5 +31,11 @@ public class LecturerController {
     @Autowired
     UserService userService;
 
-    
+    // REQUESTS : GET ALL MEETING REQUESTS
+    /*@GetMapping("requests")
+    public List<MeetingRequestDTO> getAllRequestsMeeting (){
+        return meetingRequestService.getAllRequest();
+    }*/
+
+
 }
