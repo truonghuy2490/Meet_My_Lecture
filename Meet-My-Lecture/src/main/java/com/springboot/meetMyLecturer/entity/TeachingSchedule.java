@@ -22,7 +22,7 @@ public class TeachingSchedule {
     private User lecturer;
 
     @ManyToOne
-    @JoinColumn(name = "subject", nullable = false)
+    @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
     // moi add ne

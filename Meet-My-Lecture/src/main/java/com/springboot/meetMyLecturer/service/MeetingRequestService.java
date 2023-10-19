@@ -10,11 +10,11 @@ public interface MeetingRequestService {
     List<MeetingRequestDTO> getAllRequestByUserId(Long userId);
 
     List<MeetingRequestDTO> getAllRequests();
-    MeetingRequestDTO updateRequest(MeetingRequest meetingRequest, String subjectId, Long id);
+    MeetingRequestDTO updateRequest(String requestContent, String subjectId, Long id);
 
-    MeetingRequestDTO createRequest(Long studentId, Long lecturerId, String subjectId,MeetingRequest meetingRequest);
+    MeetingRequestDTO createRequest(Long studentId, Long lecturerId, String subjectId,String requestContent);
 
-    String deleteRequest(Long requestId);
+    String deleteRequest(Long requestId, Long studentId);
 
     MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long requestId);
 

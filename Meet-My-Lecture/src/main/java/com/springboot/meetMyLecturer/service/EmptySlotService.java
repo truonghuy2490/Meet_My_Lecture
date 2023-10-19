@@ -1,17 +1,15 @@
 package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
-import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
 
 import java.util.List;
 
 public interface EmptySlotService {
 //    List<EmptySlotDTO> getAllEmptySlot(); // dung de test thoi
 
-    List<EmptySlotDTO> getAllEmptySlotByUserId(Long userId);
+    List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(Long userId);
 
-    EmptySlotDTO creatEmptySlot(Long lectureId, EmptySlot emptySlot);
-    EmptySlotDTO assignRequestToSlot(Long meetingRequestId, Long slotId);
+    BookedSlotHomePageDTO creatEmptySlot(Long lectureId, EmptySlot emptySlot);
+    BookedSlotHomePageDTO assignRequestToSlot(Long meetingRequestId, Long slotId);
 }

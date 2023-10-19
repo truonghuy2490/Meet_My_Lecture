@@ -28,33 +28,23 @@ public class SubjectServiceImpl implements SubjectService {
     UserRepository userRepository;
 
 
-    // search subject by subject name
+    // search subject by subject Id DONE
     @Override
     public List<SubjectDTO> searchSubject(String keyword) {
         List<Subject> subjects = subjectRepository.findSubjectBySubjectIdContains(keyword);
-        Set<User> users = subjects.stream()
-                .flatMap(subject -> subject.getUserSet().stream())
-                .collect(Collectors.toSet());
 
         List<SubjectDTO> subjectDTOS = subjects.stream().map(subject -> {
-            SubjectDTO dto = new SubjectDTO();
+            return  modelMapper.map(subject, SubjectDTO.class);
+            }).collect(Collectors.toList());
 
-            dto.setSubjectId(subject.getSubjectId());
-            dto.setSubjectName(subject.getSubjectName());
-
-            Set<UserDTO> userDTOs = users.stream().map(user -> {
-                UserDTO userDTO = modelMapper.map(user,UserDTO.class);
-                return userDTO;
-            }).collect(Collectors.toSet());
-            dto.setUserDTO(userDTOs);
-            return dto;
-        }).collect(Collectors.toList());
+        if(subjectDTOS.isEmpty()){
+            throw  new RuntimeException("There are no subjects with this name:" + keyword);
+        }
 
         return subjectDTOS;
     }
 
-    //search subject by lecturer id
-
+    //search subject by lecturer id DONE
     @Override
     public List<SubjectResponseDTO> getSubjectByLecturerId(Long id) {
             List<Subject> subjectList = subjectRepository.findSubjectsByUser_UserId(id);
@@ -63,6 +53,9 @@ public class SubjectServiceImpl implements SubjectService {
                         SubjectResponseDTO dto = modelMapper.map(subject, SubjectResponseDTO.class);
                         return dto;
                     }).collect(Collectors.toList());
+            if (subjectResponseDTOS.isEmpty()){
+                throw new RuntimeException("There are no subjects with this lecturer");
+            }
             return subjectResponseDTOS;
     }
 }

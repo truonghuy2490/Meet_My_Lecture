@@ -9,11 +9,11 @@ public class MeetingRequestDTO {
 
     private int meetingRequestId;
 
-    private UserDTO student;
+    private String studentName;
 
-    private UserDTO lecturer;
+    private String lecturerName;
 
-    private SubjectResponseDTO subject;
+    private String subjectId;
 
     private String requestContent;
 

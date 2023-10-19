@@ -1,10 +1,11 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.entity.EmptySlot;
+import com.springboot.meetMyLecturer.modelDTO.BookedSlotCalendarDTO;
+import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
-import com.springboot.meetMyLecturer.service.impl.StudentServiceImpl;
 import com.springboot.meetMyLecturer.service.impl.UserServiceImpl;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,24 +23,32 @@ public class StudentController {
     @Autowired
     UserServiceImpl userService;
 
-    @GetMapping("/bookedSlot/{userId}")
-    public ResponseEntity<List<EmptySlotDTO>> viewBookedSlot(@PathVariable Long userId){
-            List<EmptySlotDTO> emptySlotDTOList = studentService.viewBookedSlot(userId);
-            return new ResponseEntity<>(emptySlotDTOList,HttpStatus.FOUND);
+    @GetMapping("/bookedSlot/homePage/{userId}")
+    public ResponseEntity<List<BookedSlotHomePageDTO>> viewBookedSlotHomePage(@PathVariable Long userId){
+            List<BookedSlotHomePageDTO> bookedSlotHomePageDTOList = studentService.viewBookedSlotHomePage(userId);
+            return new ResponseEntity<>(bookedSlotHomePageDTOList,HttpStatus.FOUND);
+    }
+
+    @GetMapping("bookedSlot/calendar/{userId}")
+    public ResponseEntity<List<BookedSlotCalendarDTO>> viewBookedSlotCalendar(@PathVariable Long userId){
+        List<BookedSlotCalendarDTO> bookedSlotCalendarDTOList = studentService.viewBookedSlotCalendar(userId);
+        return new ResponseEntity<>(bookedSlotCalendarDTOList,HttpStatus.FOUND);
     }
 
     @PutMapping("/emptySlot/{emptySlotId}/student/{studentId}/subject/{subjectId}")
-    public ResponseEntity<EmptySlotDTO> bookEmptySlot(@PathVariable Long emptySlotId,
-                                                      @PathVariable Long studentId,
-                                                      @PathVariable String subjectId){
-        EmptySlotDTO emptySlotDTO = studentService.bookEmptySlot(emptySlotId, studentId, subjectId);
+    public ResponseEntity<BookedSlotCalendarDTO> bookEmptySlot(@PathVariable Long emptySlotId,
+                                                               @PathVariable Long studentId,
+                                                               @PathVariable String subjectId,
+                                                               @RequestBody EmptySlot emptySlot){
+        BookedSlotCalendarDTO bookedSlotCalendarDTO = studentService.bookEmptySlot(emptySlotId, studentId, subjectId, emptySlot);
 
-        return new ResponseEntity<>(emptySlotDTO,HttpStatus.OK);
+        return new ResponseEntity<>(bookedSlotCalendarDTO,HttpStatus.OK);
     }
 
-    @DeleteMapping("/bookedSlot/{bookedSlotId}")
-    public ResponseEntity<String> deleteBookedSlot (@PathVariable Long bookedSlotId){
-        String result = studentService.deleteBookedSlot(bookedSlotId);
+    @PutMapping("{studentId}/bookedSlot/{bookedSlotId}")
+    public ResponseEntity<String> deleteBookedSlot (@PathVariable Long bookedSlotId,
+                                                    @PathVariable Long studentId){
+        String result = studentService.deleteBookedSlot(bookedSlotId,studentId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 

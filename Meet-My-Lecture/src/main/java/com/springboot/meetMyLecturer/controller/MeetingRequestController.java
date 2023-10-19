@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
+import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import com.springboot.meetMyLecturer.service.impl.MeetingRequestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,14 +15,14 @@ import java.util.List;
 @RequestMapping("api/v1/requests")
 public class MeetingRequestController {
     @Autowired
-    MeetingRequestServiceImpl meetingRequestService;
+    MeetingRequestService meetingRequestService;
 
     @PutMapping("/{requestId}/subject/{subjectId}")
     public ResponseEntity<MeetingRequestDTO> updateRequestMeeting(@PathVariable Long requestId,
                                                                   @PathVariable String subjectId,
-                                                                  @RequestBody MeetingRequest meetingRequest)
+                                                                  @RequestParam String requestContent)
     {
-        MeetingRequestDTO meetingRequestDTO = meetingRequestService.updateRequest(meetingRequest, subjectId, requestId);
+        MeetingRequestDTO meetingRequestDTO = meetingRequestService.updateRequest(requestContent, subjectId, requestId);
 
         return new ResponseEntity<>(meetingRequestDTO,HttpStatus.OK);
     }
@@ -30,8 +31,8 @@ public class MeetingRequestController {
     public ResponseEntity<MeetingRequestDTO> createRequest(@PathVariable Long studentId,
                                                            @PathVariable Long lecturerId,
                                                            @PathVariable String subjectId
-            ,@RequestBody MeetingRequest meetingRequest){
-            MeetingRequestDTO meetingRequestDTO = meetingRequestService.createRequest(studentId,lecturerId,subjectId,meetingRequest);
+            ,@RequestParam String requestContent){
+            MeetingRequestDTO meetingRequestDTO = meetingRequestService.createRequest(studentId,lecturerId,subjectId,requestContent);
         return new ResponseEntity<>(meetingRequestDTO,HttpStatus.CREATED);
     }
 
@@ -42,13 +43,13 @@ public class MeetingRequestController {
     }
 
 
-    @DeleteMapping("/{requestId}")
-    public ResponseEntity<String> deleteRequest(@PathVariable Long requestId){
-        String result = meetingRequestService.deleteRequest(requestId);
+    @DeleteMapping("/{requestId}/student/{studentId}")
+    public ResponseEntity<String> deleteRequest(@PathVariable Long requestId, @PathVariable Long studentId){
+        String result = meetingRequestService.deleteRequest(requestId, studentId);
                 return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    @PutMapping("lecturer/{requestId}")
+    @PutMapping("{requestId}/lecturer")
     public ResponseEntity<MeetingRequestDTO> processRequest(
             @RequestBody MeetingRequest meetingRequest,
             @PathVariable Long requestId)

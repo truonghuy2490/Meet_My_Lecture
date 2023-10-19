@@ -4,12 +4,18 @@ import lombok.Data;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @Data
-public class EmptySlotDTO {
+public class BookedSlotCalendarDTO {
+
     private int slotId;
 
-    private String roomId;
+    private int roomId;
+
+    private Timestamp bookedDate;
+
+    private String subjectId;
 
     private String status;
 
@@ -21,13 +27,6 @@ public class EmptySlotDTO {
 
     private Date dateStart;
 
-    private Date bookedDate;
+    private String lecturerName;
 
-    private UserDTO student;
-
-    private UserDTO lecturer;
-
-    private MeetingRequestDTO request;
-
-    private SubjectResponseDTO subject;
 }

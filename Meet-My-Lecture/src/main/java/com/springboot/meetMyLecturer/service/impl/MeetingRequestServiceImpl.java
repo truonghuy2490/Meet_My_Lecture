@@ -37,9 +37,9 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     ModelMapper modelMapper;
 
 
-    //student create request
+    //student create request DONE
     @Override
-    public MeetingRequestDTO createRequest(Long studentId, Long lecturerId,String subjectId, MeetingRequest meetingRequest) {
+    public MeetingRequestDTO createRequest(Long studentId, Long lecturerId,String subjectId, String requestContent) {
         User student = userRepository.findById(studentId).orElseThrow(
                 () -> new ResourceNotFoundException("Student", "id", String.valueOf(studentId))
         );
@@ -50,6 +50,8 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
                 () -> new ResourceNotFoundException("Subject", "id", subjectId)
         );
 
+        MeetingRequest meetingRequest = new MeetingRequest();
+
         Date currentDate = new Date();
         java.sql.Date date = new java.sql.Date(currentDate.getTime());
 
@@ -58,20 +60,31 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequest.setLecturer(lecturer);
         meetingRequest.setRequestStatus("Pending");
         meetingRequest.setCreateAt(date);
+        meetingRequest.setRequestContent(requestContent);
 
         meetingRequestRepository.save(meetingRequest);
 
-        MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest,MeetingRequestDTO.class);
 
-        return meetingRequestDTO;
+        return modelMapper.map(meetingRequest,MeetingRequestDTO.class);
     }
 
-    //student delete request
+    //student delete request DONE
     @Override
-    public String deleteRequest(Long requestId) {
+    public String deleteRequest(Long requestId, Long studentId) {
+        MeetingRequest meetingRequest = meetingRequestRepository.findById(requestId).orElseThrow(
+                () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(requestId))
+        );
+
+        if(!meetingRequest.getStudent().getUserId().equals(studentId)){
+            throw new RuntimeException("You do not have this request.");
+        }
+
         meetingRequestRepository.deleteById(requestId);
+
         return "This meeting request has been deleted!";
     }
+
+
     // TRUOC KHI ASSIGN
     @Override
     public MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long requestId) {
@@ -117,13 +130,6 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
                     dto.setRequestStatus(meetingRequest.getRequestStatus());
                     dto.setRequestContent(meetingRequest.getRequestContent());
 
-                    UserDTO studentDTO = modelMapper.map(meetingRequest.getStudent(),UserDTO.class);
-                    UserDTO lecturerDTO = modelMapper.map(meetingRequest.getLecturer(),UserDTO.class);
-                    SubjectResponseDTO subjectDTO = modelMapper.map(meetingRequest.getSubject(), SubjectResponseDTO.class);
-
-                    dto.setStudent(studentDTO);
-                    dto.setLecturer(lecturerDTO);
-                    dto.setSubject(subjectDTO);
 
                     return dto;
                 }).collect(Collectors.toList());
@@ -146,8 +152,9 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         return meetingRequestDTOList;
     }
 
+    // student update request DONE
     @Override
-    public MeetingRequestDTO updateRequest(MeetingRequest meetingRequest, String subjectId, Long requestId)
+    public MeetingRequestDTO updateRequest(String requestContent, String subjectId, Long requestId)
     {
         MeetingRequest meetingRequestDB = meetingRequestRepository.findById(requestId).orElseThrow(
                 () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(requestId))
@@ -158,12 +165,13 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         );
 
         meetingRequestDB.setSubject(subject);
-        meetingRequestDB.setRequestContent(meetingRequest.getRequestContent());
+        meetingRequestDB.setRequestContent(requestContent);
         meetingRequestRepository.save(meetingRequestDB);
 
         MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequestDB,MeetingRequestDTO.class);
-
-        SubjectResponseDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseDTO.class);
+        meetingRequestDTO.setStudentName(meetingRequestDB.getStudent().getUserName());
+        meetingRequestDTO.setLecturerName(meetingRequestDB.getLecturer().getUserName());
+        meetingRequestDTO.setSubjectId(meetingRequestDB.getSubject().getSubjectId());
 
         return meetingRequestDTO;
     }

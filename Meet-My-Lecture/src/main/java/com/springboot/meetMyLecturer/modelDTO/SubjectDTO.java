@@ -9,5 +9,4 @@ import java.util.Set;
 public class SubjectDTO {
     private String subjectId;
     private String subjectName;
-    private Set<UserDTO> userDTO;
 }

@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,12 +31,16 @@ public class EmptySlot {
     private User student;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id")
+    @JoinColumn(name = "subject_id", nullable = true)
     private Subject subject;
 
     @ManyToOne
     @JoinColumn(name = "weekly_slot_id")
     private WeeklyEmptySlot weeklySlot;
+
+    @ManyToOne
+    @JoinColumn(name = "slot_time_id")
+    private SlotTime slotTime;
 
     @OneToMany(mappedBy = "emptySlot")
     private Set<Notification> notifications;
@@ -59,7 +64,7 @@ public class EmptySlot {
 
     private Date dateStart;
 
-    private Date bookedDate;
+    private Timestamp bookedDate;
 
     private Integer code;
 
