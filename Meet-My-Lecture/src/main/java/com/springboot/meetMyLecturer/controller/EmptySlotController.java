@@ -21,12 +21,6 @@ public class EmptySlotController {
     EmptySlotService slotService;
 
 
-
-    @GetMapping("")
-    public List<EmptySlotDTO> getAllEmptySlot(){
-        return slotService.getAllEmptySlot();
-    }
-
     @GetMapping("lecturer/{lecturerId}")
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(
             @PathVariable Long lecturerId
