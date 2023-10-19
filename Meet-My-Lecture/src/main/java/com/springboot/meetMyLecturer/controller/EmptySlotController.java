@@ -22,10 +22,10 @@ public class EmptySlotController {
 
 
 
-//    @GetMapping("")
-//    public List<EmptySlotDTO> getAllEmptySlot(){
-//        return slotService.getAllEmptySlot();
-//    }
+    @GetMapping("")
+    public List<EmptySlotDTO> getAllEmptySlot(){
+        return slotService.getAllEmptySlot();
+    }
 
     @GetMapping("lecturer/{lecturerId}")
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(

@@ -6,7 +6,7 @@ import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
 import java.util.List;
 
 public interface EmptySlotService {
-//    List<EmptySlotDTO> getAllEmptySlot(); // dung de test thoi
+    List<EmptySlotDTO> getAllEmptySlot(); // dung de test thoi
 
     List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(Long userId);
 
