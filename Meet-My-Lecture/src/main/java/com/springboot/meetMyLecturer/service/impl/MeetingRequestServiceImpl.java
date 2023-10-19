@@ -89,9 +89,9 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
     @Override
 
-    public List<MeetingRequestDTO> getAllRequest() {
-        List<MeetingRequest> meetingRequests = meetingRequestRepository.findAll();
-        return meetingRequests.stream().map(meetingRequest -> mapToDTO(meetingRequest)).collect(Collectors.toList());
+//    public List<MeetingRequestDTO> getAllRequest() {
+//        List<MeetingRequest> meetingRequests = meetingRequestRepository.findAll();
+//        return meetingRequests.stream().map(meetingRequest -> mapToDTO(meetingRequest)).collect(Collectors.toList());
 
     public List<MeetingRequestDTO> getRequestByUserId(Long lecturerId) {
         User user = userRepository.findById(lecturerId).orElseThrow(
