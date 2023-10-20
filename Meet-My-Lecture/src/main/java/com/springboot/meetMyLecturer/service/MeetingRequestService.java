@@ -13,8 +13,7 @@ public interface MeetingRequestService {
 
     List<MeetingRequestResponseDTO> getAllRequests();
     MeetingRequestResponseDTO updateRequest(String requestContent, String subjectId, Long id);
-    RequestResponse getAllRequests(int pageNo, int pageSize, String sortBy, String sortDir);
-    MeetingRequestDTO updateRequest(String requestContent, String subjectId, Long id);
+//    RequestResponse getAllRequests(int pageNo, int pageSize, String sortBy, String sortDir);
 
     MeetingRequestResponseDTO createRequest(Long studentId, Long lecturerId, String subjectId, MeetingRequestDTO meetingRequestDTO);
 

@@ -11,7 +11,4 @@ import java.time.LocalTime;
 @Repository
 public interface SlotTimeRepository extends JpaRepository<SlotTime, Integer> {
 
-    @Query("select sl.slotTimeId from SlotTime  sl where :currentTime BETWEEN sl.timeStart and sl.timeEnd")
-    int findSlotTimeIdByTimeStartAndTimeEnd(@Param("currentTime")LocalTime currentTime);
-
 }

@@ -16,13 +16,12 @@ import java.util.Set;
 public class SlotTime {
 
     @Id
+    @Column(name = "slot_id")
     private int slotTimeId;
+    @Column(name = "start_time")
+    private Time startTime;
+    @Column(name = "end_time")
+    private Time endTime;
 
-    private Time timeStart;
-
-    private Time timeEnd;
-
-    @OneToMany(mappedBy = "slotTime")
-    private Set<EmptySlot> emptySlots;
 
 }
