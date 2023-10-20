@@ -1,21 +1,23 @@
 package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "lecturer_subject")
+@IdClass(LecturerSubjectId.class)
 public class LecturerSubject {
     @Id
-    @ManyToOne
-    @JoinColumn(name = "lecturer_id")
-    private User lecturer;
+    @Column(name = "lecturer_id")
+    private Long lecturerId;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "subject_id")
-    private Subject subject;
+    @Column(name = "subject_id")
+    private String subjectId;
 
 }
-

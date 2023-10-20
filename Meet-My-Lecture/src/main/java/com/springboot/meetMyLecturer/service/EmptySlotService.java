@@ -1,12 +1,11 @@
 package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
-import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
 
 import java.util.List;
 
 public interface EmptySlotService {
-    List<EmptySlotDTO> getAllEmptySlot(); // dung de test thoi
 
     List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(Long userId);
 

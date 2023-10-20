@@ -3,7 +3,8 @@ package com.springboot.meetMyLecturer.modelDTO;
 import lombok.Data;
 
 @Data
-public class SubjectResponseDTO {
+public class BookSlotDTO {
     private String subjectId;
-    private String subjectName;
+    private String description;
+    private int code;
 }

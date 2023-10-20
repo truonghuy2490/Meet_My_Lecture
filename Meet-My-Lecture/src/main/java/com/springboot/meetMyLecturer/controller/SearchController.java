@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.modelDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -23,27 +24,12 @@ public class SearchController {
 
 
 
+    //DONE
     @GetMapping("/lecturer")
-    public ResponseEntity<?> searchLecturer (@RequestParam String name){
-        try{
+    public ResponseEntity<List<LecturerSubjectDTO>> searchLecturer (@RequestParam String name){
 
-            List<UserDTO> lecturerList = studentService.searchLecturers(name);
-
-            if(!lecturerList.isEmpty()){
-                return ResponseEntity.ok().body(lecturerList);
-            }else{
-                return  ResponseEntity.notFound().build();
-            }
-
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body("Error at:" + e.getMessage());
-        }
-    }
-
-    @GetMapping("/subject/lecturer/{lecturerId}")
-    public ResponseEntity<List<SubjectResponseDTO>> getSubjectByLecturerId (@PathVariable Long lecturerId){
-        List<SubjectResponseDTO> subjectResponseDTOS = subjectService.getSubjectByLecturerId(lecturerId);
-        return new ResponseEntity<>(subjectResponseDTOS,HttpStatus.FOUND);
+            List<LecturerSubjectDTO> lecturerSubjectDTOList = studentService.searchLecturers(name);
+             return new ResponseEntity<>(lecturerSubjectDTOList,HttpStatus.FOUND);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.springboot.meetMyLecturer.modelDTO;
+package com.springboot.meetMyLecturer.ResponseDTO;
 
 import com.springboot.meetMyLecturer.entity.Major;
 import com.springboot.meetMyLecturer.entity.Role;
@@ -9,6 +9,4 @@ public class UserProfileDTO {
     private long userId;
     private String userName;
     private String email;
-    private MajorProfileDTO major;
-    private RoleDTO role;
 }

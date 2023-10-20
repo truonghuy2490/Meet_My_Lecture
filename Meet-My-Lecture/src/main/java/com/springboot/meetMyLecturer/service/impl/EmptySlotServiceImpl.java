@@ -4,7 +4,7 @@ import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
@@ -31,12 +31,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
     @Autowired
     MeetingRequestRepository meetingRequestRepository;
-
-//    @Override
-//    public List<EmptySlotDTO> getAllEmptySlot() {
-//        List<EmptySlot> emptySlots = emptySlotRepository.findAll();
-//        return emptySlots.stream().map(emptySlot -> mapper.map(emptySlot, EmptySlotDTO.class)).collect(Collectors.toList());
-//    }
 
     @Override
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(Long userId) {

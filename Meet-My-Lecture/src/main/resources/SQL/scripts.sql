@@ -113,6 +113,7 @@ CREATE TABLE subject_lecturer_student (
 CREATE TABLE lecturer_subject (
                                   lecturer_id INT,
                                   subject_id VARCHAR(10),
+                                PRIMARY KEY (lecturer_id,subject_id),
                                   FOREIGN KEY (lecturer_id) REFERENCES user(user_id),
                                   FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
 );

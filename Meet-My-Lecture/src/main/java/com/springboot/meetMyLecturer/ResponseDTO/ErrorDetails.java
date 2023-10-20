@@ -1,4 +1,4 @@
-package com.springboot.meetMyLecturer.modelDTO;
+package com.springboot.meetMyLecturer.ResponseDTO;
 
 import java.util.Date;
 

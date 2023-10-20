@@ -2,7 +2,7 @@ package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ public interface UserService {
 
     List<UserDTO> getUserByEmptySlotId(Long slotId);
 
-    UserProfileDTO viewProfile(Long userId);
+    UserProfileDTO viewProfileUser(Long userId);
 
-    UserProfileDTO updateProfile(Long userId, Long majorId, User user);
+    UserProfileDTO updateProfileForStudent(Long studentId, Long majorId, UserDTO userDTO, String subjectId, Long lecturerId);
 
     List<String> getAllUsers();
 

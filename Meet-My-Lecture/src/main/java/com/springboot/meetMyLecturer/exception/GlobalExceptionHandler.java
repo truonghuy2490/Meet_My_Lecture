@@ -1,6 +1,6 @@
 package com.springboot.meetMyLecturer.exception;
 
-import com.springboot.meetMyLecturer.modelDTO.ErrorDetails;
+import com.springboot.meetMyLecturer.ResponseDTO.ErrorDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

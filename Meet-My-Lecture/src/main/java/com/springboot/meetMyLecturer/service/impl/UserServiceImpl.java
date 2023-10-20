@@ -1,16 +1,10 @@
 package com.springboot.meetMyLecturer.service.impl;
 
-import com.springboot.meetMyLecturer.entity.Major;
-import com.springboot.meetMyLecturer.entity.Role;
-import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.MajorProfileDTO;
-import com.springboot.meetMyLecturer.modelDTO.RoleDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserProfileDTO;
-import com.springboot.meetMyLecturer.repository.MajorRepository;
-import com.springboot.meetMyLecturer.repository.RoleRepository;
-import com.springboot.meetMyLecturer.repository.UserRepository;
+import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -32,6 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public MajorRepository majorRepository;
+
+    @Autowired
+    SubjectRepository subjectRepository;
+
+    @Autowired
+    SubjectLecturerStudentRepository subjectLecturerStudentRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -54,36 +53,51 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    // view profile
+    // view profile user DONE
     @Override
-    public UserProfileDTO viewProfile(Long userId) {
+    public UserProfileDTO viewProfileUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
         );
-
         UserProfileDTO userDTO = modelMapper.map(user, UserProfileDTO.class);
 
         return userDTO;
     }
 
-    //update profile
+    //update profile for student
     @Override
-    public UserProfileDTO updateProfile(Long userId, Long majorId, User userUpdate) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
+    public UserProfileDTO updateProfileForStudent(Long studentId, Long majorId, UserDTO userDTO, String subjectId, Long lecturerId) {
+        User student = userRepository.findById(studentId).orElseThrow(
+                () -> new ResourceNotFoundException("Student", "id", String.valueOf(studentId))
         );
         Major major = majorRepository.findById(majorId).orElseThrow(
                 () -> new ResourceNotFoundException("Major", "id", String.valueOf(majorId))
         );
 
-        user.setMajor(userUpdate.getMajor());
-        user.setEmail(userUpdate.getEmail());
-        user.setUserName(userUpdate.getUserName());
-        user.setMajor(major);
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
+        );
 
-        User userUpdated = userRepository.save(user);
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
+                () -> new ResourceNotFoundException("Subject","id",subjectId)
+        );
 
-        UserProfileDTO userProfileDTO = modelMapper.map(userUpdated,UserProfileDTO.class);
+        SubjectLecturerStudent subjectLecturerStudent = new SubjectLecturerStudent();
+        subjectLecturerStudent.setStudentId(studentId);
+        subjectLecturerStudent.setLecturerId(lecturerId);
+        subjectLecturerStudent.setSubjectId(subjectId);
+
+        subjectLecturerStudentRepository.save(subjectLecturerStudent);
+
+
+
+        student.setMajor(major);
+        student.setEmail(userDTO.getEmail());
+        student.setUserName(userDTO.getUserName());
+
+        User userUpdate = userRepository.save(student);
+
+        UserProfileDTO userProfileDTO = modelMapper.map(userUpdate,UserProfileDTO.class);
 
         return userProfileDTO ;
     }

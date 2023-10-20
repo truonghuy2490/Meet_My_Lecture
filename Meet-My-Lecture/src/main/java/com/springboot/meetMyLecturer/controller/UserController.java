@@ -2,7 +2,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -32,15 +32,19 @@ public class UserController {
         return new  ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
+    //DONE
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<?> viewProfile(@PathVariable long userId){
-        UserProfileDTO userDTO = userService.viewProfile(userId);
+    public ResponseEntity<UserProfileDTO> viewProfileUser(@PathVariable long userId){
+        UserProfileDTO userDTO = userService.viewProfileUser(userId);
         return new ResponseEntity<>(userDTO, HttpStatus.FOUND);
     }
 
-    @PutMapping("profile/{userId}/major/{majorId}")
-    public ResponseEntity<UserProfileDTO> editProfile(@PathVariable Long userId,@PathVariable Long majorId, @RequestBody User user){
-        UserProfileDTO userProfileDTO = userService.updateProfile(userId,majorId, user);
+    //
+    @PutMapping("profile/{studentId}/major/{majorId}")
+    public ResponseEntity<UserProfileDTO> editProfile(@PathVariable Long studentId, @PathVariable Long majorId, @RequestBody UserDTO userDTO,
+                                                      @RequestParam String subjectId,
+                                                      @RequestParam Long lecturerId) {
+        UserProfileDTO userProfileDTO = userService.updateProfileForStudent(studentId,majorId, userDTO, subjectId, lecturerId);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
 

@@ -27,7 +27,7 @@ public class Subject {
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    private User user;
+    private User admin;
 
     @ManyToMany(mappedBy = "subjectSet")
     private Set<Major> majorSet;
@@ -36,13 +36,10 @@ public class Subject {
     private Set<EmptySlot> emptySlots;
 
     @ManyToMany(mappedBy = "subjectSet")
-    private Set<User> userSet;
+    private Set<User> lecturerSet;
 
     @ManyToMany(mappedBy = "subjectSet")
     private Set<Semester> semesterSet;
-
-    @OneToMany(mappedBy = "subject")
-    private Set<SubjectLecturerStudent> subjectLecturerStudentSet;
 
     @OneToMany(mappedBy = "subject")
     private Set<MeetingRequest> meetingRequests;

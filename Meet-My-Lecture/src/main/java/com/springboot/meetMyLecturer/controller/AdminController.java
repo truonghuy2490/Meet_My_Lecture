@@ -1,7 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import com.springboot.meetMyLecturer.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

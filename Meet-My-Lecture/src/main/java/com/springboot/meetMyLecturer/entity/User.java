@@ -40,7 +40,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Semester> semesters;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "admin")
     private Set<Subject> subjects;
 
     @OneToMany(mappedBy = "lecturer")
@@ -68,11 +68,14 @@ public class User {
     )
     private Set<Subject> subjectSet;
 
-    @OneToMany(mappedBy = "student")
-    private Set<SubjectLecturerStudent> subjectLecturerStudentStuSet;
+    /*@OneToMany(mappedBy = "lecturer")
+    private Set<SubjectLecturerStudent> subjectLecturerSet;
 
-    @OneToMany(mappedBy = "lecturer")
-    private Set<SubjectLecturerStudent> subjectLecturerStudentLecSet;
+    @OneToMany(mappedBy = "student")
+    private Set<SubjectLecturerStudent> subjectStudentSet;*/
+
+
+
 
 
 }

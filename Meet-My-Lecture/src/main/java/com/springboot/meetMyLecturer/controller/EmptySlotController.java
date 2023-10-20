@@ -1,7 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
-import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,6 @@ public class EmptySlotController {
     @Autowired
     EmptySlotService slotService;
 
-
-
-    @GetMapping("")
-    public List<EmptySlotDTO> getAllEmptySlot(){
-        return slotService.getAllEmptySlot();
-    }
 
     @GetMapping("lecturer/{lecturerId}")
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(

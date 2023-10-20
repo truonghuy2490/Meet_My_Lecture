@@ -1,13 +1,14 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectDTO;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
-import com.springboot.meetMyLecturer.entity.SlotTime;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.BookedSlotCalendarDTO;
-import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotCalendarDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SlotTimeRepository;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,17 +47,28 @@ public class StudentServiceImpl implements StudentService {
 
     //student search lecturer DONE
     @Override
-    public List<UserDTO> searchLecturers(String name) {
+    public List<LecturerSubjectDTO> searchLecturers(String name) {
 
         List<User> lecturerList = userRepository.findLecturerByUserName(name);
         if(lecturerList.isEmpty()){
             throw new RuntimeException("There are no lecturers with this name!");
         }
-        List<UserDTO> userDTOList = lecturerList.stream().map(
-                user -> {UserDTO dto = modelMapper.map(user, UserDTO.class);
-                return dto;
-                }).collect(Collectors.toList());
-        return userDTOList;
+
+        List<LecturerSubjectDTO> lecturerSubjectDTOList = new ArrayList<>();
+
+        for(int i = 0; i< lecturerList.size(); i++){
+            List<Subject> subjectList = subjectRepository.findSubjectsByLecturerId(lecturerList.get(i).getUserId());
+            for(int j = 0; j < subjectList.size(); j++){
+                LecturerSubjectDTO lecturerSubjectDTO = new LecturerSubjectDTO();
+                lecturerSubjectDTO.setLecturerId(lecturerList.get(i).getUserId());
+                lecturerSubjectDTO.setLecturerName(lecturerList.get(i).getUserName());
+                lecturerSubjectDTO.setSubjectId(subjectList.get(j).getSubjectId());
+                lecturerSubjectDTOList.add(lecturerSubjectDTO);
+            }
+        }
+
+
+        return lecturerSubjectDTOList;
     }
 
 
@@ -86,6 +98,10 @@ public class StudentServiceImpl implements StudentService {
     public List<BookedSlotCalendarDTO> viewBookedSlotCalendar(Long userId) {
         List<EmptySlot> emptySlotList  = emptySlotRepository.findEmptySlotsByStudent_UserId(userId);
 
+        if(emptySlotList.isEmpty()){
+            throw  new RuntimeException("There are no booked slots!");
+        }
+
         List<BookedSlotCalendarDTO> bookedSlotCalendarDTOList = emptySlotList.stream().map(
                 emptySlot -> {
                     BookedSlotCalendarDTO bookedSlotCalendarDTO = modelMapper.map(emptySlot, BookedSlotCalendarDTO.class);
@@ -95,49 +111,46 @@ public class StudentServiceImpl implements StudentService {
                 }
         ).collect(Collectors.toList());
 
-        if(bookedSlotCalendarDTOList.isEmpty()){
-            throw  new RuntimeException("There are no booked slots!");
-        }
 
         return bookedSlotCalendarDTOList;
     }
 
     //student book an empty slot DONE
     @Override
-    public BookedSlotCalendarDTO bookEmptySlot(Long emptySlotId, Long studentId, String subjectId, EmptySlot emptySlot) {
-        EmptySlot emptySlotDB = emptySlotRepository.findById(emptySlotId).orElseThrow(
+    public BookedSlotCalendarDTO bookEmptySlot(Long emptySlotId, Long studentId, BookSlotDTO bookSlotDTO) {
+        EmptySlot emptySlot = emptySlotRepository.findById(emptySlotId).orElseThrow(
                 () -> new ResourceNotFoundException("Empty Slot", "id", String.valueOf(emptySlotId))
         );
 
         User student = userRepository.findById(studentId).orElseThrow(
                 () -> new ResourceNotFoundException("Student", "id", String.valueOf(studentId))
         );
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Subject", "id", subjectId)
+        Subject subject = subjectRepository.findById(bookSlotDTO.getSubjectId()).orElseThrow(
+                () -> new ResourceNotFoundException("Subject", "id", bookSlotDTO.getSubjectId())
         );
 
         LocalDateTime currentDateTime = LocalDateTime.now();
 
 
-        if(emptySlotDB.getCode() != null){
-            if(!emptySlotDB.getCode().equals(emptySlot.getCode())){
-                throw new RuntimeException("Wrong code:" + emptySlot.getCode());
+        if(emptySlot.getCode() != null){
+            if(!emptySlot.getCode().equals(bookSlotDTO.getCode())){
+                throw new RuntimeException("Wrong code:" + bookSlotDTO.getCode());
             }
         }
 
-        emptySlotDB.setStudent(student);
-        emptySlotDB.setSubject(subject);
-        emptySlotDB.setDescription(emptySlot.getDescription());
-        emptySlotDB.setStatus("Booked");
-        emptySlotDB.setBookedDate(Timestamp.valueOf(currentDateTime));
+        emptySlot.setStudent(student);
+        emptySlot.setSubject(subject);
+        emptySlot.setDescription(bookSlotDTO.getDescription());
+        emptySlot.setStatus("Booked");
+        emptySlot.setBookedDate(Timestamp.valueOf(currentDateTime));
 
-        emptySlotRepository.save(emptySlotDB);
+        emptySlotRepository.save(emptySlot);
 
-        BookedSlotCalendarDTO bookedSlotCalendarPageDTO = modelMapper.map(emptySlotDB, BookedSlotCalendarDTO.class);
+        BookedSlotCalendarDTO bookedSlotCalendarPageDTO = modelMapper.map(emptySlot, BookedSlotCalendarDTO.class);
 
 
-        bookedSlotCalendarPageDTO.setSubjectId(subjectId);
-        bookedSlotCalendarPageDTO.setLecturerName(emptySlotDB.getLecturer().getUserName());
+        bookedSlotCalendarPageDTO.setSubjectId(bookSlotDTO.getSubjectId());
+        bookedSlotCalendarPageDTO.setLecturerName(emptySlot.getLecturer().getUserName());
 
         return bookedSlotCalendarPageDTO;
     }
@@ -155,6 +168,7 @@ public class StudentServiceImpl implements StudentService {
         }
 
         emptySlot.setStudent(null);
+        emptySlot.setSubject(null);
 
         emptySlotRepository.save(emptySlot);
 

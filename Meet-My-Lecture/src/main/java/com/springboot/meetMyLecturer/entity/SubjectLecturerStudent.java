@@ -5,25 +5,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "subject_lecturer_student")
+@IdClass(SubjectLecturerStudentId.class)
 public class SubjectLecturerStudent {
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "lecturer_id", referencedColumnName = "user_id")
-    private User lecturer;
+    @Column(name = "student_id")
+    private Long studentId;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "user_id")
-    private User student;
+    @Column(name = "lecturer_id")
+    private Long lecturerId;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "subject_id", referencedColumnName = "subject_id")
-    private Subject subject;
+    @Column(name = "subject_id")
+    private String subjectId;
+
+
+
 }
