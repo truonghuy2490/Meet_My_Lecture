@@ -5,24 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "subject_lecturer_student")
-@IdClass(SubjectLecturerStudentId.class)
-public class SubjectLecturerStudent {
-
-    @Id
-    @Column(name = "student_id")
-    private Long studentId;
-
-    @Id
-    @Column(name = "lecturer_id")
-    private Long lecturerId;
+@Table(name = "subject_semester")
+@IdClass(SubjectSemesterId.class)
+public class SubjectSemester {
 
     @Id
     @Column(name = "subject_id")
     private String subjectId;
+
+    @Id
+    @Column(name = "semester_id")
+    private Long semesterId;
 
 }

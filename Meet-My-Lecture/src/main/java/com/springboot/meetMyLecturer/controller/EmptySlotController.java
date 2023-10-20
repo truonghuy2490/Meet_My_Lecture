@@ -1,12 +1,9 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
-
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.UserService;
-import com.springboot.meetMyLecturer.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,15 +39,16 @@ public class EmptySlotController {
         return slotService.getAllEmptySlotByUserId(lecturerId);
     }
 
+    //DONE
     @PostMapping("lecturer/{lecturerId}")
     public ResponseEntity<BookedSlotHomePageDTO> createEmptySlot(
             @PathVariable Long lecturerId,
             @RequestBody EmptySlot emptySlot
     ) {
 
-        BookedSlotHomePageDTO slot = slotService.creatEmptySlot(lecturerId, emptySlot);
+        BookedSlotHomePageDTO bookedSlotHomePageDTO = slotService.creatEmptySlot(lecturerId, emptySlot);
 
-        return ResponseEntity.ok(slot);
+        return ResponseEntity.ok(bookedSlotHomePageDTO);
     }
 
     // SLOT : SET STUDENT AFTER ASSIGN

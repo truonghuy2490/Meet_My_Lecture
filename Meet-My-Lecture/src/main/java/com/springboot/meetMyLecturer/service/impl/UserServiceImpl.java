@@ -2,8 +2,9 @@ package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -36,22 +37,29 @@ public class UserServiceImpl implements UserService {
     ModelMapper modelMapper;
 
 
-    // login first time
+    // register DONE
     @Override
-    public UserDTO registerUser(Long roleId, User userRegister) {
-        Role role = roleRepository.findById(roleId).orElseThrow();
-        userRegister.setRole(role);
+    public UserRegisterResponseDTO registerUser(Long roleId, UserRegister userRegister) {
+        Role role = roleRepository.findById(roleId).orElseThrow(
+                ()-> new ResourceNotFoundException("Role","id",String.valueOf(roleId))
+        );
 
-        User user = userRepository.save(userRegister);
+        String[] parts = userRegister.getUserName().split(" ");
+        String lastName = parts[parts.length - 1];
 
-        return modelMapper.map(user,UserDTO.class);
+        StringBuilder result = new StringBuilder();
+        result.append(lastName.toLowerCase());
+        for (int i = 0; i < parts.length - 1; i++) {
+            result.append(parts[i].substring(0, 1).toUpperCase());
+        }
+
+        User user = modelMapper.map(userRegister,User.class);
+        user.setNickName(result.toString());
+        user.setRole(role);
+        userRepository.save(user);
+
+        return modelMapper.map(user, UserRegisterResponseDTO.class);
     }
-
-    @Override
-    public List<UserDTO> getUserByEmptySlotId(Long slotId) {
-        return null;
-    }
-
 
     // view profile user DONE
     @Override
@@ -59,50 +67,22 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
         );
-        UserProfileDTO userDTO = modelMapper.map(user, UserProfileDTO.class);
-
-        return userDTO;
+        return modelMapper.map(user, UserProfileDTO.class);
     }
 
-    //update profile for student
+    //update profile for student DONE
     @Override
-    public UserProfileDTO updateProfileForStudent(Long studentId, Long majorId, UserDTO userDTO, String subjectId, Long lecturerId) {
+    public UserProfileDTO updateProfileForStudent(Long studentId, UserRegister userRegister) {
         User student = userRepository.findById(studentId).orElseThrow(
-                () -> new ResourceNotFoundException("Student", "id", String.valueOf(studentId))
-        );
-        Major major = majorRepository.findById(majorId).orElseThrow(
-                () -> new ResourceNotFoundException("Major", "id", String.valueOf(majorId))
+                ()-> new ResourceNotFoundException("Student","id",String.valueOf(studentId))
         );
 
-        User lecturer = userRepository.findById(lecturerId).orElseThrow(
-                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
-        );
-
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Subject","id",subjectId)
-        );
-
-        SubjectLecturerStudent subjectLecturerStudent = new SubjectLecturerStudent();
-        subjectLecturerStudent.setStudentId(studentId);
-        subjectLecturerStudent.setLecturerId(lecturerId);
-        subjectLecturerStudent.setSubjectId(subjectId);
-
-        subjectLecturerStudentRepository.save(subjectLecturerStudent);
-
-
-
-        student.setMajor(major);
-        student.setEmail(userDTO.getEmail());
-        student.setUserName(userDTO.getUserName());
-
-        User userUpdate = userRepository.save(student);
-
-        UserProfileDTO userProfileDTO = modelMapper.map(userUpdate,UserProfileDTO.class);
-
-        return userProfileDTO ;
+        student.setUserName(userRegister.getUserName());
+        userRepository.save(student);
+        return modelMapper.map(student,UserProfileDTO.class);
     }
 
-    //get all users
+    //get all users DONE
     @Override
     public List<String> getAllUsers(){
         List<String> userList = userRepository.findUserNotAdmin();
@@ -112,19 +92,16 @@ public class UserServiceImpl implements UserService {
         return  userList;
     }
 
-    //view profile by userId for admin
+    //view profile by userId for admin DONE
     @Override
     public UserProfileDTO viewProfileByUserId(Long userId) {
         Optional<User> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
         ));
-
-        UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
-
-        return userProfileDTO;
+        return modelMapper.map(user, UserProfileDTO.class);
     }
 
-    //delete user for admin
+    //delete user for admin DONE
     @Override
     public String deleteUser(Long userId) {
         userRepository.deleteById(userId);

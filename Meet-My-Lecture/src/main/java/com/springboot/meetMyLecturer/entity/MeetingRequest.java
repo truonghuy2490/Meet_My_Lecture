@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class MeetingRequest {
 
     private String requestStatus;
     @Column(name = "create_at")
-    private Date createAt;
+    private LocalDate createAt;
 
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)

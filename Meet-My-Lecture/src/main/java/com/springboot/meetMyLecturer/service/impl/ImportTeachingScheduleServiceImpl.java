@@ -3,7 +3,7 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.TeachingScheduleDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.repository.SlotRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.TeachingScheduleRepository;
@@ -34,7 +34,7 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
         User user = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecture","id",String.valueOf(lecturerId))
         );
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        UserRegisterResponseDTO userRegisterResponseDTO = modelMapper.map(user, UserRegisterResponseDTO.class);
         // retrieve schedule
         List<TeachingSchedule> teachingSchedules = teachingScheduleRepository.getTeachingScheduleListByLecturer_UserId(lecturerId);
 

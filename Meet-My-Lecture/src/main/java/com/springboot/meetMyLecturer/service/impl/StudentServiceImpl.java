@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotForStudentDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectDTO;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.Subject;
@@ -9,7 +10,6 @@ import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotCalendarDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SlotTimeRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
@@ -61,6 +61,7 @@ public class StudentServiceImpl implements StudentService {
             for(int j = 0; j < subjectList.size(); j++){
                 LecturerSubjectDTO lecturerSubjectDTO = new LecturerSubjectDTO();
                 lecturerSubjectDTO.setLecturerId(lecturerList.get(i).getUserId());
+                lecturerSubjectDTO.setNickName(lecturerList.get(i).getNickName());
                 lecturerSubjectDTO.setLecturerName(lecturerList.get(i).getUserName());
                 lecturerSubjectDTO.setSubjectId(subjectList.get(j).getSubjectId());
                 lecturerSubjectDTOList.add(lecturerSubjectDTO);
@@ -146,13 +147,7 @@ public class StudentServiceImpl implements StudentService {
 
         emptySlotRepository.save(emptySlot);
 
-        BookedSlotCalendarDTO bookedSlotCalendarPageDTO = modelMapper.map(emptySlot, BookedSlotCalendarDTO.class);
-
-
-        bookedSlotCalendarPageDTO.setSubjectId(bookSlotDTO.getSubjectId());
-        bookedSlotCalendarPageDTO.setLecturerName(emptySlot.getLecturer().getUserName());
-
-        return bookedSlotCalendarPageDTO;
+        return modelMapper.map(emptySlot, BookedSlotCalendarDTO.class);
     }
 
     //student delete bookedSlot DONE
@@ -173,6 +168,20 @@ public class StudentServiceImpl implements StudentService {
         emptySlotRepository.save(emptySlot);
 
         return "This booked slot has been deleted!";
+    }
+
+    //view empty slot by lecturerId for student DONE
+    @Override
+    public List<EmptySlotForStudentDTO> viewEmptySlot(Long lecturerId) {
+        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotByLecturer_UserId(lecturerId);
+
+        List<EmptySlotForStudentDTO> emptySlotForStudentDTOList = emptySlotList.stream().map(
+                emptySlot -> {
+                    return modelMapper.map(emptySlot, EmptySlotForStudentDTO.class);
+                }
+        ).toList();
+
+        return emptySlotForStudentDTOList;
     }
 }
 

@@ -32,6 +32,9 @@ public class User {
     @JoinColumn(name = "major_id")
     private Major major;
 
+    @Column(name = "nick_name")
+    private String nickName;
+
     private int absentCount;
 
     @OneToMany(mappedBy = "admin")
