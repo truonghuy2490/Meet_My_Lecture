@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import java.time.Year;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class WeeklyEmptySlot {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weekly_slot_id")
     private int weeklySlotId;
 
@@ -28,13 +28,8 @@ public class WeeklyEmptySlot {
     @Column(name = "last_day_of_week", nullable = false)
     private Date lastDateOfWeek;
 
-    @Column(name = "year", nullable = false)
-    private Year year;
-
     @OneToMany(mappedBy = "weeklySlot")
     private Set<EmptySlot> emptySlots;
-
-
 
     @ManyToOne
     @JoinColumn(name = "semester_id")

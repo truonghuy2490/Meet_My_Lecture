@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.modelDTO.ResponseDTO;
 
-import com.springboot.meetMyLecturer.modelDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
+
 import jdk.jfr.Name;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,9 +1,12 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.entity.EmptySlot;
+
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.UserService;
+import com.springboot.meetMyLecturer.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,17 @@ public class EmptySlotController {
     @Autowired
     EmptySlotService slotService;
 
+    // get Slot and Sort by Attribute "asc" or "desc"
+    @GetMapping
+    public SlotResponse getAllSlots(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+//        return slotService.getAllSlots(pageNo,pageSize,sortBy,sortDir);
+        return null;
+    }
 
     @GetMapping("lecturer/{lecturerId}")
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(
@@ -34,9 +48,9 @@ public class EmptySlotController {
             @RequestBody EmptySlot emptySlot
     ) {
 
-        BookedSlotHomePageDTO bookedSlotHomePageDTO = slotService.creatEmptySlot(lecturerId, emptySlot);
+        BookedSlotHomePageDTO slot = slotService.creatEmptySlot(lecturerId, emptySlot);
 
-        return ResponseEntity.ok(bookedSlotHomePageDTO);
+        return ResponseEntity.ok(slot);
     }
 
     // SLOT : SET STUDENT AFTER ASSIGN

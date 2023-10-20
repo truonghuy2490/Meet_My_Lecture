@@ -11,7 +11,7 @@ public class SubjectLecturerStudentId implements Serializable {
 
     private String subjectId;
 
-    /*@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -24,6 +24,6 @@ public class SubjectLecturerStudentId implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(lecturerId, studentId, subjectId);
-    }*/
+    }
 
 }

@@ -11,6 +11,7 @@ import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
+import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
     @Autowired
     MeetingRequestRepository meetingRequestRepository;
+    @Autowired
+    WeeklyEmptySlotService weeklyEmptySlotService;
 
     @Override
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(Long userId) {
@@ -58,8 +61,12 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         UserDTO userDTO = mapper.map(user, UserDTO.class);
 
         bookedSlotHomePageDTO.setLecturerName(userDTO.getUserName());
+        // Auto add slot to Weekly
+        weeklyEmptySlotService.createWeeklyByDateAt(bookedSlotHomePageDTO.getDateStart());
+
         bookedSlotHomePageDTO.setStatus("Open");
 
+        // save to db
         EmptySlot newEmptySlot = emptySlotRepository.save(mapper.map(bookedSlotHomePageDTO, EmptySlot.class));
 
         return mapper.map(newEmptySlot, BookedSlotHomePageDTO.class);
