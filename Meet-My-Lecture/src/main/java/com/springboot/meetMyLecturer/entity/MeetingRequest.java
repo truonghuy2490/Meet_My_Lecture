@@ -14,7 +14,7 @@ public class MeetingRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
-    private int requestId;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)

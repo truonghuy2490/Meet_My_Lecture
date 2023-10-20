@@ -2,8 +2,10 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import com.springboot.meetMyLecturer.service.impl.MeetingRequestServiceImpl;
+import com.springboot.meetMyLecturer.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +38,24 @@ public class MeetingRequestController {
         return new ResponseEntity<>(meetingRequestDTO,HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<MeetingRequestDTO>> getAllRequestByUserId(@PathVariable Long userId){
-        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequestByUserId(userId);
-        return new ResponseEntity<>(meetingRequestDTOList,HttpStatus.FOUND);
+//    @GetMapping("/user/{userId}")
+//    public ResponseEntity<List<MeetingRequestDTO>> getAllRequestByUserId(
+//            @PathVariable(name = "userId") Long userId
+//    )
+//    {
+//        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequestByUserId(userId);
+//        return new ResponseEntity<>(meetingRequestDTOList,HttpStatus.FOUND);
+//    }
+
+    // get Slot and Sort by Attribute "asc" or "desc" || sort by date created at
+    @GetMapping
+    public RequestResponse getAllRequests(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return meetingRequestService.getAllRequests(pageNo,pageSize,sortBy,sortDir);
     }
 
 

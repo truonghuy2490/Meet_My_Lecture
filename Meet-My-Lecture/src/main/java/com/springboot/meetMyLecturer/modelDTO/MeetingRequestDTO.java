@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class MeetingRequestDTO {
 
-    private int meetingRequestId;
+    private int id;
 
     private String studentName;
 

@@ -47,8 +47,9 @@ public class AdminController {
 
     @GetMapping("/requests")
     public ResponseEntity<List<MeetingRequestDTO>> getAllRequests(){
-        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequests();
-        return new ResponseEntity<>(meetingRequestDTOList, HttpStatus.FOUND);
+//        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequests();
+//        return new ResponseEntity<>(meetingRequestDTOList, HttpStatus.FOUND);
+        return null;
     }
 
 

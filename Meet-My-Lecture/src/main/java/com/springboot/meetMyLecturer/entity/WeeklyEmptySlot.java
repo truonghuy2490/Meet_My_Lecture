@@ -15,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "weekly_empty_slot")
+
 public class WeeklyEmptySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,8 +34,11 @@ public class WeeklyEmptySlot {
     @OneToMany(mappedBy = "weeklySlot")
     private Set<EmptySlot> emptySlots;
 
+
+
     @ManyToOne
     @JoinColumn(name = "semester_id")
     private Semester semester;
 
 }
+

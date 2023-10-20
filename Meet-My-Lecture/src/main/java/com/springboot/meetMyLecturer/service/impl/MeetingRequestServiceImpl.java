@@ -1,17 +1,24 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.GlobalExceptionHandler;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.*;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -137,19 +144,48 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         return meetingRequestDTOList;
     }
 
+//    @Override
+//    public List<MeetingRequestDTO> getAllRequests() {
+//        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findAll();
+//        if(meetingRequestList.isEmpty()){
+//            throw new RuntimeException("There are no meeting requests!");
+//        }
+//        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestList.stream().map(
+//                meetingRequest -> {
+//                    MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest, MeetingRequestDTO.class);
+//                    return meetingRequestDTO;
+//                }
+//        ).collect(Collectors.toList());
+//        return meetingRequestDTOList;
+//    }
     @Override
-    public List<MeetingRequestDTO> getAllRequests() {
-        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findAll();
-        if(meetingRequestList.isEmpty()){
-            throw new RuntimeException("There are no meeting requests!");
-        }
-        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestList.stream().map(
-                meetingRequest -> {
-                    MeetingRequestDTO meetingRequestDTO = modelMapper.map(meetingRequest, MeetingRequestDTO.class);
-                    return meetingRequestDTO;
-                }
+    public RequestResponse getAllRequests(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // create page
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        // save to repo
+        Page<MeetingRequest> requests = meetingRequestRepository.findAll(pageable);
+
+        // get content for slots
+        List<MeetingRequest> listOfRequests = requests.getContent();
+
+        List<MeetingRequestDTO> content = listOfRequests.stream().map(
+                meetingRequest -> modelMapper.map(meetingRequest, MeetingRequestDTO.class)
         ).collect(Collectors.toList());
-        return meetingRequestDTOList;
+
+        RequestResponse requestResponse = new RequestResponse();
+        requestResponse.setContent(content);
+        requestResponse.setPageNo(requests.getNumber());
+        requestResponse.setPageSize(requests.getSize());
+        requestResponse.setTotalPage(requests.getTotalPages());
+        requestResponse.setTotalElement(requests.getTotalElements());
+        requestResponse.setLast(requests.isLast());
+
+        return requestResponse;
     }
 
     // student update request DONE

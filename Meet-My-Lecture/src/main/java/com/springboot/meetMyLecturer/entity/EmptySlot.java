@@ -20,7 +20,7 @@ public class EmptySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "slot_id")
-    private int slotId;
+    private int id;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "lecturer_id", nullable = false)
