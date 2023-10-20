@@ -1,22 +1,22 @@
 package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
+import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface MeetingRequestService {
-    List<MeetingRequestDTO> getAllRequestByUserId(Long userId);
+    List<MeetingRequestResponseDTO> getAllRequestByUserId(Long userId);
 
-    List<MeetingRequestDTO> getAllRequests();
-    MeetingRequestDTO updateRequest(String requestContent, String subjectId, Long id);
+    List<MeetingRequestResponseDTO> getAllRequests();
+    MeetingRequestResponseDTO updateRequest(String requestContent, String subjectId, Long id);
 
-    MeetingRequestDTO createRequest(Long studentId, Long lecturerId, String subjectId,String requestContent);
+    MeetingRequestResponseDTO createRequest(Long studentId, Long lecturerId, String subjectId, MeetingRequestDTO meetingRequestDTO);
 
     String deleteRequest(Long requestId, Long studentId);
 
-    MeetingRequestDTO processRequest(MeetingRequest meetingRequest, Long requestId);
+    MeetingRequestResponseDTO processRequest(MeetingRequest meetingRequest, Long requestId);
 
-    List<MeetingRequestDTO> getRequestByUserId(Long lecturerId);
+    List<MeetingRequestResponseDTO> getRequestByUserId(Long lecturerId);
 }

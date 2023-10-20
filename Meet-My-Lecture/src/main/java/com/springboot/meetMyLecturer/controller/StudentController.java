@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotForStudentDTO;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotCalendarDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
@@ -55,6 +56,13 @@ public class StudentController {
                                                     @PathVariable Long studentId){
         String result = studentService.deleteBookedSlot(bookedSlotId,studentId);
         return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    //DONE
+    @GetMapping("/emptySlot/lecturer/{lecturerId}")
+    public ResponseEntity<List<EmptySlotForStudentDTO>> viewEmptySlot (@PathVariable Long lecturerId){
+        List<EmptySlotForStudentDTO> emptySlotDTOList = studentService.viewEmptySlot(lecturerId);
+        return new ResponseEntity<>(emptySlotDTOList, HttpStatus.FOUND);
     }
 
 

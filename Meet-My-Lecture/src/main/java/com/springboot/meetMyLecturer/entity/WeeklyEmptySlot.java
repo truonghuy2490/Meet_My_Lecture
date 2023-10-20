@@ -27,9 +27,6 @@ public class WeeklyEmptySlot {
     @Column(name = "last_day_of_week", nullable = false)
     private Date lastDateOfWeek;
 
-    @Column(name = "year", nullable = false)
-    private Year year;
-
     @OneToMany(mappedBy = "weeklySlot")
     private Set<EmptySlot> emptySlots;
 

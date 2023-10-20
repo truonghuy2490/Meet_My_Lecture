@@ -7,7 +7,8 @@ import lombok.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.HashSet;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 
@@ -42,14 +43,16 @@ public class EmptySlot {
     @JoinColumn(name = "slot_time_id")
     private SlotTime slotTime;
 
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private Room room;
+
     @OneToMany(mappedBy = "emptySlot")
     private Set<Notification> notifications;
 
     @OneToOne
     @JoinColumn(name = "meeting_request_id")
     private MeetingRequest meetingRequest;
-
-    private String roomId;
 
     @Column(name = "status", nullable = false)
     private String status;

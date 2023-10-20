@@ -1,8 +1,8 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -25,11 +25,11 @@ public class UserController {
     public RoleRepository roleRepository;
 
 
+    //DONE
     @PostMapping("/register/{roleId}")
-    public ResponseEntity<UserDTO> registerUser (@PathVariable Long roleId, @RequestBody User userRegister){
-        UserDTO userDTO = userService.registerUser(roleId,userRegister);
-
-        return new  ResponseEntity<>(userDTO, HttpStatus.CREATED);
+    public ResponseEntity<UserRegisterResponseDTO> registerUser (@PathVariable Long roleId, @RequestBody UserRegister userRegister){
+        UserRegisterResponseDTO userRegisterResponseDTO = userService.registerUser(roleId,userRegister);
+        return new  ResponseEntity<>(userRegisterResponseDTO, HttpStatus.CREATED);
     }
 
     //DONE
@@ -39,13 +39,16 @@ public class UserController {
         return new ResponseEntity<>(userDTO, HttpStatus.FOUND);
     }
 
-    //
+
+
+    //DONE
     @PutMapping("profile/{studentId}/major/{majorId}")
-    public ResponseEntity<UserProfileDTO> editProfile(@PathVariable Long studentId, @PathVariable Long majorId, @RequestBody UserDTO userDTO,
-                                                      @RequestParam String subjectId,
-                                                      @RequestParam Long lecturerId) {
-        UserProfileDTO userProfileDTO = userService.updateProfileForStudent(studentId,majorId, userDTO, subjectId, lecturerId);
+    public ResponseEntity<UserProfileDTO> editProfile(@PathVariable Long studentId,
+                                                      @RequestBody UserRegister userRegister) {
+        UserProfileDTO userProfileDTO = userService.updateProfileForStudent(studentId, userRegister);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
+
+
 
 }

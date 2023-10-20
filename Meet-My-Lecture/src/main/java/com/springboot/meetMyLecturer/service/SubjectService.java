@@ -11,6 +11,6 @@ public interface SubjectService {
 
     List<LecturerSubjectDTO> searchSubject (String keyword);
 
-
+    List<SubjectResponseDTO> getSubjectByMajorId(Long majorId);
 
 }

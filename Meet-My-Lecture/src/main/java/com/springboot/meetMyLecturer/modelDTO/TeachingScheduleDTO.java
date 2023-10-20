@@ -1,10 +1,8 @@
 package com.springboot.meetMyLecturer.modelDTO;
 
+import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.entity.Slot;
-import com.springboot.meetMyLecturer.entity.Subject;
 import lombok.Data;
-
-import java.sql.Time;
 
 @Data
 public class TeachingScheduleDTO {
@@ -13,7 +11,7 @@ public class TeachingScheduleDTO {
 
     private String dateOfWeek;
 
-    private UserDTO lecturer;
+    private UserRegisterResponseDTO lecturer;
 
     private SubjectDTO subject;
 

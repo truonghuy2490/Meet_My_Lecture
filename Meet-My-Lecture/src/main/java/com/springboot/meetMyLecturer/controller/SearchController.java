@@ -2,7 +2,6 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,25 @@ public class SearchController {
     @Autowired
     SubjectService subjectService;
 
-
-
     //DONE
     @GetMapping("/lecturer")
-    public ResponseEntity<List<LecturerSubjectDTO>> searchLecturer (@RequestParam String name){
+    public ResponseEntity<List<LecturerSubjectDTO>> searchLecturerByLecturerName(@RequestParam String name){
 
             List<LecturerSubjectDTO> lecturerSubjectDTOList = studentService.searchLecturers(name);
              return new ResponseEntity<>(lecturerSubjectDTOList,HttpStatus.FOUND);
+    }
+
+    //DONE
+    @GetMapping("/subject")
+    public ResponseEntity<List<LecturerSubjectDTO> > searchSubjectBySubjectId(@RequestParam String keyword){
+        List<LecturerSubjectDTO> subjectList = subjectService.searchSubject(keyword);
+        return new ResponseEntity<>(subjectList, HttpStatus.FOUND);
+    }
+
+    @GetMapping("/major/{majorId}")
+    public ResponseEntity<List<SubjectResponseDTO>> getSubjectsByMajorId(@PathVariable Long majorId){
+        List<SubjectResponseDTO> subjectResponseDTOList = subjectService.getSubjectByMajorId(majorId);
+        return new ResponseEntity<>(subjectResponseDTOList,HttpStatus.FOUND);
     }
 
 }

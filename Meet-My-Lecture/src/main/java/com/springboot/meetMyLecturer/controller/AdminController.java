@@ -1,6 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import com.springboot.meetMyLecturer.service.impl.UserServiceImpl;
@@ -46,9 +46,9 @@ public class AdminController {
     }
 
     @GetMapping("/requests")
-    public ResponseEntity<List<MeetingRequestDTO>> getAllRequests(){
-        List<MeetingRequestDTO> meetingRequestDTOList = meetingRequestService.getAllRequests();
-        return new ResponseEntity<>(meetingRequestDTOList, HttpStatus.FOUND);
+    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequests(){
+        List<MeetingRequestResponseDTO> meetingRequestResponseDTOList = meetingRequestService.getAllRequests();
+        return new ResponseEntity<>(meetingRequestResponseDTOList, HttpStatus.FOUND);
     }
 
 

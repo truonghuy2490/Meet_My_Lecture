@@ -11,7 +11,7 @@ public class BookedSlotCalendarDTO {
 
     private int slotId;
 
-    private int roomId;
+    private String roomId;
 
     private Timestamp bookedDate;
 
