@@ -6,6 +6,6 @@ import lombok.Data;
 public class LecturerSubjectResponseDTO {
     private Long lecturerId;
     private String lecturerName;
-    private String nickName;
+    private String unique;
     private String subjectId;
 }

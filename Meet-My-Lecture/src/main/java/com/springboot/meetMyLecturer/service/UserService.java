@@ -15,7 +15,7 @@ public interface UserService {
 
     UserProfileDTO updateProfileForStudent(Long studentId, UserRegister userRegister);
 
-    List<String> getAllUsers();
+    List<UserProfileDTO> getAllUsers();
 
     UserProfileDTO viewProfileByUserId(Long userId);
 

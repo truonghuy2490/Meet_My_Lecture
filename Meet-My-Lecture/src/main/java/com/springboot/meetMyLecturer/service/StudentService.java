@@ -15,12 +15,14 @@ public interface StudentService {
 
     List<BookedSlotHomePageDTO> viewBookedSlotHomePage(Long userId);
 
-    List<BookedSlotCalendarDTO> viewBookedSlotCalendar(Long userId);
+    List<BookedSlotCalendarDTO> viewBookedSlotCalendar(Long lecturerId);
 
     BookedSlotCalendarDTO bookEmptySlot(Long emptySlotId, Long studentId, BookSlotDTO bookSlotDTO);
 
     String deleteBookedSlot(Long bookedSlotId, Long studentId);
 
     List<EmptySlotForStudentDTO> viewEmptySlot(Long lecturerId);
+
+    List<LecturerSubjectResponseDTO> recommendRelatedCourses(Long studentId);
 
 }

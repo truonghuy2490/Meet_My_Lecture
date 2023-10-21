@@ -25,6 +25,8 @@ public class Semester {
 
     private Date dateEnd;
 
+    private int year;
+
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
     private User user;

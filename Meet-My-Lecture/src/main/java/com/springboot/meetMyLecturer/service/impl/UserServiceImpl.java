@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = modelMapper.map(userRegister,User.class);
-//        user.setNickName(result.toString());
+        user.setUnique(result.toString());
         user.setRole(role);
         userRepository.save(user);
 
@@ -85,12 +86,15 @@ public class UserServiceImpl implements UserService {
 
     //get all users DONE
     @Override
-    public List<String> getAllUsers(){
-        List<String> userList = userRepository.findUserNotAdmin();
+    public List<UserProfileDTO> getAllUsers(){
+        List<User> userList = userRepository.findUserNotAdmin();
         if(userList.isEmpty()){
             throw new RuntimeException("There are no users");
         }
-        return  userList;
+        List<UserProfileDTO> userProfileDTOList = userList.stream().map(
+                user -> {return modelMapper.map(user, UserProfileDTO.class);
+                }).toList();
+        return  userProfileDTOList;
     }
 
     //view profile by userId for admin DONE

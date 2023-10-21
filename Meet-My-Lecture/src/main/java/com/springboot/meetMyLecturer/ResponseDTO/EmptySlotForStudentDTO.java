@@ -8,6 +8,8 @@ import java.util.Date;
 @Data
 public class EmptySlotForStudentDTO {
 
+    private Long lecturerId;
+
     private String lecturerName;
 
     private Date dateStart;
@@ -18,5 +20,5 @@ public class EmptySlotForStudentDTO {
 
     private Time duration;
 
-    private int roomId;
+    private String roomId;
 }

@@ -13,8 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query( "select u from User u join Role r on u.role.roleId = r.roleId where u.userName like %:name% and r.roleName ='LECTURER' ")
     List<User> findLecturerByUserName(String name);
 
-    @Query("select u.userName from User u join Role r on r.roleId = u.role.roleId and r.roleName !='Admin' ")
-    List<String> findUserNotAdmin();
+    @Query("select u from User u join Role r on r.roleId = u.role.roleId and r.roleName !='Admin' ")
+    List<User> findUserNotAdmin();
 
     User findUserByEmail(String email);
 

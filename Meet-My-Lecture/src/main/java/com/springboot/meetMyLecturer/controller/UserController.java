@@ -50,16 +50,4 @@ public class UserController {
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/profile/student/{studentId}/subject/{subjectId}/lecturer/{lecturerId}")
-    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjects(@PathVariable String subjectId,
-                                                                     @PathVariable Long lecturerId,
-                                                                     @PathVariable Long studentId){
-        LecturerSubjectResponseDTO result = userService.updateSubjects(subjectId, lecturerId,studentId);
-        return new ResponseEntity<>(result,HttpStatus.OK);
-    }
-
-
-
-
-
 }

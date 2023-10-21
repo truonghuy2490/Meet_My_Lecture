@@ -19,8 +19,7 @@ public class TeachingScheduleController {
 
     @GetMapping("lecturer/{lecturerId}")
     public List<TeachingScheduleDTO> getTeachingScheduleByLectureId(
-            @PathVariable Long lecturerId
-    )
+            @PathVariable Long lecturerId)
     {
         return importTeachingScheduleService.getTeachingScheduleByLectureId(lecturerId);
     }

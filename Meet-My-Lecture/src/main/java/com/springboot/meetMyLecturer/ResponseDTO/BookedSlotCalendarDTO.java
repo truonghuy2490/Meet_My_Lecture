@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 public class BookedSlotCalendarDTO {
 
-    private int id;
+    private Long emptySlotId;
 
     private String roomId;
 

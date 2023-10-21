@@ -50,7 +50,7 @@ public class SubjectServiceImpl implements SubjectService {
                 lecturerSubjectResponseDTO.setLecturerId(lecturerList.get(j).getUserId());
                 lecturerSubjectResponseDTO.setSubjectId(subjectList.get(i).getSubjectId());
                 lecturerSubjectResponseDTO.setLecturerName(lecturerList.get(j).getUserName());
-                lecturerSubjectResponseDTO.setNickName(lecturerList.get(j).getNickName());
+                lecturerSubjectResponseDTO.setUnique(lecturerList.get(j).getUnique());
                 lecturerSubjectResponseDTOList.add(lecturerSubjectResponseDTO);
             }
         }
@@ -77,7 +77,7 @@ public class SubjectServiceImpl implements SubjectService {
            List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subjectList.get(i).getSubjectId());
            for(int j = 0; j < lecturerList.size(); j++){
                LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
-               lecturerSubjectResponseDTO.setNickName(lecturerList.get(j).getNickName());
+               lecturerSubjectResponseDTO.setUnique(lecturerList.get(j).getUnique());
                lecturerSubjectResponseDTO.setLecturerName(lecturerList.get(j).getUserName());
                lecturerSubjectResponseDTO.setSubjectId(subjectList.get(i).getSubjectId());
                lecturerSubjectResponseDTO.setLecturerId(lecturerList.get(j).getUserId());

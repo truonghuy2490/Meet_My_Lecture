@@ -33,7 +33,7 @@ public class User {
     private Major major;
 
     @Column(name = "nick_name")
-    private String nickName;
+    private String unique;
 
     private int absentCount;
 

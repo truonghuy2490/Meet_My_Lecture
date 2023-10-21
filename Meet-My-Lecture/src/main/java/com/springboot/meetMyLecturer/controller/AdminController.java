@@ -1,6 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
+
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import com.springboot.meetMyLecturer.service.impl.UserServiceImpl;
@@ -22,34 +22,27 @@ public class AdminController {
     @Autowired
     MeetingRequestService meetingRequestService;
 
+    //DONE
     @GetMapping("/users")
-    public ResponseEntity<List<String>> getAllUsers(){
-        List<String> userDTOList = userService.getAllUsers();
+    public ResponseEntity<List<UserProfileDTO>> getAllUsers(){
+        List<UserProfileDTO> userDTOList = userService.getAllUsers();
         return new ResponseEntity<>(userDTOList, HttpStatus.FOUND);
     }
 
-    @GetMapping("/user-account")
-    public ResponseEntity<List<String>> getUserAccount(@RequestParam String userName){
-    return null;
-    }
-
+    //DONE
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserProfileDTO> viewProfileUserByUserId(@PathVariable Long userId){
         UserProfileDTO userDTO = userService.viewProfileByUserId(userId);
         return new ResponseEntity<>(userDTO, HttpStatus.FOUND);
     }
 
+    //DONE
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId){
         String result = userService.deleteUser(userId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    @GetMapping("/requests")
-    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequests(){
-        List<MeetingRequestResponseDTO> meetingRequestResponseDTOList = meetingRequestService.getAllRequests();
-        return new ResponseEntity<>(meetingRequestResponseDTOList, HttpStatus.FOUND);
-    }
-
+    
 
 }
