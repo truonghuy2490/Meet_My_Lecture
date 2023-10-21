@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
@@ -42,12 +43,22 @@ public class UserController {
 
 
     //DONE
-    @PutMapping("profile/{studentId}/major/{majorId}")
+    @PutMapping("profile/{studentId}")
     public ResponseEntity<UserProfileDTO> editProfile(@PathVariable Long studentId,
                                                       @RequestBody UserRegister userRegister) {
         UserProfileDTO userProfileDTO = userService.updateProfileForStudent(studentId, userRegister);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
+
+    @PutMapping("/profile/student/{studentId}/subject/{subjectId}/lecturer/{lecturerId}")
+    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjects(@PathVariable String subjectId,
+                                                                     @PathVariable Long lecturerId,
+                                                                     @PathVariable Long studentId){
+        LecturerSubjectResponseDTO result = userService.updateSubjects(subjectId, lecturerId,studentId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+
 
 
 

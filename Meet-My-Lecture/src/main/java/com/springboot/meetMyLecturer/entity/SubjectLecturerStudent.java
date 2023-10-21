@@ -10,19 +10,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "subject_lecturer_student")
-@IdClass(SubjectLecturerStudentId.class)
 public class SubjectLecturerStudent {
 
-    @Id
-    @Column(name = "student_id")
-    private Long studentId;
+    @EmbeddedId
+    private SubjectLecturerStudentId subjectLecturerStudentId;
 
-    @Id
-    @Column(name = "lecturer_id")
-    private Long lecturerId;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    @MapsId("studentId")
+    private User student;
 
-    @Id
-    @Column(name = "subject_id")
-    private String subjectId;
+
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id")
+    @MapsId("lecturerId")
+    private User lecturer;
+
+
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
+    @MapsId("subjectId")
+    private Subject subject;
 
 }

@@ -10,14 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "subject_major")
-@IdClass(SubjectMajorId.class)
 public class SubjectMajor {
 
-    @Id
-    @Column(name = "subject_id")
-    private String subjectId;
+    @EmbeddedId
+    private SubjectMajorId subjectMajorId;
 
-    @Id
-    @Column(name = "major_id")
-    private String majorId;
+
+    @ManyToOne
+    @MapsId("subjectId")
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
+
+    @ManyToOne
+    @MapsId("majorId")
+    @JoinColumn(name = "major_id")
+    private Major major;
 }

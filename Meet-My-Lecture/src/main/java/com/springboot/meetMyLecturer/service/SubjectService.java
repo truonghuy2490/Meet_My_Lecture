@@ -1,16 +1,14 @@
 package com.springboot.meetMyLecturer.service;
 
-import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectDTO;
-import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 
 import java.util.List;
 
 public interface SubjectService {
 
 
-    List<LecturerSubjectDTO> searchSubject (String keyword);
+    List<LecturerSubjectResponseDTO> searchSubject (String keyword);
 
-    List<SubjectResponseDTO> getSubjectByMajorId(Long majorId);
+    List<LecturerSubjectResponseDTO> getSubjectByMajorId(Long majorId);
 
 }

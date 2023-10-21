@@ -2,7 +2,7 @@ package com.springboot.meetMyLecturer.service.impl;
 
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotForStudentDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
@@ -47,29 +47,29 @@ public class StudentServiceImpl implements StudentService {
 
     //student search lecturer DONE
     @Override
-    public List<LecturerSubjectDTO> searchLecturers(String name) {
+    public List<LecturerSubjectResponseDTO> searchLecturers(String name) {
 
         List<User> lecturerList = userRepository.findLecturerByUserName(name);
         if(lecturerList.isEmpty()){
             throw new RuntimeException("There are no lecturers with this name!");
         }
 
-        List<LecturerSubjectDTO> lecturerSubjectDTOList = new ArrayList<>();
+        List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = new ArrayList<>();
 
         for(int i = 0; i< lecturerList.size(); i++){
             List<Subject> subjectList = subjectRepository.findSubjectsByLecturerId(lecturerList.get(i).getUserId());
             for(int j = 0; j < subjectList.size(); j++){
-                LecturerSubjectDTO lecturerSubjectDTO = new LecturerSubjectDTO();
-                lecturerSubjectDTO.setLecturerId(lecturerList.get(i).getUserId());
-                lecturerSubjectDTO.setNickName(lecturerList.get(i).getNickName());
-                lecturerSubjectDTO.setLecturerName(lecturerList.get(i).getUserName());
-                lecturerSubjectDTO.setSubjectId(subjectList.get(j).getSubjectId());
-                lecturerSubjectDTOList.add(lecturerSubjectDTO);
+                LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
+                lecturerSubjectResponseDTO.setLecturerId(lecturerList.get(i).getUserId());
+                lecturerSubjectResponseDTO.setNickName(lecturerList.get(i).getNickName());
+                lecturerSubjectResponseDTO.setLecturerName(lecturerList.get(i).getUserName());
+                lecturerSubjectResponseDTO.setSubjectId(subjectList.get(j).getSubjectId());
+                lecturerSubjectResponseDTOList.add(lecturerSubjectResponseDTO);
             }
         }
 
 
-        return lecturerSubjectDTOList;
+        return lecturerSubjectResponseDTOList;
     }
 
 

@@ -1,7 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +22,24 @@ public class SearchController {
 
     //DONE
     @GetMapping("/lecturer")
-    public ResponseEntity<List<LecturerSubjectDTO>> searchLecturerByLecturerName(@RequestParam String name){
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> searchLecturerByLecturerName(@RequestParam String name){
 
-            List<LecturerSubjectDTO> lecturerSubjectDTOList = studentService.searchLecturers(name);
-             return new ResponseEntity<>(lecturerSubjectDTOList,HttpStatus.FOUND);
+            List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = studentService.searchLecturers(name);
+             return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.FOUND);
     }
 
     //DONE
     @GetMapping("/subject")
-    public ResponseEntity<List<LecturerSubjectDTO> > searchSubjectBySubjectId(@RequestParam String keyword){
-        List<LecturerSubjectDTO> subjectList = subjectService.searchSubject(keyword);
+    public ResponseEntity<List<LecturerSubjectResponseDTO> > searchSubjectBySubjectId(@RequestParam String keyword){
+        List<LecturerSubjectResponseDTO> subjectList = subjectService.searchSubject(keyword);
         return new ResponseEntity<>(subjectList, HttpStatus.FOUND);
     }
 
+    //DONE
     @GetMapping("/major/{majorId}")
-    public ResponseEntity<List<SubjectResponseDTO>> getSubjectsByMajorId(@PathVariable Long majorId){
-        List<SubjectResponseDTO> subjectResponseDTOList = subjectService.getSubjectByMajorId(majorId);
-        return new ResponseEntity<>(subjectResponseDTOList,HttpStatus.FOUND);
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjectsByMajorId(@PathVariable Long majorId){
+        List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = subjectService.getSubjectByMajorId(majorId);
+        return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.FOUND);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.service;
 
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
@@ -19,5 +20,7 @@ public interface UserService {
     UserProfileDTO viewProfileByUserId(Long userId);
 
     String deleteUser(Long userId);
+
+    LecturerSubjectResponseDTO updateSubjects(String subjectId, Long lecturerId, Long studentId);
 
 }

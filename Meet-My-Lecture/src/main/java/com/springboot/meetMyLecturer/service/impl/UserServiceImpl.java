@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
@@ -107,6 +108,36 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
         return "This user has been deleted!";
     }
+
+    @Override
+    public LecturerSubjectResponseDTO updateSubjects(String subjectId, Long lecturerId, Long studentId) {
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
+                ()-> new ResourceNotFoundException("Subject","id",subjectId)
+        );
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
+                ()-> new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId))
+        );
+        User student = userRepository.findById(studentId).orElseThrow(
+                ()->new ResourceNotFoundException("Student","id",String.valueOf(studentId))
+        );
+
+        SubjectLecturerStudent subjectLecturerStudent = new SubjectLecturerStudent();
+
+        subjectLecturerStudent.setSubject(subject);
+        subjectLecturerStudent.setLecturer(lecturer);
+        subjectLecturerStudent.setStudent(student);
+
+        subjectLecturerStudentRepository.save(subjectLecturerStudent);
+
+        LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
+
+        lecturerSubjectResponseDTO.setSubjectId(subjectId);
+        lecturerSubjectResponseDTO.setLecturerName(lecturer.getUserName());
+        lecturerSubjectResponseDTO.setLecturerId(lecturerId);
+
+        return lecturerSubjectResponseDTO;
+    }
+
 
 }
 
