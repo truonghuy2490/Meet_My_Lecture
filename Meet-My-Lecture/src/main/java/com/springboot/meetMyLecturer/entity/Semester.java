@@ -24,7 +24,6 @@ public class Semester {
     private Date dateStart;
 
     private Date dateEnd;
-    private int year;
 
     private int year;
 
