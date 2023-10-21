@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = modelMapper.map(userRegister,User.class);
-        user.setNickName(result.toString());
+//        user.setNickName(result.toString());
         user.setRole(role);
         userRepository.save(user);
 

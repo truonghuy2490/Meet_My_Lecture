@@ -3,8 +3,7 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.TeachingScheduleDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
-import com.springboot.meetMyLecturer.repository.SlotRepository;
+import com.springboot.meetMyLecturer.repository.SlotTimeRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.TeachingScheduleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -27,14 +26,14 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
     @Autowired
     SubjectRepository subjectRepository;
     @Autowired
-    SlotRepository slotRepository;
+    SlotTimeRepository slotTimeRepository;
     @Override
     public List<TeachingScheduleDTO> getTeachingScheduleByLectureId(Long lecturerId) {
         // retrieve user
         User user = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecture","id",String.valueOf(lecturerId))
         );
-        UserRegisterResponseDTO userRegisterResponseDTO = modelMapper.map(user, UserRegisterResponseDTO.class);
+//        UserRegisterResponseDTO userRegisterResponseDTO = modelMapper.map(user, UserRegisterResponseDTO.class);
         // retrieve schedule
         List<TeachingSchedule> teachingSchedules = teachingScheduleRepository.getTeachingScheduleListByLecturer_UserId(lecturerId);
 
@@ -62,9 +61,9 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
         );
         teachingSchedule.setSubject(subject); // set entity
 
-        long slotId = teachingSchedule.getSlot().getSlotId();
+        int slotId = teachingSchedule.getSlot().getSlotTimeId();
 
-        Slot slot = slotRepository.findById(slotId).orElseThrow(
+        SlotTime slot = slotTimeRepository.findById(slotId).orElseThrow(
                 ()-> new ResourceNotFoundException("Slot","id",String.valueOf(slotId))
         );
         teachingSchedule.setSlot(slot); // set entity
