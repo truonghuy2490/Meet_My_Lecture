@@ -61,7 +61,7 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
 
         WeeklyEmptySlot responseWeekly = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
         // save to DB
-        weeklySlotRepository.save(responseWeekly);
+//        weeklySlotRepository.save(responseWeekly);
 
         return weeklyDTO;
     }

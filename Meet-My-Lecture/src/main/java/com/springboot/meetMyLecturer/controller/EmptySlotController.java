@@ -31,12 +31,12 @@ public class EmptySlotController {
 
     //DONE
     @PostMapping("lecturer/{lecturerId}")
-    public ResponseEntity<BookedSlotCalendarDTO> createEmptySlot(
+    public ResponseEntity<BookedSlotHomePageDTO> createEmptySlot(
             @PathVariable Long lecturerId,
-            @RequestBody BookedSlotCalendarDTO bookedSlotCalendarDTO
+            @RequestBody EmptySlotDTO emptySlotDTO
     ) {
 
-        BookedSlotCalendarDTO responseSlot = slotService.creatEmptySlot(lecturerId, bookedSlotCalendarDTO);
+        BookedSlotHomePageDTO responseSlot = slotService.creatEmptySlot(lecturerId, emptySlotDTO);
 
         return ResponseEntity.ok(responseSlot);
     }

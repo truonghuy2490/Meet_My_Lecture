@@ -13,7 +13,9 @@ import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
+import com.springboot.meetMyLecturer.utils.ConvertLecturerName;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,53 +54,78 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         if(slots.isEmpty()){
             throw new RuntimeException("There no empty slot by this user");
         }
-        return slots.stream().map(
-                slot -> mapper.map(slot, BookedSlotHomePageDTO.class)
-        ).collect(Collectors.toList());
+        // Create a ModelMapper instance
+        ModelMapper modelMapper = new ModelMapper();
+
+        // Define the mapping for other properties
+        TypeMap<EmptySlot, BookedSlotHomePageDTO> typeMap = modelMapper.createTypeMap(EmptySlot.class, BookedSlotHomePageDTO.class);
+
+        // Explicitly map LecturerName
+        typeMap.addMapping(src -> src.getLecturer().getUserName() != null ? src.getLecturer().getUserName() : src.getLecturer().getNickName(), BookedSlotHomePageDTO::setLecturerName);
+
+        // Map the entities to DTOs
+        return slots.stream()
+                .map(slot -> modelMapper.map(slot, BookedSlotHomePageDTO.class))
+                .collect(Collectors.toList());
     }
 
 
     //lecturer create empty slot DONE
     @Override
-    public BookedSlotCalendarDTO creatEmptySlot(Long lecturerId, BookedSlotCalendarDTO bookedSlotCalendarDTO) {
+    public BookedSlotHomePageDTO creatEmptySlot(Long lecturerId, EmptySlotDTO emptySlotDTO) {
 
-        // revert to slot entity
-        EmptySlot emptySlot = mapper.map(bookedSlotCalendarDTO, EmptySlot.class);
 
         // retrieve Lecturer
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
         );
-        emptySlot.setLecturer(lecturer);
+//        emptySlot.setLecturer(lecturer);
 
         // retrieve room
-        Room room = roomRepository.findById(bookedSlotCalendarDTO.getRoomId()).orElseThrow(
-                () -> new ResourceNotFoundException("Room", "id", String.valueOf(bookedSlotCalendarDTO.getRoomId()))
+        String roomId = emptySlotDTO.getRoomId();
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new ResourceNotFoundException("Room", "id", String.valueOf(roomId))
         );
-        emptySlot.setRoom(room);
+//        emptySlot.setRoom(room);
 
         // retrieve to Slot Time
-        int SlotId = emptySlot.getSlotTime().getSlotTimeId();
-        SlotTime slotTime = slotTimeRepository.findById(SlotId).orElseThrow(
-                () -> new ResourceNotFoundException("Slot time", "id", String.valueOf(SlotId))
+        int SlotTimeId = emptySlotDTO.getSlotTimeId();
+        SlotTime slotTime = slotTimeRepository.findById(SlotTimeId).orElseThrow(
+                () -> new ResourceNotFoundException("Slot time", "id", String.valueOf(SlotTimeId))
         );
+//        emptySlot.setSlotTime(slotTime);
+
+        // get Weekly [if not have in db, create new week]
+        WeeklyDTO weeklyDTO = weeklyEmptySlotService.createWeeklyByDateAt(emptySlotDTO.getDateStart());
+        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
+        weeklySlotRepository.save(weeklyEmptySlot);
+
+        EmptySlot emptySlot = new EmptySlot();
+        emptySlot.setLecturer(lecturer);
         emptySlot.setSlotTime(slotTime);
+        emptySlot.setRoom(room);
+        emptySlot.setWeeklySlot(weeklyEmptySlot);
 
-        // add Slot to Weekly
-        WeeklyDTO weeklyDTO = weeklyEmptySlotService.createWeeklyByDateAt(emptySlot.getDateStart());
-        emptySlot.setWeeklySlot(mapper.map(weeklyDTO, WeeklyEmptySlot.class));
+        emptySlot.setDateStart(emptySlotDTO.getDateStart());
+        emptySlot.setDuration(emptySlotDTO.getDuration());
+        emptySlot.setTimeStart(emptySlotDTO.getTimeStart());
 
-        // revert to dto
-        BookedSlotCalendarDTO newSlotDTO = mapper.map(emptySlot, BookedSlotCalendarDTO.class);
-        newSlotDTO.setLecturerName(emptySlot.getLecturer().getUserName());
-        newSlotDTO.setRoomId(emptySlot.getRoom().getRoomId());
+        emptySlot.setStatus("Open");
 
-        newSlotDTO.setStatus("OPEN");
+        emptySlotRepository.save(emptySlot); // save db
 
-        // save to db
-        emptySlotRepository.save(mapper.map(newSlotDTO, EmptySlot.class));
+        BookedSlotHomePageDTO bookedSlotHomePageDTO = new BookedSlotHomePageDTO();
+        bookedSlotHomePageDTO.setSlotTimeId(slotTime.getSlotTimeId());
+        bookedSlotHomePageDTO.setLecturerName(lecturer.getUserName());
+        bookedSlotHomePageDTO.setDateStart(emptySlot.getDateStart());
+        bookedSlotHomePageDTO.setSlotId(emptySlot.getId());
+        bookedSlotHomePageDTO.setDuration(emptySlot.getDuration());
+        bookedSlotHomePageDTO.setTimeStart(emptySlot.getTimeStart());
+        bookedSlotHomePageDTO.setStatus(emptySlot.getStatus());
+        bookedSlotHomePageDTO.setDescription(emptySlot.getDescription());
 
-        return newSlotDTO;
+
+        return bookedSlotHomePageDTO;
     }
 
 

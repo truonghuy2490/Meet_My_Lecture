@@ -22,7 +22,7 @@ public class SubjectSemester {
 
     @ManyToOne
     @MapsId("semesterId")
-    @Column(name = "semester_id")
+    @JoinColumn(name = "semester_id")
     private Semester semester;
 
 }

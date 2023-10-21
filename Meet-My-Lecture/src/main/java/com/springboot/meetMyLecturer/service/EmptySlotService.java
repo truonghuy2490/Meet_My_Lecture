@@ -11,6 +11,6 @@ public interface EmptySlotService {
 
     List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(Long userId);
 
-    BookedSlotCalendarDTO creatEmptySlot(Long lectureId, BookedSlotCalendarDTO bookedSlotCalendarDTO);
+    BookedSlotHomePageDTO creatEmptySlot(Long lectureId, EmptySlotDTO emptySlotDTO);
     BookedSlotCalendarDTO assignRequestToSlot(Long meetingRequestId, Long emptySlotId);
 }
