@@ -33,6 +33,6 @@ public class TeachingSchedule {
 
     @ManyToOne
     @JoinColumn(name = "slot_id", nullable = false)
-    private Slot slot;
+    private SlotTime slot;
 
 }

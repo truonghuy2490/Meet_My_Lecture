@@ -1,7 +1,7 @@
 package com.springboot.meetMyLecturer.modelDTO;
 
 import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
-import com.springboot.meetMyLecturer.entity.Slot;
+import com.springboot.meetMyLecturer.entity.SlotTime;
 import lombok.Data;
 
 @Data
@@ -19,5 +19,5 @@ public class TeachingScheduleDTO {
 
     private String meetingURL;
 
-    private Slot slot;
+    private SlotTime slot;
 }
