@@ -1,7 +1,9 @@
 package com.springboot.meetMyLecturer.controller;
 
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotCalendarDTO;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +22,6 @@ public class EmptySlotController {
     @Autowired
     EmptySlotService slotService;
 
-    // get Slot and Sort by Attribute "asc" or "desc"
-    @GetMapping
-    public SlotResponse getAllSlots(
-            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
-    ){
-//        return slotService.getAllSlots(pageNo,pageSize,sortBy,sortDir);
-        return null;
-    }
-
     @GetMapping("lecturer/{lecturerId}")
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(
             @PathVariable Long lecturerId
@@ -41,25 +31,25 @@ public class EmptySlotController {
 
     //DONE
     @PostMapping("lecturer/{lecturerId}")
-    public ResponseEntity<BookedSlotHomePageDTO> createEmptySlot(
+    public ResponseEntity<BookedSlotCalendarDTO> createEmptySlot(
             @PathVariable Long lecturerId,
-            @RequestBody EmptySlot emptySlot
+            @RequestBody BookedSlotCalendarDTO bookedSlotCalendarDTO
     ) {
 
-        BookedSlotHomePageDTO bookedSlotHomePageDTO = slotService.creatEmptySlot(lecturerId, emptySlot);
+        BookedSlotCalendarDTO responseSlot = slotService.creatEmptySlot(lecturerId, bookedSlotCalendarDTO);
 
-        return ResponseEntity.ok(bookedSlotHomePageDTO);
+        return ResponseEntity.ok(responseSlot);
     }
 
     // SLOT : SET STUDENT AFTER ASSIGN
     // request id, slot id
     @PutMapping("lecture/meeting-request/{requestId}/slot/{slotId}")
-    public ResponseEntity<BookedSlotHomePageDTO> assignRequestToEmptySlot(
+    public ResponseEntity<BookedSlotCalendarDTO> assignRequestToEmptySlot(
             @PathVariable Long requestId,
             @PathVariable Long slotId
     ){
-        BookedSlotHomePageDTO bookedSlotHomePageDTO = slotService.assignRequestToSlot(requestId, slotId);
-        return new ResponseEntity<>(bookedSlotHomePageDTO, HttpStatus.OK);
+        BookedSlotCalendarDTO bookedSlotCalendarDTO = slotService.assignRequestToSlot(requestId, slotId);
+        return new ResponseEntity<>(bookedSlotCalendarDTO, HttpStatus.OK);
     }
 
 }

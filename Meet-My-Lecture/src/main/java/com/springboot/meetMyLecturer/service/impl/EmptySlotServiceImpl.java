@@ -1,15 +1,16 @@
 package com.springboot.meetMyLecturer.service.impl;
 
-import com.springboot.meetMyLecturer.entity.EmptySlot;
-import com.springboot.meetMyLecturer.entity.MeetingRequest;
-import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotCalendarDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
+import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
-import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserDTO;
-import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
-import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
-import com.springboot.meetMyLecturer.repository.UserRepository;
+
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.TeachingScheduleDTO;
+import com.springboot.meetMyLecturer.modelDTO.UserRegister;
+import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
+import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import org.modelmapper.ModelMapper;
@@ -37,9 +38,10 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     MeetingRequestRepository meetingRequestRepository;
     @Autowired
     WeeklyEmptySlotService weeklyEmptySlotService;
-
     @Autowired
     SlotTimeRepository slotTimeRepository;
+    @Autowired
+    WeeklySlotRepository weeklySlotRepository;
 
     @Override
     public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(Long userId) {
@@ -55,40 +57,50 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         ).collect(Collectors.toList());
     }
 
+
     //lecturer create empty slot DONE
     @Override
-    public BookedSlotCalendarDTO creatEmptySlot(Long lecturerId, EmptySlotDTO emptySlotDTO) {
+    public BookedSlotCalendarDTO creatEmptySlot(Long lecturerId, BookedSlotCalendarDTO bookedSlotCalendarDTO) {
+
+        // revert to slot entity
+        EmptySlot emptySlot = mapper.map(bookedSlotCalendarDTO, EmptySlot.class);
+
+        // retrieve Lecturer
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
         );
-        Room  room = roomRepository.findById(emptySlotDTO.getRoomId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Room","id", emptySlotDTO.getRoomId())
-        );
-        SlotTime slotTime = slotTimeRepository.findById(emptySlotDTO.getSlotTimeId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Slot time","id",String.valueOf(emptySlotDTO.getSlotTimeId()))
-        );
+        emptySlot.setLecturer(lecturer);
 
-        bookedSlotHomePageDTO.setLecturerName(userDTO.getUserName());
-        // Auto add slot to Weekly
-        weeklyEmptySlotService.createWeeklyByDateAt(bookedSlotHomePageDTO.getDateStart());
+        // retrieve room
+        Room room = roomRepository.findById(bookedSlotCalendarDTO.getRoomId()).orElseThrow(
+                () -> new ResourceNotFoundException("Room", "id", String.valueOf(bookedSlotCalendarDTO.getRoomId()))
+        );
+        emptySlot.setRoom(room);
 
-        bookedSlotHomePageDTO.setStatus("Open");
-        EmptySlot emptySlot = new EmptySlot();
+        // retrieve to Slot Time
+        int SlotId = emptySlot.getSlotTime().getSlotTimeId();
+        SlotTime slotTime = slotTimeRepository.findById(SlotId).orElseThrow(
+                () -> new ResourceNotFoundException("Slot time", "id", String.valueOf(SlotId))
+        );
+        emptySlot.setSlotTime(slotTime);
+
+        // add Slot to Weekly
+        WeeklyDTO weeklyDTO = weeklyEmptySlotService.createWeeklyByDateAt(emptySlot.getDateStart());
+        emptySlot.setWeeklySlot(mapper.map(weeklyDTO, WeeklyEmptySlot.class));
+
+        // revert to dto
+        BookedSlotCalendarDTO newSlotDTO = mapper.map(emptySlot, BookedSlotCalendarDTO.class);
+        newSlotDTO.setLecturerName(emptySlot.getLecturer().getUserName());
+        newSlotDTO.setRoomId(emptySlot.getRoom().getRoomId());
+
+        newSlotDTO.setStatus("OPEN");
 
         // save to db
-        EmptySlot newEmptySlot = emptySlotRepository.save(mapper.map(bookedSlotHomePageDTO, EmptySlot.class));
-        emptySlot.setSlotTime(slotTime);
-        emptySlot.setRoom(room);
-        emptySlot.setDateStart(emptySlotDTO.getDateStart());
-        emptySlot.setDuration(emptySlotDTO.getDuration());
-        emptySlot.setTimeStart(emptySlotDTO.getTimeStart());
-        emptySlot.setLecturer(lecturer);
-        emptySlot.setStatus("Open");
+        emptySlotRepository.save(mapper.map(newSlotDTO, EmptySlot.class));
 
-        emptySlotRepository.save(emptySlot);
-
-        return mapper.map(emptySlot, BookedSlotCalendarDTO.class);
+        return newSlotDTO;
     }
+
 
     //assign meeting request to empty slot DONE
     @Override
@@ -109,4 +121,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     }
 
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
+
+    //--
+
 }
