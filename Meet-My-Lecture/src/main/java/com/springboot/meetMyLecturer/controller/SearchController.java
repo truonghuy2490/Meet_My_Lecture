@@ -25,21 +25,21 @@ public class SearchController {
     public ResponseEntity<List<LecturerSubjectResponseDTO>> searchLecturerByLecturerName(@RequestParam String name){
 
             List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = studentService.searchLecturers(name);
-             return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.FOUND);
+             return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.OK);
     }
 
     //DONE
     @GetMapping("/subject")
     public ResponseEntity<List<LecturerSubjectResponseDTO> > searchSubjectBySubjectId(@RequestParam String keyword){
         List<LecturerSubjectResponseDTO> subjectList = subjectService.searchSubject(keyword);
-        return new ResponseEntity<>(subjectList, HttpStatus.FOUND);
+        return new ResponseEntity<>(subjectList, HttpStatus.OK);
     }
 
     //DONE
     @GetMapping("/major/{majorId}")
     public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjectsByMajorId(@PathVariable Long majorId){
         List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = subjectService.getSubjectByMajorId(majorId);
-        return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.FOUND);
+        return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.OK);
     }
 
 }

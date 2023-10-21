@@ -26,14 +26,14 @@ public class AdminController {
     @GetMapping("/users")
     public ResponseEntity<List<UserProfileDTO>> getAllUsers(){
         List<UserProfileDTO> userDTOList = userService.getAllUsers();
-        return new ResponseEntity<>(userDTOList, HttpStatus.FOUND);
+        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
     //DONE
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserProfileDTO> viewProfileUserByUserId(@PathVariable Long userId){
         UserProfileDTO userDTO = userService.viewProfileByUserId(userId);
-        return new ResponseEntity<>(userDTO, HttpStatus.FOUND);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     //DONE

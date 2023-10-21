@@ -16,7 +16,7 @@ public class Major {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "major_id")
-    private int majorId;
+    private Long majorId;
 
     @Column(name = "major_name", nullable = false)
     private String majorName;

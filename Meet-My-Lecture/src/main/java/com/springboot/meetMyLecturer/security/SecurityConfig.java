@@ -47,7 +47,8 @@ public class SecurityConfig {
                         config.setMaxAge(3600L);
                         return config;
                     }
-                })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("api/v1/students/**","api/v1/requests/**","api/v1/user/**","api/v1/slots/**","api/v1/user/**")
+                })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("api/v1/students/**","api/v1/requests/**","api/v1/user/**","api/v1/slots/**","api/v1/user/**"
+                        ,"api/v1/lecturer/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests

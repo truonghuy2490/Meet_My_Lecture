@@ -7,8 +7,7 @@ import lombok.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 
@@ -21,7 +20,7 @@ public class EmptySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "slot_id")
-    private int id;
+    private int emptySlotId;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "lecturer_id", nullable = false)
@@ -67,7 +66,7 @@ public class EmptySlot {
 
     private Date dateStart;
 
-    private Timestamp bookedDate;
+    private LocalDateTime bookedDate;
 
     private Integer code;
 

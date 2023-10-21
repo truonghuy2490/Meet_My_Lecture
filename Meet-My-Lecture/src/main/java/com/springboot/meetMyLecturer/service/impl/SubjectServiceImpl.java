@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
@@ -41,20 +42,18 @@ public class SubjectServiceImpl implements SubjectService {
             throw  new RuntimeException("There are no subjects with this name:" + keyword);
         }
 
-        List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = new ArrayList<>();
-
-        for (int i = 0; i < subjectList.size(); i++){
-            List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subjectList.get(i).getSubjectId());
-            for(int j = 0; j < lecturerList.size(); j++){
-                LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
-                lecturerSubjectResponseDTO.setLecturerId(lecturerList.get(j).getUserId());
-                lecturerSubjectResponseDTO.setSubjectId(subjectList.get(i).getSubjectId());
-                lecturerSubjectResponseDTO.setLecturerName(lecturerList.get(j).getUserName());
-                lecturerSubjectResponseDTO.setUnique(lecturerList.get(j).getUnique());
-                lecturerSubjectResponseDTOList.add(lecturerSubjectResponseDTO);
-            }
-        }
-        return lecturerSubjectResponseDTOList;
+        return subjectList.stream()
+                .flatMap(subject -> {
+                    List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subject.getSubjectId());
+                    return lecturerList.stream().map(lecturer -> {
+                        LecturerSubjectResponseDTO dto = new LecturerSubjectResponseDTO();
+                        dto.setLecturerId(lecturer.getUserId());
+                        dto.setSubjectId(subject.getSubjectId());
+                        dto.setLecturerName(lecturer.getUserName());
+                        dto.setUnique(lecturer.getUnique());
+                        return dto;
+                    });
+                }).collect(Collectors.toList());
     }
 
     //search subject by majorId
@@ -64,26 +63,24 @@ public class SubjectServiceImpl implements SubjectService {
                 ()-> new ResourceNotFoundException("Major","id",String.valueOf(majorId))
         );
 
-        List<String> subjects = subjectMajorRepository.findSubjectIdByMajorId(majorId);
+        List<String> subjects = subjectMajorRepository.findSubjectIdByMajorId(major.getMajorId());
 
-        List<Subject> subjectList = new ArrayList<>();
-       for(int i = 0; i< subjects.size(); i++){
-           Subject subject = subjectRepository.findById(subjects.get(i)).orElseThrow();
-           subjectList.add(subject);
-       }
+        List<Subject> subjectList = subjects.stream()
+                .map(subjectId -> subjectRepository.findById(subjectId).orElseThrow())
+                .toList();
 
-       List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = new ArrayList<>();
-       for(int i =0; i < subjectList.size(); i++){
-           List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subjectList.get(i).getSubjectId());
-           for(int j = 0; j < lecturerList.size(); j++){
-               LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
-               lecturerSubjectResponseDTO.setUnique(lecturerList.get(j).getUnique());
-               lecturerSubjectResponseDTO.setLecturerName(lecturerList.get(j).getUserName());
-               lecturerSubjectResponseDTO.setSubjectId(subjectList.get(i).getSubjectId());
-               lecturerSubjectResponseDTO.setLecturerId(lecturerList.get(j).getUserId());
-               lecturerSubjectResponseDTOList.add(lecturerSubjectResponseDTO);
-           }
-       }
-        return lecturerSubjectResponseDTOList;
+        return subjectList.stream()
+                .flatMap(subject -> {
+                    List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subject.getSubjectId());
+                    return lecturerList.stream()
+                            .map(lecturer -> {
+                                LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
+                                lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
+                                lecturerSubjectResponseDTO.setLecturerName(lecturer.getUserName());
+                                lecturerSubjectResponseDTO.setSubjectId(subject.getSubjectId());
+                                lecturerSubjectResponseDTO.setLecturerId(lecturer.getUserId());
+                                return lecturerSubjectResponseDTO;
+                            });
+                }).collect(Collectors.toList());
     }
 }

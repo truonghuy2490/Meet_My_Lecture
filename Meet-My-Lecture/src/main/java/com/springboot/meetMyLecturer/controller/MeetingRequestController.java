@@ -1,11 +1,8 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
-import com.springboot.meetMyLecturer.service.impl.MeetingRequestServiceImpl;
-import com.springboot.meetMyLecturer.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,10 +37,11 @@ public class MeetingRequestController {
         return new ResponseEntity<>(meetingRequestResponseDTO,HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByUserId(@PathVariable Long userId){
-        List<MeetingRequestResponseDTO> meetingRequestResponseDTOList = meetingRequestService.getAllRequestByUserId(userId);
-        return new ResponseEntity<>(meetingRequestResponseDTOList,HttpStatus.FOUND);
+    //DONE
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByUserId(@PathVariable Long studentId){
+        List<MeetingRequestResponseDTO> meetingRequestResponseDTOList = meetingRequestService.getAllRequestByStudentId(studentId);
+        return new ResponseEntity<>(meetingRequestResponseDTOList,HttpStatus.OK);
     }
 
 
@@ -54,20 +52,22 @@ public class MeetingRequestController {
                 return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
+    //DONE
     @PutMapping("{requestId}/lecturer")
     public ResponseEntity<MeetingRequestResponseDTO> processRequest(
-            @RequestBody MeetingRequest meetingRequest,
+            @RequestParam String status,
             @PathVariable Long requestId)
     {
-        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(meetingRequest, requestId);
+        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(status, requestId);
         return new ResponseEntity<>(meetingRequestResponseDTO, HttpStatus.OK);
     }
 
+    //DONE
     @GetMapping("lecturer/{lecturerId}")
-    public List<MeetingRequestResponseDTO> getAllRequestByLecturerId(
+    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByLecturerId(
             @PathVariable Long lecturerId
     ){
-        List<MeetingRequestResponseDTO> requestDTOList = meetingRequestService.getRequestByUserId(lecturerId);
-        return requestDTOList;
+        List<MeetingRequestResponseDTO> requestDTOList = meetingRequestService.getRequestByLecturerId(lecturerId);
+        return new ResponseEntity<>(requestDTOList, HttpStatus.OK);
     }
 }

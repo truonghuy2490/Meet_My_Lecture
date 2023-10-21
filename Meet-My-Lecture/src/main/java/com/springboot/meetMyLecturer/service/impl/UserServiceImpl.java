@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
@@ -27,7 +28,10 @@ public class UserServiceImpl implements UserService {
     public UserRepository userRepository;
 
     @Autowired
-    public MajorRepository majorRepository;
+    EmptySlotRepository emptySlotRepository;
+
+    @Autowired
+    MajorRepository majorRepository;
 
     @Autowired
     SubjectRepository subjectRepository;
@@ -39,7 +43,7 @@ public class UserServiceImpl implements UserService {
     ModelMapper modelMapper;
 
 
-    // register DONE
+    // register user DONE
     @Override
     public UserRegisterResponseDTO registerUser(Long roleId, UserRegister userRegister) {
         Role role = roleRepository.findById(roleId).orElseThrow(
@@ -72,7 +76,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserProfileDTO.class);
     }
 
-    //update profile for student DONE
+    //update profile for user DONE
     @Override
     public UserProfileDTO updateProfileForStudent(Long studentId, UserRegister userRegister) {
         User student = userRepository.findById(studentId).orElseThrow(
@@ -91,10 +95,9 @@ public class UserServiceImpl implements UserService {
         if(userList.isEmpty()){
             throw new RuntimeException("There are no users");
         }
-        List<UserProfileDTO> userProfileDTOList = userList.stream().map(
-                user -> {return modelMapper.map(user, UserProfileDTO.class);
+
+        return  userList.stream().map(user -> {return modelMapper.map(user, UserProfileDTO.class);
                 }).toList();
-        return  userProfileDTOList;
     }
 
     //view profile by userId for admin DONE
@@ -106,6 +109,16 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserProfileDTO.class);
     }
 
+    //view empty slot by lecturerId for student DONE
+    @Override
+    public List<EmptySlotResponseDTO> viewEmptySlot(Long lecturerId) {
+        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotByLecturer_UserId(lecturerId);
+
+        return emptySlotList.stream().map(
+                emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)).toList();
+    }
+
+
     //delete user for admin DONE
     @Override
     public String deleteUser(Long userId) {
@@ -114,7 +127,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LecturerSubjectResponseDTO updateSubjects(String subjectId, Long lecturerId, Long studentId) {
+    public LecturerSubjectResponseDTO updateSubjectsForStudent(String subjectId, Long lecturerId, Long studentId) {
         Subject subject = subjectRepository.findById(subjectId).orElseThrow(
                 ()-> new ResourceNotFoundException("Subject","id",subjectId)
         );

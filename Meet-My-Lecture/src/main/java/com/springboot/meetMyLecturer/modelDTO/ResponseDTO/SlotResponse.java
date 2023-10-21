@@ -1,8 +1,6 @@
 package com.springboot.meetMyLecturer.modelDTO.ResponseDTO;
 
-import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
-
-import jdk.jfr.Name;
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SlotResponse {
-    private List<BookedSlotHomePageDTO> content;
+    private List<EmptySlotResponseDTO> content;
     private int pageNo;
     private int pageSize;
     private Long totalElement;

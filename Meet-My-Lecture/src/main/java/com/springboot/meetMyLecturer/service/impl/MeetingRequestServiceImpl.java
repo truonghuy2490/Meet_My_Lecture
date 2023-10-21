@@ -74,7 +74,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         }
 
         if(meetingRequest.getRequestStatus().equals("Accepted")){
-            throw new RuntimeException("This meeting request is accepted. Please update information ");
+            throw new RuntimeException("This meeting request is accepted. Please update information in booked slot.");
         }
 
         meetingRequestRepository.deleteById(requestId);
@@ -83,23 +83,24 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     }
 
 
-    // TRUOC KHI ASSIGN
+    // process request for lecturer DONE
     @Override
-    public MeetingRequestResponseDTO processRequest(MeetingRequest meetingRequest, Long requestId) {
-        MeetingRequestResponseDTO meetingRequestResponseDTO = modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
-        MeetingRequest meetingRequestDB = meetingRequestRepository.findById(requestId).orElseThrow(
+    public MeetingRequestResponseDTO processRequest(String status, Long requestId) {
+
+        MeetingRequest meetingRequest = meetingRequestRepository.findById(requestId).orElseThrow(
                 () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(requestId))
         );
-        // SET STATUS
-        meetingRequestDB.setRequestStatus(meetingRequestResponseDTO.getRequestStatus());
 
-        MeetingRequest responseRequest = meetingRequestRepository.save(modelMapper.map(meetingRequestDB, MeetingRequest.class));
+        meetingRequest.setRequestStatus(status);
 
-        return modelMapper.map(responseRequest, MeetingRequestResponseDTO.class);
+        meetingRequestRepository.save(meetingRequest);
+
+        return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }
 
+    //get all requests by lecturerId for lecturer DONE
     @Override
-    public List<MeetingRequestResponseDTO> getRequestByUserId(Long lecturerId) {
+    public List<MeetingRequestResponseDTO> getRequestByLecturerId(Long lecturerId) {
         User user = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(lecturerId))
         );
@@ -116,38 +117,15 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     }
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
 
-    //lecturer get all requests
+    //student get all requests DONE
     @Override
-    public List<MeetingRequestResponseDTO> getAllRequestByUserId(Long userId) {
+    public List<MeetingRequestResponseDTO> getAllRequestByStudentId(Long studentId) {
 
-        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findMeetingRequestByStudent_UserId(userId);
+        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findMeetingRequestByStudent_UserId(studentId);
 
-        List<MeetingRequestResponseDTO> meetingRequestResponseDTOList = meetingRequestList.stream().map(
-                meetingRequest -> {
-                    MeetingRequestResponseDTO dto = new MeetingRequestResponseDTO();
-                    dto.setRequestStatus(meetingRequest.getRequestStatus());
-                    dto.setRequestContent(meetingRequest.getRequestContent());
-
-
-                    return dto;
-                }).collect(Collectors.toList());
-
-        return meetingRequestResponseDTOList;
-    }
-
-    @Override
-    public List<MeetingRequestResponseDTO> getAllRequests() {
-        List<MeetingRequest> meetingRequestList = meetingRequestRepository.findAll();
-        if(meetingRequestList.isEmpty()){
-            throw new RuntimeException("There are no meeting requests!");
-        }
-        List<MeetingRequestResponseDTO> meetingRequestResponseDTOList = meetingRequestList.stream().map(
-                meetingRequest -> {
-                    MeetingRequestResponseDTO meetingRequestResponseDTO = modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
-                    return meetingRequestResponseDTO;
-                }
-        ).collect(Collectors.toList());
-        return meetingRequestResponseDTOList;
+        return meetingRequestList.stream().map(
+                meetingRequest -> modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
     // student update request DONE
@@ -162,16 +140,15 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
                 () -> new ResourceNotFoundException("Subject", "id", subjectId)
         );
 
+        if(!meetingRequest.getRequestStatus().equals("Accepted")){
+            throw new RuntimeException("This meeting request is accepted. Please update information in booked slot.");
+        }
+
         meetingRequest.setSubject(subject);
         meetingRequest.setRequestContent(requestContent);
         meetingRequestRepository.save(meetingRequest);
 
-        MeetingRequestResponseDTO meetingRequestResponseDTO = modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
-        meetingRequestResponseDTO.setStudentName(meetingRequest.getStudent().getUserName());
-        meetingRequestResponseDTO.setLecturerName(meetingRequest.getLecturer().getUserName());
-        meetingRequestResponseDTO.setSubjectId(meetingRequest.getSubject().getSubjectId());
-
-        return meetingRequestResponseDTO;
+        return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }
 
 

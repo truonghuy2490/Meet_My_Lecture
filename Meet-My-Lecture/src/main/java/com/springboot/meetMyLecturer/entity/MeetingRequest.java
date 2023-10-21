@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -29,7 +30,7 @@ public class MeetingRequest {
 
     private String requestStatus;
     @Column(name = "create_at")
-    private LocalDate createAt;
+    private LocalDateTime createAt;
 
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)

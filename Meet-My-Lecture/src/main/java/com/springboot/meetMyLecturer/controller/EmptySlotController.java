@@ -1,8 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotCalendarDTO;
-import com.springboot.meetMyLecturer.entity.EmptySlot;
-import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -22,34 +20,24 @@ public class EmptySlotController {
     @Autowired
     EmptySlotService slotService;
 
-    @GetMapping("lecturer/{lecturerId}")
-    public List<BookedSlotHomePageDTO> getAllEmptySlotByUserId(
-            @PathVariable Long lecturerId
-    ){
-        return slotService.getAllEmptySlotByUserId(lecturerId);
-    }
-
     //DONE
     @PostMapping("lecturer/{lecturerId}")
-    public ResponseEntity<BookedSlotHomePageDTO> createEmptySlot(
+    public ResponseEntity<EmptySlotResponseDTO> createEmptySlot(
             @PathVariable Long lecturerId,
             @RequestBody EmptySlotDTO emptySlotDTO
     ) {
-
-        BookedSlotHomePageDTO responseSlot = slotService.creatEmptySlot(lecturerId, emptySlotDTO);
+        EmptySlotResponseDTO responseSlot = slotService.creatEmptySlot(lecturerId, emptySlotDTO);
 
         return ResponseEntity.ok(responseSlot);
     }
 
-    // SLOT : SET STUDENT AFTER ASSIGN
-    // request id, slot id
-    @PutMapping("lecture/meeting-request/{requestId}/slot/{slotId}")
-    public ResponseEntity<BookedSlotCalendarDTO> assignRequestToEmptySlot(
+    //DONE
+    @PutMapping("lecture/meeting-request/{requestId}/emptySlot/{emptySlotId}")
+    public ResponseEntity<EmptySlotResponseDTO> assignRequestToEmptySlot(
             @PathVariable Long requestId,
-            @PathVariable Long slotId
+            @PathVariable Long emptySlotId
     ){
-        BookedSlotCalendarDTO bookedSlotCalendarDTO = slotService.assignRequestToSlot(requestId, slotId);
-        return new ResponseEntity<>(bookedSlotCalendarDTO, HttpStatus.OK);
+        EmptySlotResponseDTO emptySlotResponseDTO = slotService.assignRequestToSlot(requestId, emptySlotId);
+        return new ResponseEntity<>(emptySlotResponseDTO, HttpStatus.OK);
     }
-
 }
