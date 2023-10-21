@@ -53,7 +53,8 @@ public class SubjectServiceImpl implements SubjectService {
                         dto.setUnique(lecturer.getUnique());
                         return dto;
                     });
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
     }
 
     //search subject by majorId
