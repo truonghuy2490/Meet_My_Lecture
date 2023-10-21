@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "Semester")
 public class Semester {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "semester_id")
     private int semesterId;
 
@@ -24,6 +24,7 @@ public class Semester {
     private Date dateStart;
 
     private Date dateEnd;
+    private int year;
 
     private int year;
 

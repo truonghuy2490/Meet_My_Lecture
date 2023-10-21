@@ -149,6 +149,5 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
 
-    //--
 
 }
