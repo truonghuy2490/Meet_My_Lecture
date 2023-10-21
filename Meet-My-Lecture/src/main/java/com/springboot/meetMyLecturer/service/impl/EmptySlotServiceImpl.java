@@ -7,15 +7,11 @@ import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.ResponseDTO.BookedSlotHomePageDTO;
 
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
-import com.springboot.meetMyLecturer.modelDTO.TeachingScheduleDTO;
-import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
-import com.springboot.meetMyLecturer.utils.ConvertLecturerName;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,18 +50,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         if(slots.isEmpty()){
             throw new RuntimeException("There no empty slot by this user");
         }
-        // Create a ModelMapper instance
-        ModelMapper modelMapper = new ModelMapper();
 
-        // Define the mapping for other properties
-        TypeMap<EmptySlot, BookedSlotHomePageDTO> typeMap = modelMapper.createTypeMap(EmptySlot.class, BookedSlotHomePageDTO.class);
-
-        // Explicitly map LecturerName
-        typeMap.addMapping(src -> src.getLecturer().getUserName() != null ? src.getLecturer().getUserName() : src.getLecturer().getNickName(), BookedSlotHomePageDTO::setLecturerName);
-
-        // Map the entities to DTOs
         return slots.stream()
-                .map(slot -> modelMapper.map(slot, BookedSlotHomePageDTO.class))
+                .map(slot -> mapper.map(slot, BookedSlotHomePageDTO.class))
                 .collect(Collectors.toList());
     }
 
