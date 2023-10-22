@@ -2,15 +2,15 @@ package com.springboot.meetMyLecturer.ResponseDTO;
 
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 @Data
 public class WeeklyEmptySlotResponseDTO {
-    private Long weekly_slot_id;
+    private Long weeklySlotId;
 
-    private Long semester_id;
+    private Long semesterId;
 
-    private LocalDate firstDayOfWeek;
+    private Date firstDayOfWeek;
 
-    private LocalDate endDayOfWeek;
+    private Date lastDayOfWeek;
 }

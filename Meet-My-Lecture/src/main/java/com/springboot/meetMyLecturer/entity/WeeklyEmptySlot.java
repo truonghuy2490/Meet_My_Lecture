@@ -23,10 +23,10 @@ public class WeeklyEmptySlot {
     private int weeklySlotId;
 
     @Column(name = "first_day_of_week", nullable = false)
-    private Date firstDateOfWeek;
+    private Date firstDayOfWeek;
 
     @Column(name = "last_day_of_week", nullable = false)
-    private Date lastDateOfWeek;
+    private Date lastDayOfWeek;
 
     @OneToMany(mappedBy = "weeklySlot")
     private Set<EmptySlot> emptySlots;
