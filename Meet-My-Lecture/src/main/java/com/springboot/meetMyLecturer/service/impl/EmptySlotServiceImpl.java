@@ -12,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+
 
 @Service
 public class EmptySlotServiceImpl implements EmptySlotService {
@@ -67,8 +69,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setWeeklySlot(weeklyEmptySlot);
 
         emptySlot.setDateStart(emptySlotDTO.getDateStart());
-        emptySlot.setDuration(emptySlotDTO.getDuration());
-        emptySlot.setTimeStart(emptySlotDTO.getTimeStart());
+        emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
+        emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
         emptySlot.setStatus("Open");
 
