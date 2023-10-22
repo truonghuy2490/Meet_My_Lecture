@@ -19,5 +19,5 @@ public class TeachingScheduleDTO {
 
     private String meetingURL;
 
-    private SlotTime slot;
+    private int slotTimeId;
 }

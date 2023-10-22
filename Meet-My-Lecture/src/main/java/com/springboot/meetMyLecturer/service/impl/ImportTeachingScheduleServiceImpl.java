@@ -1,7 +1,9 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.TeachingScheduleDTO;
 import com.springboot.meetMyLecturer.repository.SlotTimeRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
@@ -47,35 +49,36 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
     }
 
     @Override
-    public TeachingScheduleDTO createTeachingSchedule(TeachingSchedule teachingSchedule, Long lecturerId) {
-
+    public TeachingScheduleDTO createTeachingSchedule(TeachingScheduleDTO teachingScheduleDTO, Long lecturerId) {
+        TeachingSchedule teachingSchedule = modelMapper.map(teachingScheduleDTO, TeachingSchedule.class);
         User user = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId))
         );
-        teachingSchedule.setLecturer(user); // set entity
+        teachingSchedule.setLecturer(user);
+        UserRegisterResponseDTO lecDto = modelMapper.map(user, UserRegisterResponseDTO.class);
 
-        String subjectId = teachingSchedule.getSubject().getSubjectId();
-
+        String subjectId = teachingScheduleDTO.getSubject().getSubjectId();
         Subject subject = subjectRepository.findById(subjectId).orElseThrow(
                 () -> new ResourceNotFoundException("Subject", "id", subjectId)
         );
-        teachingSchedule.setSubject(subject); // set entity
+        teachingSchedule.setSubject(subject);
 
-        int slotId = teachingSchedule.getSlot().getSlotTimeId();
+        int slotId = teachingScheduleDTO.getSlotTimeId();
 
         SlotTime slot = slotTimeRepository.findById(slotId).orElseThrow(
-                ()-> new ResourceNotFoundException("Slot","id",String.valueOf(slotId))
+                ()-> new ResourceNotFoundException("Slot", "id", String.valueOf(slotId))
         );
         teachingSchedule.setSlot(slot); // set entity
 
-        TeachingScheduleDTO teachingScheduleDTO = modelMapper.map(teachingSchedule, TeachingScheduleDTO.class);
+        teachingScheduleRepository.save(teachingSchedule);
 
-        teachingScheduleDTO.setRoomId(teachingSchedule.getRoomId());
+        TeachingScheduleDTO newSchedule = modelMapper.map(teachingSchedule, TeachingScheduleDTO.class);
+        newSchedule.setLecturer(lecDto);
+        newSchedule.setSubject(modelMapper.map(teachingSchedule.getSubject(), SubjectDTO.class));
+        newSchedule.setRoomId(teachingSchedule.getRoomId());
+        newSchedule.setSlotTimeId(teachingSchedule.getSlot().getSlotTimeId());
 
-        teachingScheduleRepository.save(
-                modelMapper.map(teachingSchedule, TeachingSchedule.class)
-        );
-        return teachingScheduleDTO;
+        return newSchedule;
     }
 
     @Override

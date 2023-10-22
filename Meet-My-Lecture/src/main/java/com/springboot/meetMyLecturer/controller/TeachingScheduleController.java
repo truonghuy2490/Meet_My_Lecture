@@ -27,14 +27,14 @@ public class TeachingScheduleController {
     @PostMapping("lecturer/{lecturerId}")
     public ResponseEntity<TeachingScheduleDTO> createTeachingScheduleByLecId(
             @PathVariable Long lecturerId,
-            @RequestBody TeachingSchedule teachingSchedule
+            @RequestBody TeachingScheduleDTO teachingScheduleDTO
     )
     {
-        TeachingScheduleDTO teachingScheduleDTO = importTeachingScheduleService.createTeachingSchedule(
-                teachingSchedule,
+        TeachingScheduleDTO responseSchedule = importTeachingScheduleService.createTeachingSchedule(
+                teachingScheduleDTO,
                 lecturerId
         );
-        return new ResponseEntity<>(teachingScheduleDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseSchedule, HttpStatus.CREATED);
     }
     @DeleteMapping("{scheduleId}/lecturer/{lecturerId}")
     public ResponseEntity<String> deleteSchedule(
