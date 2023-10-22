@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.LecturerSubject;
+import com.springboot.meetMyLecturer.entity.LecturerSubjectId;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
@@ -30,17 +31,21 @@ public class LecturerServiceImpl implements LecturerService {
 
     // delete subjects for lecturer DONE
     @Override
-    public String deleteSubjectsForLecturer(Long lecturerId, String subjectId) {
+    public String deleteSubjectsForLecturer(LecturerSubjectId lecturerSubjectId) {
 
-        User lecturer = userRepository.findById(lecturerId).orElseThrow(
-                ()-> new ResourceNotFoundException("Lecturer","id", String.valueOf(lecturerId))
+        User lecturer = userRepository.findById(lecturerSubjectId.getLecturerId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Lecturer","id", String.valueOf(lecturerSubjectId.getLecturerId()))
         );
 
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",subjectId)
+        Subject subject = subjectRepository.findById(lecturerSubjectId.getSubjectId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Subject","id",lecturerSubjectId.getSubjectId())
         );
 
-        LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerIdAndSubjectId(lecturerId, subjectId);
+        LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+
+        if(lecturerSubject == null){
+            throw  new RuntimeException("You do not teach this subject.");
+        }
 
         lecturerSubjectRepository.delete(lecturerSubject);
 
@@ -48,24 +53,30 @@ public class LecturerServiceImpl implements LecturerService {
 
     }
 
-    // insert subjects for lecturer
+    // insert subjects for lecturer DONE
     @Override
-    public LecturerSubjectResponseDTO insertTaughtSubjects(Long lecturerId, String subjectId) {
-        User lecturer = userRepository.findById(lecturerId).orElseThrow(
-                ()-> new ResourceNotFoundException("Lecturer","id", String.valueOf(lecturerId))
+    public LecturerSubjectResponseDTO insertTaughtSubjects(LecturerSubjectId lecturerSubjectId) {
+        User lecturer = userRepository.findById(lecturerSubjectId.getLecturerId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Lecturer","id", String.valueOf(lecturerSubjectId.getLecturerId()))
         );
 
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",subjectId)
+        Subject subject = subjectRepository.findById(lecturerSubjectId.getSubjectId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Subject","id",lecturerSubjectId.getSubjectId())
         );
+
+        LecturerSubject lecturerSubjectDB = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+
+        if(lecturerSubjectDB != null){
+            throw  new RuntimeException("You already teach this subject");
+        }
 
         LecturerSubject lecturerSubject = new LecturerSubject();
-        lecturerSubject.setLecturerId(lecturerId);
-        lecturerSubject.setSubjectId(subjectId);
+        lecturerSubject.setLecturerSubjectId(lecturerSubjectId);
+        lecturerSubject.setLecturer(lecturer);
+        lecturerSubject.setSubject(subject);
         lecturerSubjectRepository.save(lecturerSubject);
 
         LecturerSubjectResponseDTO lecturerSubjectResponseDTO = modelMapper.map(lecturerSubject, LecturerSubjectResponseDTO.class);
-        lecturerSubjectResponseDTO.setLecturerName(lecturer.getUserName());
         lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
 
         return lecturerSubjectResponseDTO;

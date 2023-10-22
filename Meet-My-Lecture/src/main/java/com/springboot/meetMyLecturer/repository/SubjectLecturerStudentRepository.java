@@ -11,4 +11,6 @@ import java.util.List;
 public interface SubjectLecturerStudentRepository extends JpaRepository<SubjectLecturerStudent, SubjectLecturerStudentId> {
 
     List<SubjectLecturerStudent> searchSubjectLecturerStudentsByStudent_UserId(Long studentId);
+
+    SubjectLecturerStudent searchSubjectLecturerStudentBySubjectLecturerStudentId(SubjectLecturerStudentId subjectLecturerStudentId);
 }

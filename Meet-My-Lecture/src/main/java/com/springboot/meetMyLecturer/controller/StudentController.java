@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
+import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -56,11 +57,22 @@ public class StudentController {
     }
 
     //DONE
-    @PutMapping("/profile/student/{studentId}/subject/{subjectId}/lecturer/{lecturerId}")
-    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@PathVariable String subjectId,
-                                                                     @PathVariable Long lecturerId,
-                                                                     @PathVariable Long studentId){
-        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectId, lecturerId,studentId);
+    @PutMapping("/profile/subject")
+    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
+        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudentId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    //DONE
+    @PostMapping("/profile/subject")
+    public ResponseEntity<LecturerSubjectResponseDTO> insertSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
+        LecturerSubjectResponseDTO result = userService.insertSubjectsForStudent(subjectLecturerStudentId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/profile/subject")
+    public ResponseEntity<String> deleteSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
+        String result = userService.deleteSubjectsForStudent(subjectLecturerStudentId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 

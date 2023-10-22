@@ -19,19 +19,19 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    public UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
-    public UserService userService;
+    UserService userService;
 
     @Autowired
-    public RoleRepository roleRepository;
+    RoleRepository roleRepository;
 
 
     //DONE
-    @PostMapping("/register/{roleId}")
-    public ResponseEntity<UserRegisterResponseDTO> registerUser (@PathVariable Long roleId, @RequestBody UserRegister userRegister){
-        UserRegisterResponseDTO userRegisterResponseDTO = userService.registerUser(roleId,userRegister);
+    @PostMapping("/register")
+    public ResponseEntity<UserRegisterResponseDTO> registerUser (@RequestParam String userName){
+        UserRegisterResponseDTO userRegisterResponseDTO = userService.registerUser(userName);
         return new  ResponseEntity<>(userRegisterResponseDTO, HttpStatus.CREATED);
     }
 
@@ -43,10 +43,10 @@ public class UserController {
     }
 
     //DONE
-    @PutMapping("profile/{studentId}")
-    public ResponseEntity<UserProfileDTO> updateProfile(@PathVariable Long studentId,
+    @PutMapping("profile/{userId}")
+    public ResponseEntity<UserProfileDTO> updateProfile(@PathVariable Long userId,
                                                       @RequestBody UserRegister userRegister) {
-        UserProfileDTO userProfileDTO = userService.updateProfileForStudent(studentId, userRegister);
+        UserProfileDTO userProfileDTO = userService.updateProfile(userId, userRegister);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
 

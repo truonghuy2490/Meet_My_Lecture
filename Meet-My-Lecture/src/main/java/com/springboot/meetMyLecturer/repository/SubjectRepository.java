@@ -13,10 +13,10 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
 
     List<Subject> findSubjectBySubjectIdContains(String keyword);
 
-    @Query("select s from Subject s join LecturerSubject ls on ls.subjectId = s.subjectId and ls.lecturerId = :id ")
+    @Query("select s from Subject s join LecturerSubject ls on ls.subject.subjectId = s.subjectId and ls.lecturer.userId = :id ")
     List<Subject> findSubjectsByLecturerId(long id);
 
-    @Query("select u from User u join LecturerSubject ls on ls.lecturerId = u.userId and ls.subjectId = :subjectId")
+    @Query("select u from User u join LecturerSubject ls on ls.lecturer.userId = u.userId and ls.subject.subjectId = :subjectId")
     List<User> findLecturerBySubjectId(String subjectId);
 
 }

@@ -1,7 +1,10 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.entity.WeeklyEmptySlot;
+import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
+import com.springboot.meetMyLecturer.modelDTO.WeeklyEmptySlotDTO;
 import com.springboot.meetMyLecturer.repository.WeeklySlotRepository;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import org.modelmapper.ModelMapper;
@@ -64,6 +67,28 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
 //        weeklySlotRepository.save(responseWeekly);
 
         return weeklyDTO;
+    }
+
+    // view all week for amin
+    @Override
+    public List<WeeklyEmptySlotResponseDTO> viewAllWeeks() {
+        List<WeeklyEmptySlot> weeklyEmptySlotList = weeklySlotRepository.findAll();
+
+        if(weeklyEmptySlotList.isEmpty()){
+            throw new RuntimeException("Error");
+        }
+
+        return weeklyEmptySlotList.stream().map(weeklyEmptySlot -> mapper.map(weeklyEmptySlot, WeeklyEmptySlotResponseDTO.class)).collect(Collectors.toList());
+    }
+
+    //edit week for admin
+    @Override
+    public WeeklyEmptySlotResponseDTO editWeeklyEmptySlot(Long weeklyEmptySlotId, WeeklyEmptySlotDTO weeklyEmptySlotDTO) {
+        WeeklyEmptySlot weeklyEmptySlot = weeklySlotRepository.findById(weeklyEmptySlotId).orElseThrow(
+                ()-> new ResourceNotFoundException("This week","id",String.valueOf(weeklyEmptySlotId))
+        );
+
+        return mapper.map(weeklyEmptySlot, WeeklyEmptySlotResponseDTO.class);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
+import com.springboot.meetMyLecturer.entity.LecturerSubjectId;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.LecturerService;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
@@ -34,19 +35,17 @@ public class LecturerController {
         return meetingRequestService.getAllRequest();
     }*/
 
-    @PostMapping("/{lecturerId}/subject/{subjectId}")
-    public ResponseEntity<LecturerSubjectResponseDTO> insertTaughtSubjects(@PathVariable Long lecturerId,
-                                                                           @PathVariable String subjectId){
-        LecturerSubjectResponseDTO lecturerSubjectResponseDTO = lecturerService.insertTaughtSubjects(lecturerId, subjectId);
+    @PostMapping("/subject")
+    public ResponseEntity<LecturerSubjectResponseDTO> insertTaughtSubjects(@RequestBody LecturerSubjectId lecturerSubjectId){
+        LecturerSubjectResponseDTO lecturerSubjectResponseDTO = lecturerService.insertTaughtSubjects(lecturerSubjectId);
 
         return  new ResponseEntity<>(lecturerSubjectResponseDTO, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{lecturerId}/subject/{subjectId}")
-    public ResponseEntity<String> deleteSubjectsForLecturer(@PathVariable Long lecturerId,
-                                                                     @PathVariable String subjectId){
+    @DeleteMapping("/subject")
+    public ResponseEntity<String> deleteSubjectsForLecturer(@RequestBody LecturerSubjectId lecturerSubjectId){
 
-        String result = lecturerService.deleteSubjectsForLecturer(lecturerId, subjectId);
+        String result = lecturerService.deleteSubjectsForLecturer(lecturerSubjectId);
 
         return  new ResponseEntity<>(result, HttpStatus.OK);
     }

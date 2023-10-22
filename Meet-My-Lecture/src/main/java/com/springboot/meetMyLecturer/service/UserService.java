@@ -4,17 +4,18 @@ import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 
 import java.util.List;
 
 public interface UserService {
 
-    UserRegisterResponseDTO registerUser(Long roleId, UserRegister userRegister);
+    UserRegisterResponseDTO registerUser(String userName);
 
     UserProfileDTO viewProfileUser(Long userId);
 
-    UserProfileDTO updateProfileForStudent(Long studentId, UserRegister userRegister);
+    UserProfileDTO updateProfile(Long userId, UserRegister userRegister);
 
     List<UserProfileDTO> getAllUsers();
 
@@ -24,6 +25,9 @@ public interface UserService {
 
     String deleteUser(Long userId);
 
-    LecturerSubjectResponseDTO updateSubjectsForStudent(String subjectId, Long lecturerId, Long studentId);
+    LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
 
+    LecturerSubjectResponseDTO insertSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
+
+    String deleteSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
 }
