@@ -4,7 +4,6 @@ package com.springboot.meetMyLecturer.controller;
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
-import com.springboot.meetMyLecturer.modelDTO.WeeklyEmptySlotDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import com.springboot.meetMyLecturer.service.impl.UserServiceImpl;
@@ -58,9 +57,10 @@ public class AdminController {
         return new ResponseEntity<>(weeklyEmptySlotResponseDTO, HttpStatus.OK);
     }
 
+    //DONE
     @GetMapping("emptySlots/weeklyEmptySlot")
-    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlotInWeek(@RequestBody WeeklyEmptySlotDTO weeklyEmptySlotDTO){
-        List<EmptySlotResponseDTO> emptySlotResponseDTOList = weeklyEmptySlotService.getEmptySlotsInWeek(weeklyEmptySlotDTO);
+    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlotInWeek(@RequestParam Long lecturerId, @RequestParam Long weeklyEmptySlotId){
+        List<EmptySlotResponseDTO> emptySlotResponseDTOList = weeklyEmptySlotService.getEmptySlotsInWeek(lecturerId, weeklyEmptySlotId);
         return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);
     }
 

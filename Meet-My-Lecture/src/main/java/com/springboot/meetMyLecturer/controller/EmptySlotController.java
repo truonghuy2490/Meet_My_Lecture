@@ -1,8 +1,10 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
+import com.springboot.meetMyLecturer.service.RoomService;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ public class EmptySlotController {
     UserService userService;
     @Autowired
     EmptySlotService slotService;
+    @Autowired
+    RoomService roomService;
 
     //DONE
     @PostMapping("lecturer/{lecturerId}")
@@ -39,5 +43,12 @@ public class EmptySlotController {
     ){
         EmptySlotResponseDTO emptySlotResponseDTO = slotService.assignRequestToSlot(requestId, emptySlotId);
         return new ResponseEntity<>(emptySlotResponseDTO, HttpStatus.OK);
+    }
+
+    //DONE
+    @GetMapping("lecturer/room")
+    public ResponseEntity<List<Room>> getAllRooms(){
+        List<Room> roomList = roomService.getAllRooms();
+        return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 }

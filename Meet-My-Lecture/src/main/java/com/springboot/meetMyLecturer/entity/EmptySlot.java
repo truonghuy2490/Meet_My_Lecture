@@ -21,7 +21,7 @@ public class EmptySlot {
     @Column(name = "slot_id")
     private int emptySlotId;
 
-    @ManyToOne(optional = true)
+    @ManyToOne
     @JoinColumn(name = "lecturer_id", nullable = false)
     private User lecturer;
 

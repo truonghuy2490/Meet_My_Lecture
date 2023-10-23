@@ -3,7 +3,7 @@ package com.springboot.meetMyLecturer.modelDTO;
 import lombok.Data;
 
 import java.sql.Time;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class EmptySlotDTO {

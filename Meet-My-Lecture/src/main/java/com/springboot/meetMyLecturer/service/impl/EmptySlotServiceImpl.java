@@ -67,13 +67,15 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         weeklyEmptySlot.setLastDayOfWeek(dateEnd);
         weeklySlotRepository.save(weeklyEmptySlot);
 
-        EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
+        EmptySlot emptySlot = new EmptySlot();
         emptySlot.setLecturer(lecturer);
         emptySlot.setSlotTime(slotTime);
         emptySlot.setRoom(room);
         emptySlot.setWeeklySlot(weeklyEmptySlot);
 
-        emptySlot.setDateStart(emptySlotDTO.getDateStart());
+        java.sql.Date date = new java.sql.Date(emptySlotDTO.getDateStart().getTime());
+
+        emptySlot.setDateStart(date);
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 

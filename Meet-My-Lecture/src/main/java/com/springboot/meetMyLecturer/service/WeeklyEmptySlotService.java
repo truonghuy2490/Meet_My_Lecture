@@ -12,7 +12,6 @@ public interface WeeklyEmptySlotService {
     WeeklyDTO createWeeklyByDateAt(Date date);
     List<WeeklyEmptySlotResponseDTO> viewAllWeeks();
     String deleteWeeklyEmptySlot(Long weeklyEmptySlotId);
-
-    List<EmptySlotResponseDTO> getEmptySlotsInWeek(WeeklyEmptySlotDTO weeklyEmptySlotDTO);
+    List<EmptySlotResponseDTO> getEmptySlotsInWeek(Long lecturerId, Long weeklyEmptySlotId);
 
 }

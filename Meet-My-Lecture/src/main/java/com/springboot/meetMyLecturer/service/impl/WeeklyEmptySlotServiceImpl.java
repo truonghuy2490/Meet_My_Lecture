@@ -90,15 +90,15 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
         return "This week has been deleted!";
     }
 
-    // view empty slot in this week by weekId or weekId and lecturerId
+    // view empty slot in this week by weekId or weekId and lecturerId DONE
     @Override
-    public List<EmptySlotResponseDTO> getEmptySlotsInWeek(WeeklyEmptySlotDTO weeklyEmptySlotDTO) {
+    public List<EmptySlotResponseDTO> getEmptySlotsInWeek(Long lecturerId, Long weeklyEmptySlotId) {
 
-        User lecturer = userRepository.findUserByUserId(weeklyEmptySlotDTO.getLecturerId());
+        User lecturer = userRepository.findUserByUserId(lecturerId);
 
         if(lecturer == null){
             List<EmptySlot> emptySlotList = emptySlotRepository.
-                    findEmptySlotsByWeeklySlot_WeeklySlotId(weeklyEmptySlotDTO.getWeeklyEmptySlotId());
+                    findEmptySlotsByWeeklySlot_WeeklySlotId(weeklyEmptySlotId);
 
             return emptySlotList.stream().map(
                     emptySlot -> mapper.map(emptySlot, EmptySlotResponseDTO.class)
@@ -107,7 +107,7 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
 
         List<EmptySlot> emptySlotList = emptySlotRepository.
                 findEmptySlotsByWeeklySlot_WeeklySlotIdAndLecturer_UserId
-                        (weeklyEmptySlotDTO.getWeeklyEmptySlotId(), weeklyEmptySlotDTO.getLecturerId());
+                        (weeklyEmptySlotId, lecturerId);
 
         return emptySlotList.stream().map(
                 emptySlot -> mapper.map(emptySlot, EmptySlotResponseDTO.class)
