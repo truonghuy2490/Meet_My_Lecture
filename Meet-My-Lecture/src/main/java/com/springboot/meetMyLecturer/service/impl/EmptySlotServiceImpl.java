@@ -135,7 +135,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
                     // Check if newStartTime is within the existing time slot
                     if (newStartTime.compareTo(startTime) >= 0 && newStartTime.compareTo(endTimeExist) <= 0) {
-                        throw new RuntimeException("con cac"); // Replace this with your desired action or error message.
+                        throw new RuntimeException("Slot have been booked already !"); // Replace this with your desired action or error message.
                     }
                 }
             }
