@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyEmptySlotDTO;
@@ -50,17 +51,24 @@ public class AdminController {
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
+    //DONE
     @GetMapping("/weeklyEmptySlot")
     public ResponseEntity<List<WeeklyEmptySlotResponseDTO> >viewWeeklyEmptySlot(){
         List<WeeklyEmptySlotResponseDTO> weeklyEmptySlotResponseDTO = weeklyEmptySlotService.viewAllWeeks();
         return new ResponseEntity<>(weeklyEmptySlotResponseDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/weeklyEmptySlot/{weeklyEmptySlotId}")
-    public ResponseEntity<WeeklyEmptySlotResponseDTO> editWeeklyEmptySlot(@PathVariable Long weeklyEmptySlotId,
-                                                                                @RequestBody WeeklyEmptySlotDTO weeklyEmptySlotDTO){
-        WeeklyEmptySlotResponseDTO weeklyEmptySlotResponseDTO = weeklyEmptySlotService.editWeeklyEmptySlot(weeklyEmptySlotId, weeklyEmptySlotDTO);
-        return new ResponseEntity<>(weeklyEmptySlotResponseDTO, HttpStatus.OK);
+    @GetMapping("emptySlots/weeklyEmptySlot")
+    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlotInWeek(@RequestBody WeeklyEmptySlotDTO weeklyEmptySlotDTO){
+        List<EmptySlotResponseDTO> emptySlotResponseDTOList = weeklyEmptySlotService.getEmptySlotsInWeek(weeklyEmptySlotDTO);
+        return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);
+    }
+
+    //DONE
+    @DeleteMapping("/weeklyEmptySlot/{weeklyEmptySlotId}")
+    public ResponseEntity<String> deleteWeeklyEmptySlot(@PathVariable Long weeklyEmptySlotId){
+        String result = weeklyEmptySlotService.deleteWeeklyEmptySlot(weeklyEmptySlotId);
+        return  new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 

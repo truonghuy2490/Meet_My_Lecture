@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.util.Date;
 
 
 @Service
@@ -48,7 +49,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         );
         String roomId = emptySlotDTO.getRoomId();
         Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new ResourceNotFoundException("Room", "id", String.valueOf(roomId))
+                () -> new ResourceNotFoundException("Room", "id", roomId)
         );
 
         int SlotTimeId = emptySlotDTO.getSlotTimeId();
@@ -59,7 +60,11 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         // get Weekly [if not have in db, create new week]
         WeeklyDTO weeklyDTO = weeklyEmptySlotService.createWeeklyByDateAt(emptySlotDTO.getDateStart());
-        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
+        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
+        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime());
+        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());
+        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
+        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
         weeklySlotRepository.save(weeklyEmptySlot);
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);

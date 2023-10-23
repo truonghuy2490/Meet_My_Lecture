@@ -17,11 +17,6 @@ public class WeeklyController {
     @Autowired
     WeeklyEmptySlotService weeklyEmptySlotService;
 
-    @GetMapping
-    public List<WeeklyDTO> getAllWeekly(){
-        List<WeeklyDTO> list = weeklyEmptySlotService.getAllWeekly();
-        return list;
-    }
     @PostMapping()
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss")
     public ResponseEntity<WeeklyDTO> createWeekly(

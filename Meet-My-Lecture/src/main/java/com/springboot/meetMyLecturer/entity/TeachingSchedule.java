@@ -15,7 +15,7 @@ public class TeachingSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "teaching_schedule_id")
-    private int teachingScheduleId;
+    private Long teachingScheduleId;
 
     @ManyToOne
     @JoinColumn(name = "lecturer_id")
@@ -29,7 +29,7 @@ public class TeachingSchedule {
     @Column(name = "date_of_week")
     private String dateOfWeek;
 
-    private int roomId;
+    private String roomId;
 
     @ManyToOne
     @JoinColumn(name = "slot_id", nullable = false)

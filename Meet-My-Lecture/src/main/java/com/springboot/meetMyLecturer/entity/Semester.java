@@ -16,7 +16,7 @@ public class Semester {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "semester_id")
-    private int semesterId;
+    private Long semesterId;
 
     @Column(name = "semester_name", nullable = false)
     private String semesterName;

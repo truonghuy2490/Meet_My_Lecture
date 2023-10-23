@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class TeachingScheduleDTO {
 
-    private int teachingScheduleId;
+    private Long teachingScheduleId;
 
     private String dateOfWeek;
 
@@ -15,7 +15,7 @@ public class TeachingScheduleDTO {
 
     private SubjectDTO subject;
 
-    private int roomId;
+    private String roomId;
 
     private String meetingURL;
 
