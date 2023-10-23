@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.util.Date;
 
 
 @Service
@@ -57,10 +58,15 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         );
 
 
-        // get Weekly [if not have in db, create new week]
-        WeeklyDTO weeklyDTO = weeklyEmptySlotService.createWeeklyByDateAt(emptySlotDTO.getDateStart());
-        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
-        weeklySlotRepository.save(weeklyEmptySlot);
+        // [DONE] - get Weekly [if not have in db, create new week]
+        WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
+
+        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
+        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime());
+        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());
+
+        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
+        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
         emptySlot.setLecturer(lecturer);
@@ -74,7 +80,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         emptySlot.setStatus("Open");
 
-        emptySlotRepository.save(emptySlot);
+        // save to DB
+//        emptySlotRepository.save(emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }

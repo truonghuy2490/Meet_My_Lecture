@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class SemesterServiceImpl implements SemesterService {
     ModelMapper modelMapper;
     @Autowired
     UserRepository userRepository;
+
     @Override
     public List<SemesterDTO> getAllSemester() {
         List<Semester> semesters = semesterRepository.findAll();
@@ -83,4 +85,15 @@ public class SemesterServiceImpl implements SemesterService {
         semesterRepository.save(semester);
         return modelMapper.map(semester, SemesterDTO.class);
     }
+
+    @Override
+    public SemesterDTO insertWeeklyIntoSemester(Date date) {
+        Semester semester = semesterRepository.findSemesterByDateStart(date);
+        if(semester == null){
+            throw new RuntimeException("Semester is out of range");
+        }
+        return modelMapper.map(semester, SemesterDTO.class);
+    }
+
+
 }

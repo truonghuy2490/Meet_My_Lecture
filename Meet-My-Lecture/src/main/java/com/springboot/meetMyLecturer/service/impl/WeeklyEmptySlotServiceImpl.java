@@ -1,11 +1,14 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.entity.Semester;
 import com.springboot.meetMyLecturer.entity.WeeklyEmptySlot;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyEmptySlotDTO;
 import com.springboot.meetMyLecturer.repository.WeeklySlotRepository;
+import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
     WeeklySlotRepository weeklySlotRepository;
     @Autowired
     ModelMapper mapper;
+    @Autowired
+    SemesterService semesterService;
     @Override
     public List<WeeklyDTO> getAllWeekly() {
         List<WeeklyEmptySlot> weeklyEmptySlots = weeklySlotRepository.findAll();
@@ -67,6 +72,54 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
 //        weeklySlotRepository.save(responseWeekly);
 
         return weeklyDTO;
+    }
+
+    @Override
+    public WeeklyDTO insertIntoWeeklyByDateAt(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); // Define your preferred first day of the week
+
+        // Calculate the end of the week by adding 6 days
+        Calendar endOfWeekCalendar = (Calendar) calendar.clone();
+        endOfWeekCalendar.add(Calendar.DATE, 6);
+
+        // Extract the start and end dates
+        Date startDate = calendar.getTime();
+        Date endDate = endOfWeekCalendar.getTime();
+
+        // Convert java.util.Date to java.sql.Date
+        java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+        java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+
+        // find weekly exist first date of week in DB
+        Date checkWeeklyDate = weeklySlotRepository.findWeeklyEmptySlotByFirstDayOfWeek(sqlStartDate).getFirstDayOfWeek();
+
+        // Check if exist 1 weekly has day start
+        if (!startDate.equals(checkWeeklyDate) ){
+            // if it does not exist, create a WeeklyDTO object and set the start and end dates as java.sql.Date
+            // if create weekly NEED to add into Semester !!
+            WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
+            weeklyEmptySlot.setFirstDayOfWeek(sqlStartDate);
+            weeklyEmptySlot.setLastDayOfWeek(sqlEndDate);
+
+//            WeeklyDTO weeklyDTO = new WeeklyDTO();
+//            weeklyDTO.setFirstDateOfWeek(sqlStartDate);
+//            weeklyDTO.setLastDateOfWeek(sqlEndDate);
+
+            SemesterDTO semesterDTO = semesterService.insertWeeklyIntoSemester(sqlStartDate);
+            weeklyEmptySlot.setSemester(mapper.map(semesterDTO, Semester.class));
+
+            WeeklyDTO responseWeekly = mapper.map(weeklyEmptySlot, WeeklyDTO.class);
+
+            // save to DB
+            //weeklySlotRepository.save(responseWeekly);
+
+            return responseWeekly;
+        }
+        // Get Weekly Available
+        WeeklyEmptySlot weeklyEmptySlot = weeklySlotRepository.findWeeklyEmptySlotByFirstDayOfWeek(sqlStartDate);
+        return mapper.map(weeklyEmptySlot, WeeklyDTO.class);
     }
 
     // view all week for amin

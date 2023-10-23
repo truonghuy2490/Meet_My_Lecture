@@ -9,6 +9,7 @@ import java.sql.Date;
 @Data
 public class WeeklyDTO {
     private int id;
+    private String semesterName;
     private Date firstDateOfWeek;
     private Date lastDateOfWeek;
 }
