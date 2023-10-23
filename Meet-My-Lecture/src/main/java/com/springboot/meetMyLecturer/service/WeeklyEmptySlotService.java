@@ -13,6 +13,5 @@ public interface WeeklyEmptySlotService {
     WeeklyDTO createWeeklyByDateAt(Date date);
     WeeklyDTO insertIntoWeeklyByDateAt(Date date);
     List<WeeklyEmptySlotResponseDTO> viewAllWeeks();
-
     WeeklyEmptySlotResponseDTO editWeeklyEmptySlot(Long weeklyEmptySlotId, WeeklyEmptySlotDTO weeklyEmptySlotDTO);
 }

@@ -8,8 +8,6 @@ import java.util.Date;
 
 @Data
 public class MeetingRequestDTO {
-
-    private LocalDateTime createAt;
-
+    private String requestStatus;
     private String requestContent;
 }
