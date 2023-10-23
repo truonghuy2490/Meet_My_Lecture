@@ -16,7 +16,7 @@ import java.util.Set;
 public class SlotTime {
 
     @Id
-    @Column(name = "slot_id")
+    @Column(name = "slot_time_id")
     private int slotTimeId;
     @Column(name = "start_time")
     private Time startTime;

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface EmptySlotRepository extends JpaRepository<EmptySlot, Long> {
-    List<EmptySlot> findEmptySlotByLecturer_UserId(Long userId);
+    List<EmptySlot> findEmptySlotsByLecturer_UserId(Long userId);
 //    @Query("select e from EmptySlot e where e.student.userId = :userId")
 //    List<EmptySlot> findEmptySlotsByLecturer_UserId(Long userId);
     List<EmptySlot> findEmptySlotsByStudent_UserId(Long userId);
