@@ -40,4 +40,14 @@ public class EmptySlotController {
         EmptySlotResponseDTO emptySlotResponseDTO = slotService.assignRequestToSlot(requestId, emptySlotId);
         return new ResponseEntity<>(emptySlotResponseDTO, HttpStatus.OK);
     }
+
+    @PutMapping("{slotId}/lecturer/{lecturerId}")
+    public ResponseEntity<EmptySlotResponseDTO> updateEmptySlot(
+            @PathVariable Long slotId,
+            @PathVariable Long lecturerId,
+            @RequestBody EmptySlotDTO emptySlotDTO
+    ){
+        EmptySlotResponseDTO responseDTO = slotService.updateEmptySlot(lecturerId, slotId, emptySlotDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
 }

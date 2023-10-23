@@ -93,29 +93,31 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
         java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 
         // find weekly exist first date of week in DB
-        Date checkWeeklyDate = weeklySlotRepository.findWeeklyEmptySlotByFirstDayOfWeek(sqlStartDate).getFirstDayOfWeek();
+        WeeklyEmptySlot checkWeeklyDate = weeklySlotRepository.findWeeklyEmptySlotByFirstDayOfWeek(sqlStartDate);
 
-        // Check if exist 1 weekly has day start
-        if (!startDate.equals(checkWeeklyDate) ){
-            // if it does not exist, create a WeeklyDTO object and set the start and end dates as java.sql.Date
-            // if create weekly NEED to add into Semester !!
-            WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
-            weeklyEmptySlot.setFirstDayOfWeek(sqlStartDate);
-            weeklyEmptySlot.setLastDayOfWeek(sqlEndDate);
+        if( checkWeeklyDate == null) {
+            // Check if exist 1 weekly has day start
+            if (!startDate.equals(checkWeeklyDate)) {
+                // if it does not exist, create a WeeklyDTO object and set the start and end dates as java.sql.Date
+                // if create weekly NEED to add into Semester !!
+                WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
+                weeklyEmptySlot.setFirstDayOfWeek(sqlStartDate);
+                weeklyEmptySlot.setLastDayOfWeek(sqlEndDate);
 
 //            WeeklyDTO weeklyDTO = new WeeklyDTO();
 //            weeklyDTO.setFirstDateOfWeek(sqlStartDate);
 //            weeklyDTO.setLastDateOfWeek(sqlEndDate);
 
-            SemesterDTO semesterDTO = semesterService.insertWeeklyIntoSemester(sqlStartDate);
-            weeklyEmptySlot.setSemester(mapper.map(semesterDTO, Semester.class));
+                SemesterDTO semesterDTO = semesterService.insertWeeklyIntoSemester(sqlStartDate);
+                weeklyEmptySlot.setSemester(mapper.map(semesterDTO, Semester.class));
 
-            WeeklyDTO responseWeekly = mapper.map(weeklyEmptySlot, WeeklyDTO.class);
+                WeeklyDTO responseWeekly = mapper.map(weeklyEmptySlot, WeeklyDTO.class);
 
-            // save to DB
-            //weeklySlotRepository.save(responseWeekly);
+                // save to DB
+                //weeklySlotRepository.save(responseWeekly);
 
-            return responseWeekly;
+                return responseWeekly;
+            }
         }
         // Get Weekly Available
         WeeklyEmptySlot weeklyEmptySlot = weeklySlotRepository.findWeeklyEmptySlotByFirstDayOfWeek(sqlStartDate);

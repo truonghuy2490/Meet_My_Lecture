@@ -11,6 +11,7 @@ import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import com.springboot.meetMyLecturer.utils.SlotUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -115,6 +116,50 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
 
+    @Override
+    public EmptySlotResponseDTO updateEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO) {
+
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
+        );
+        EmptySlot emptySlot = emptySlotRepository.findById(emptySlotId).orElseThrow(
+                () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
+        );
+        // if does not exist slot id
+        if(!emptySlot.getLecturer().getUserId().equals(lecturer.getUserId())){
+            throw new RuntimeException("Slot not belong to this lecturer");
+        }
+        // if duplicate with other slot
+        if(!isSlotAvaiable(emptySlotDTO)){
+            throw new RuntimeException("There are Slot booked before!");
+        }
+
+
+        // updating
+        emptySlot.setDateStart(emptySlotDTO.getDateStart()); // update date start -> update weekly
+        emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
+        emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
+
+
+        // [DONE] - get Weekly [if not have in db, create new week]
+        WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
+
+        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
+        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime());
+        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());
+
+        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
+        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
+
+        emptySlot.setWeeklySlot(weeklyEmptySlot);
+
+        // save to DB
+//        emptySlotRepository.save(emptySlot);
+
+        return mapper.map(emptySlot, EmptySlotResponseDTO.class);
+
+    }
+
     public boolean isSlotAvaiable(EmptySlotDTO emptySlotDTO){
         boolean check = true;
         // check date
@@ -153,5 +198,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         return LocalTime.MIDNIGHT.plus(totalDuration);
     }
+
+
 
 }
