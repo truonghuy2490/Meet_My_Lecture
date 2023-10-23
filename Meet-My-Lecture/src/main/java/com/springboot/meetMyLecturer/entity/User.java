@@ -40,7 +40,7 @@ public class User {
     @OneToMany(mappedBy = "admin")
     private Set<Major> majors;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "admin")
     private Set<Semester> semesters;
 
     @OneToMany(mappedBy = "admin")

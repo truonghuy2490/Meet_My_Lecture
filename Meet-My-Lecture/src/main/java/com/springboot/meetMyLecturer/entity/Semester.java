@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "Semester")
 public class Semester {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "semester_id")
     private int semesterId;
 
@@ -29,7 +29,7 @@ public class Semester {
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    private User user;
+    private User admin;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "subject_semester",
