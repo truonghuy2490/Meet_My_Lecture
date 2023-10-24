@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequest.setStudent(student);
         meetingRequest.setLecturer(lecturer);
         meetingRequest.setRequestStatus("Pending");
-//        meetingRequest.setCreateAt(meetingRequestDTO.getCreateAt());
+        meetingRequest.setCreateAt(LocalDateTime.now());
         meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
 
         meetingRequestRepository.save(meetingRequest);
@@ -85,13 +86,19 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
     // process request for lecturer DONE
     @Override
-    public MeetingRequestResponseDTO processRequest(String status, Long requestId) {
+    public MeetingRequestResponseDTO processRequest(MeetingRequestDTO meetingRequestDTO, Long requestId, Long lecturerId) {
 
         MeetingRequest meetingRequest = meetingRequestRepository.findById(requestId).orElseThrow(
                 () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(requestId))
         );
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
+        );
+        if(!meetingRequest.getLecturer().getUserId().equals(lecturer.getUserId())){
+            throw new RuntimeException("This request not belong to this lecturer");
+        }
 
-        meetingRequest.setRequestStatus(status);
+        meetingRequest.setRequestStatus(meetingRequestDTO.getRequestStatus());
 
         meetingRequestRepository.save(meetingRequest);
 

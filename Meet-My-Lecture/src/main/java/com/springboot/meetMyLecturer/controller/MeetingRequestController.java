@@ -18,9 +18,11 @@ public class MeetingRequestController {
 
     //DONE
     @PutMapping("/{requestId}/subject/{subjectId}")
-    public ResponseEntity<MeetingRequestResponseDTO> updateRequestMeeting(@PathVariable Long requestId,
-                                                                          @PathVariable String subjectId,
-                                                                          @RequestParam String requestContent)
+    public ResponseEntity<MeetingRequestResponseDTO> updateRequestMeeting(
+            @PathVariable Long requestId,
+            @PathVariable String subjectId,
+            @RequestParam String requestContent
+    )
     {
         MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.updateRequest(requestContent, subjectId, requestId);
 
@@ -53,12 +55,14 @@ public class MeetingRequestController {
     }
 
     //DONE
-    @PutMapping("{requestId}/lecturer")
+    @PutMapping("{requestId}/lecturer/{lecturerId}")
     public ResponseEntity<MeetingRequestResponseDTO> processRequest(
-            @RequestParam String status,
-            @PathVariable Long requestId)
+            @RequestBody MeetingRequestDTO meetingRequestDTO,
+            @PathVariable Long requestId,
+            @PathVariable Long lecturerId
+    )
     {
-        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(status, requestId);
+        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(meetingRequestDTO, requestId, lecturerId);
         return new ResponseEntity<>(meetingRequestResponseDTO, HttpStatus.OK);
     }
 

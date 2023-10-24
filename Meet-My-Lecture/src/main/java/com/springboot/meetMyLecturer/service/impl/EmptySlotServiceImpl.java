@@ -97,7 +97,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
 
-
     //assign meeting request to empty slot DONE
     @Override
     public EmptySlotResponseDTO assignRequestToSlot(Long meetingRequestId, Long emptySlotId) {
@@ -109,9 +108,15 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                () -> new ResourceNotFoundException("Meeting Request", "id", String.valueOf(meetingRequestId))
        );
 
+       if(!meetingRequest.getRequestStatus().equals("Approved")){
+           throw new RuntimeException("Please wait for teacher approve!");
+       }
+
         emptySlot.setSubject(meetingRequest.getSubject());
         emptySlot.setStudent(meetingRequest.getStudent());
         emptySlot.setBookedDate(meetingRequest.getCreateAt());
+        emptySlot.setStatus("Booked");
+
         emptySlotRepository.save(emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
@@ -193,7 +198,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return check;
 
     }
-
 
     public static LocalTime addTimes(LocalTime time1, LocalTime time2) {
         Duration duration1 = Duration.between(LocalTime.MIDNIGHT, time1);
