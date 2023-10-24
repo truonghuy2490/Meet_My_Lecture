@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://meetlecture.c4pkvhxtozcv.ap-southeast-2.rds.amazonaws.com:3306/meetmylecturer</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="meetmylecturer@localhost" uuid="e049a0a3-5eb1-4476-87e0-c56093c2d66a">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/meetmylecturer</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

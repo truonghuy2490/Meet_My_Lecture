@@ -11,7 +11,6 @@ import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import com.springboot.meetMyLecturer.utils.SlotUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -70,20 +69,22 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         // [DONE] - get Weekly [if not have in db, create new week]
         WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
-
-        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
-        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime());
-        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());
-
-        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
-        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
+        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
+//        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
+//        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime()); // get first day of week
+//        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());    // get last day of week
+//
+//        // save to entity
+//        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
+//        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
+        // set entity
         emptySlot.setLecturer(lecturer);
         emptySlot.setSlotTime(slotTime);
         emptySlot.setRoom(room);
         emptySlot.setWeeklySlot(weeklyEmptySlot);
-
+        // set attribute
         emptySlot.setDateStart(emptySlotDTO.getDateStart());
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
@@ -91,7 +92,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setStatus("Open");
 
         // save to DB
-//        emptySlotRepository.save(emptySlot);
+        emptySlotRepository.save(emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
@@ -145,8 +146,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
 
         WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
-        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime());
-        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());
+        Date dateStart = new Date(weeklyDTO.getFirstDayOfWeek().getTime());
+        Date dateEnd = new Date(weeklyDTO.getLastDayOfWeek().getTime());
 
         weeklyEmptySlot.setFirstDayOfWeek(dateStart);
         weeklyEmptySlot.setLastDayOfWeek(dateEnd);
@@ -154,7 +155,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setWeeklySlot(weeklyEmptySlot);
 
         // save to DB
-//        emptySlotRepository.save(emptySlot);
+        emptySlotRepository.save(emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
 
@@ -181,6 +182,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                     // Check if newStartTime is within the existing time slot
                     if (newStartTime.compareTo(startTime) >= 0 && newStartTime.compareTo(endTimeExist) <= 0) {
                         throw new RuntimeException("Slot have been booked already !"); // Replace this with your desired action or error message.
+
+                    } else if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
+                        throw  new RuntimeException("This have been booked!");
                     }
                 }
             }
@@ -189,6 +193,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return check;
 
     }
+
 
     public static LocalTime addTimes(LocalTime time1, LocalTime time2) {
         Duration duration1 = Duration.between(LocalTime.MIDNIGHT, time1);

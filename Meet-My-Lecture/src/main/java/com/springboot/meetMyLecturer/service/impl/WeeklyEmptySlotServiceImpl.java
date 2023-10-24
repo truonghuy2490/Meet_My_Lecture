@@ -4,9 +4,9 @@ import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.entity.Semester;
 import com.springboot.meetMyLecturer.entity.WeeklyEmptySlot;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyEmptySlotDTO;
+import com.springboot.meetMyLecturer.repository.SemesterRepository;
 import com.springboot.meetMyLecturer.repository.WeeklySlotRepository;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
@@ -27,6 +27,8 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
     ModelMapper mapper;
     @Autowired
     SemesterService semesterService;
+    @Autowired
+    SemesterRepository semesterRepository;
     @Override
     public List<WeeklyDTO> getAllWeekly() {
         List<WeeklyEmptySlot> weeklyEmptySlots = weeklySlotRepository.findAll();
@@ -64,8 +66,8 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
 
         // Create a WeeklyDTO object and set the start and end dates as java.sql.Date
         WeeklyDTO weeklyDTO = new WeeklyDTO();
-        weeklyDTO.setFirstDateOfWeek(sqlStartDate);
-        weeklyDTO.setLastDateOfWeek(sqlEndDate);
+        weeklyDTO.setFirstDayOfWeek(sqlStartDate);
+        weeklyDTO.setLastDayOfWeek(sqlEndDate);
 
         WeeklyEmptySlot responseWeekly = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
         // save to DB
@@ -104,19 +106,17 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
                 weeklyEmptySlot.setFirstDayOfWeek(sqlStartDate);
                 weeklyEmptySlot.setLastDayOfWeek(sqlEndDate);
 
-//            WeeklyDTO weeklyDTO = new WeeklyDTO();
-//            weeklyDTO.setFirstDateOfWeek(sqlStartDate);
-//            weeklyDTO.setLastDateOfWeek(sqlEndDate);
-
-                SemesterDTO semesterDTO = semesterService.insertWeeklyIntoSemester(sqlStartDate);
-                weeklyEmptySlot.setSemester(mapper.map(semesterDTO, Semester.class));
-
-                WeeklyDTO responseWeekly = mapper.map(weeklyEmptySlot, WeeklyDTO.class);
+                // insert into semester - If there are avaiable semester
+                Semester semester = semesterRepository.findSemesterByDateStart(sqlStartDate);
+                if (semester == null){
+                    throw new RuntimeException("This semester are not avaiable to booking");
+                }
+                weeklyEmptySlot.setSemester(semester);
 
                 // save to DB
-                //weeklySlotRepository.save(responseWeekly);
+                weeklySlotRepository.save(weeklyEmptySlot);
 
-                return responseWeekly;
+                return mapper.map(weeklyEmptySlot, WeeklyDTO.class);
             }
         }
         // Get Weekly Available
