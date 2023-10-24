@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.LecturerSubject;
 import com.springboot.meetMyLecturer.entity.LecturerSubjectId;
 import com.springboot.meetMyLecturer.entity.Subject;
@@ -29,17 +30,15 @@ public class LecturerServiceImpl implements LecturerService {
     @Autowired
     ModelMapper modelMapper;
 
-    // delete subjects for lecturer DONE
+    // delete subjects for lecturer DONE-DONE
     @Override
     public String deleteSubjectsForLecturer(LecturerSubjectId lecturerSubjectId) {
 
-        User lecturer = userRepository.findById(lecturerSubjectId.getLecturerId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Lecturer","id", String.valueOf(lecturerSubjectId.getLecturerId()))
-        );
+        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerSubjectId.getLecturerId(), Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
 
-        Subject subject = subjectRepository.findById(lecturerSubjectId.getSubjectId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",lecturerSubjectId.getSubjectId())
-        );
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(lecturerSubjectId.getSubjectId(), Constant.OPEN);
+        if(subject == null) throw new RuntimeException("This subject is not existed.");
 
         LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
 
@@ -47,27 +46,38 @@ public class LecturerServiceImpl implements LecturerService {
             throw  new RuntimeException("You do not teach this subject.");
         }
 
-        lecturerSubjectRepository.delete(lecturerSubject);
+        lecturerSubject.setStatus(Constant.CLOSED);
+
+        lecturerSubjectRepository.save(lecturerSubject);
 
         return "This subject has been deleted!";
 
     }
 
-    // insert subjects for lecturer DONE
+    // insert subjects for lecturer DONE-DONE
     @Override
     public LecturerSubjectResponseDTO insertTaughtSubjects(LecturerSubjectId lecturerSubjectId) {
-        User lecturer = userRepository.findById(lecturerSubjectId.getLecturerId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Lecturer","id", String.valueOf(lecturerSubjectId.getLecturerId()))
-        );
+        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerSubjectId.getLecturerId(), Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
 
-        Subject subject = subjectRepository.findById(lecturerSubjectId.getSubjectId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",lecturerSubjectId.getSubjectId())
-        );
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(lecturerSubjectId.getSubjectId(), Constant.OPEN);
+        if(subject == null) throw new RuntimeException("This subject is not existed.");
+
 
         LecturerSubject lecturerSubjectDB = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
 
-        if(lecturerSubjectDB != null){
-            throw  new RuntimeException("You already teach this subject");
+
+        if(lecturerSubjectDB.getStatus().equals(Constant.CLOSED) ){
+            lecturerSubjectDB.setStatus(Constant.OPEN);
+            lecturerSubjectRepository.save(lecturerSubjectDB);
+
+            LecturerSubjectResponseDTO lecturerSubjectResponseDTO = modelMapper.map(lecturerSubjectDB, LecturerSubjectResponseDTO.class);
+            lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
+
+            return lecturerSubjectResponseDTO;
+
+        }else if(lecturerSubjectDB.getStatus().equals(Constant.OPEN)){
+            throw new RuntimeException("You already teach this subject.");
         }
 
         LecturerSubject lecturerSubject = new LecturerSubject();

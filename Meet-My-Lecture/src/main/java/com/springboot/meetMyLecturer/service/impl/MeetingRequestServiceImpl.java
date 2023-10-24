@@ -1,11 +1,13 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
+import com.springboot.meetMyLecturer.modelDTO.MeetingRequestForStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
@@ -15,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -36,18 +39,19 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     ModelMapper modelMapper;
 
 
-    //student create request DONE
+    //student create request DONE-DONE
     @Override
-    public MeetingRequestResponseDTO createRequest(Long studentId, Long lecturerId, String subjectId, MeetingRequestDTO meetingRequestDTO) {
-        User student = userRepository.findById(studentId).orElseThrow(
-                () -> new ResourceNotFoundException("Student", "id", String.valueOf(studentId))
-        );
-        User lecturer = userRepository.findById(lecturerId).orElseThrow(
-                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
-        );
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Subject", "id", subjectId)
-        );
+    public MeetingRequestResponseDTO createRequest(Long studentId, MeetingRequestForStudentDTO meetingRequestDTO) {
+        User student = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
+        if(student == null) throw new RuntimeException("This student is not existed.");
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(meetingRequestDTO.getLecturerId(), Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(meetingRequestDTO.getSubjectId(), Constant.OPEN);
+        if(subject == null) throw new RuntimeException("This subject is not existed.");
+
+        LocalDateTime localDateTime = LocalDateTime.now();
 
         MeetingRequest meetingRequest = new MeetingRequest();
 
@@ -63,7 +67,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }
 
-    //student delete request DONE
+    //student delete request DONE - DONE
     @Override
     public String deleteRequest(Long requestId, Long studentId) {
         MeetingRequest meetingRequest = meetingRequestRepository.findById(requestId).orElseThrow(
@@ -105,12 +109,12 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }
 
-    //get all requests by lecturerId for lecturer DONE
+    //get all requests by lecturerId for lecturer DONE-DONE
     @Override
     public List<MeetingRequestResponseDTO> getRequestByLecturerId(Long lecturerId) {
-        User user = userRepository.findById(lecturerId).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", String.valueOf(lecturerId))
-        );
+        User user = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+        if(user == null) throw new RuntimeException("This lecturer is not existed.");
+
         List<MeetingRequest> requestList = meetingRequestRepository.findMeetingRequestByLecturerUserId(lecturerId);
         if(requestList.isEmpty()){
             throw new RuntimeException("There are no request");
@@ -124,31 +128,44 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     }
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
 
-    //student get all requests DONE
+    //student get all requests DONE - DONE
     @Override
     public List<MeetingRequestResponseDTO> getAllRequestByStudentId(Long studentId) {
 
+        User user = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
+        if(user == null) throw new RuntimeException("This student is not existed.");
+
         List<MeetingRequest> meetingRequestList = meetingRequestRepository.findMeetingRequestByStudent_UserId(studentId);
+
+        if(meetingRequestList.isEmpty()){
+            throw new RuntimeException("There are no requests.");
+        }
 
         return meetingRequestList.stream().map(
                 meetingRequest -> modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
-    // student update request DONE
+    // student update request DONE-DONE
     @Override
-    public MeetingRequestResponseDTO updateRequest(String requestContent, String subjectId, Long requestId)
+    public MeetingRequestResponseDTO updateRequest(String requestContent,Long studentId, String subjectId, Long requestId)
     {
         MeetingRequest meetingRequest = meetingRequestRepository.findById(requestId).orElseThrow(
                 () -> new ResourceNotFoundException("Meeting request", "id", String.valueOf(requestId))
         );
 
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Subject", "id", subjectId)
-        );
+        User student = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
+        if(student == null) throw new RuntimeException("This student is not existed.");
+
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectId, Constant.OPEN);
+        if (subject == null) throw new RuntimeException("This subject is not existed.");
 
         if(!meetingRequest.getRequestStatus().equals("Accepted")){
             throw new RuntimeException("This meeting request is accepted. Please update information in booked slot.");
+        }
+
+        if(!meetingRequest.getStudent().getUserId().equals(studentId)){
+            throw new RuntimeException("You do not have this request.");
         }
 
         meetingRequest.setSubject(subject);

@@ -1,11 +1,9 @@
 package com.springboot.meetMyLecturer.service.impl;
 
-import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.*;
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -25,7 +23,7 @@ public class UserServiceImpl implements UserService {
     public RoleRepository roleRepository;
 
     @Autowired
-    public UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
     EmptySlotRepository emptySlotRepository;
@@ -43,28 +41,7 @@ public class UserServiceImpl implements UserService {
     ModelMapper modelMapper;
 
 
-    // register user DONE
-    @Override
-    public UserRegisterResponseDTO registerUser(String userName) {
-
-        String[] parts = userName.split(" ");
-        String lastName = parts[parts.length - 1];
-
-        StringBuilder result = new StringBuilder();
-        result.append(lastName.toLowerCase());
-        for (int i = 0; i < parts.length - 1; i++) {
-            result.append(parts[i].substring(0, 1).toUpperCase());
-        }
-
-        User user = new User();
-        user.setUserName(userName);
-        user.setUnique(result.toString());
-        userRepository.save(user);
-
-        return modelMapper.map(user, UserRegisterResponseDTO.class);
-    }
-
-    // view profile user DONE
+    // view profile user DONE - DONE
     @Override
     public UserProfileDTO viewProfileUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -73,7 +50,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserProfileDTO.class);
     }
 
-    //update profile for user DONE
+    //update profile for user DONE - DONE
     @Override
     public UserProfileDTO updateProfile(Long userId, UserRegister userRegister) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -85,58 +62,83 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user,UserProfileDTO.class);
     }
 
-    //get all users DONE
+    //get all users DONE-DONE
     @Override
-    public List<UserProfileDTO> getAllUsers(){
+    public List<UserProfileForAdminDTO> getAllUsers(){
         List<User> userList = userRepository.findUserNotAdmin();
         if(userList.isEmpty()){
             throw new RuntimeException("There are no users");
         }
-        return  userList.stream().map(user -> modelMapper.map(user, UserProfileDTO.class)).toList();
+        return  userList.stream().map(user -> modelMapper.map(user, UserProfileForAdminDTO.class)).toList();
     }
 
-    //view profile by userId for admin DONE
+    //view profile by userId for admin DONE-DONE
     @Override
-    public UserProfileDTO viewProfileByUserId(Long userId) {
+    public UserProfileForAdminDTO viewProfileByUserId(Long userId) {
         Optional<User> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
         ));
-        return modelMapper.map(user, UserProfileDTO.class);
+        return modelMapper.map(user, UserProfileForAdminDTO.class);
     }
 
-    //view empty slot by lecturerId for student DONE
+    //view empty slot by lecturerId for student and lecturer DONE-DONE
     @Override
     public List<EmptySlotResponseDTO> viewEmptySlot(Long lecturerId) {
+       User user = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+       if (user == null) throw new RuntimeException("This lecturer is not existed.");
+
+       List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
+
+        return emptySlotList.stream().map(
+                emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)).toList();
+    }
+
+    //view empty slots for admin DONE-DONE
+    @Override
+    public List<EmptySlotResponseDTO> viewEmptySlotForAdmin(Long lecturerId) {
         User user = userRepository.findById(lecturerId).orElseThrow(
-                ()-> new ResourceNotFoundException("User", "id", String.valueOf(lecturerId))
+                ()-> new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId))
         );
+
         List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
 
 //        List<EmptySlotResponseDTO> responseDTOS =
         return emptySlotList.stream().map(
                 emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)).toList();
+
     }
 
 
-    //delete user for admin DONE
+    //update user status for admin DONE-DONE
     @Override
-    public String deleteUser(Long userId) {
-        userRepository.deleteById(userId);
-        return "This user has been deleted!";
+    public UserProfileForAdminDTO updateUserStatus(Long userId, String status) {
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new ResourceNotFoundException("User","id",String.valueOf(userId))
+        );
+
+        String statusDB = status.toUpperCase();
+
+        if(statusDB.equals(Constant.CLOSED)){
+            user.setStatus(Constant.CLOSED);
+        }else if(statusDB.equals(Constant.OPEN)){
+            user.setStatus(Constant.OPEN);
+        }
+        userRepository.save(user);
+        return modelMapper.map(user, UserProfileForAdminDTO.class);
     }
 
-    //update subject for student
+
+    //update subject for student DONE - DONE
     @Override
     public LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId) {
-        Subject subject = subjectRepository.findById(subjectLecturerStudentId.getSubjectId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",subjectLecturerStudentId.getSubjectId())
-        );
-        User lecturer = userRepository.findById(subjectLecturerStudentId.getLecturerId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Lecturer","id",String.valueOf(subjectLecturerStudentId.getLecturerId()))
-        );
-        User student = userRepository.findById(subjectLecturerStudentId.getStudentId()).orElseThrow(
-                ()->new ResourceNotFoundException("Student","id",String.valueOf(subjectLecturerStudentId.getStudentId()))
-        );
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectLecturerStudentId.getSubjectId(), Constant.OPEN);
+        if(subject == null) throw new RuntimeException("This subject is not existed.");
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getLecturerId(), Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+
+        User student = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getStudentId(), Constant.OPEN);
+        if(student == null) throw new RuntimeException("This student is not existed.");
 
         SubjectLecturerStudent subjectLecturerStudent =  subjectLecturerStudentRepository
                 .searchSubjectLecturerStudentBySubjectLecturerStudentId(subjectLecturerStudentId);
@@ -148,18 +150,17 @@ public class UserServiceImpl implements UserService {
         return getLecturerSubjectResponseDTO(subjectLecturerStudentId, subject, lecturer, student, subjectLecturerStudent);
     }
 
-    //insert subject for student
+    //insert subject for student DONE-DONE
     @Override
     public LecturerSubjectResponseDTO insertSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId) {
-        Subject subject = subjectRepository.findById(subjectLecturerStudentId.getSubjectId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",subjectLecturerStudentId.getSubjectId())
-        );
-        User lecturer = userRepository.findById(subjectLecturerStudentId.getLecturerId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Lecturer","id",String.valueOf(subjectLecturerStudentId.getLecturerId()))
-        );
-        User student = userRepository.findById(subjectLecturerStudentId.getStudentId()).orElseThrow(
-                ()->new ResourceNotFoundException("Student","id",String.valueOf(subjectLecturerStudentId.getStudentId()))
-        );
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectLecturerStudentId.getSubjectId(), Constant.OPEN);
+        if(subject == null) throw new RuntimeException("This subject is not existed.");
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getLecturerId(), Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+
+        User student = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getStudentId(), Constant.OPEN);
+        if(student == null) throw new RuntimeException("This student is not existed.");
 
         SubjectLecturerStudent subjectLecturerStudentDB =  subjectLecturerStudentRepository
                 .searchSubjectLecturerStudentBySubjectLecturerStudentId(subjectLecturerStudentId);
@@ -172,18 +173,18 @@ public class UserServiceImpl implements UserService {
         return getLecturerSubjectResponseDTO(subjectLecturerStudentId, subject, lecturer, student, subjectLecturerStudent);
     }
 
-    // delete subject for student
+    // delete subject for student DONE-DONE
     @Override
     public String deleteSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId) {
-        Subject subject = subjectRepository.findById(subjectLecturerStudentId.getSubjectId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",subjectLecturerStudentId.getSubjectId())
-        );
-        User lecturer = userRepository.findById(subjectLecturerStudentId.getLecturerId()).orElseThrow(
-                ()-> new ResourceNotFoundException("Lecturer","id",String.valueOf(subjectLecturerStudentId.getLecturerId()))
-        );
-        User student = userRepository.findById(subjectLecturerStudentId.getStudentId()).orElseThrow(
-                ()->new ResourceNotFoundException("Student","id",String.valueOf(subjectLecturerStudentId.getStudentId()))
-        );
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectLecturerStudentId.getSubjectId(), Constant.OPEN);
+        if(subject == null) throw new RuntimeException("This subject is not existed.");
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getLecturerId(), Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+
+        User student = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getStudentId(), Constant.OPEN);
+        if(student == null) throw new RuntimeException("This student is not existed.");
+
 
         SubjectLecturerStudent subjectLecturerStudentDB =  subjectLecturerStudentRepository
                 .searchSubjectLecturerStudentBySubjectLecturerStudentId(subjectLecturerStudentId);
@@ -192,11 +193,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("You do not have this subject with this lecturer");
         }
 
-        subjectLecturerStudentRepository.delete(subjectLecturerStudentDB);
-
+        subjectLecturerStudentDB.setStatus(Constant.CLOSED);
+        subjectLecturerStudentRepository.save(subjectLecturerStudentDB);
 
         return "This subject with this lecturer has been deleted!";
     }
+
 
     private LecturerSubjectResponseDTO getLecturerSubjectResponseDTO(SubjectLecturerStudentId subjectLecturerStudentId, Subject subject, User lecturer, User student, SubjectLecturerStudent subjectLecturerStudent) {
         subjectLecturerStudent.setSubject(subject);

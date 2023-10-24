@@ -23,14 +23,14 @@ public class StudentController {
     @Autowired
     UserService userService;
 
-    //DONE
+    //DONE-DONE
     @GetMapping("/bookedSlot/homePage/{studentId}")
     public ResponseEntity<List<EmptySlotResponseDTO>> viewBookedSlotHomePage(@PathVariable Long studentId){
             List<EmptySlotResponseDTO> emptySlotResponseDTOS = studentService.viewBookedSlotHomePage(studentId);
             return new ResponseEntity<>(emptySlotResponseDTOS,HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @GetMapping("bookedSlot/calendar/{lecturerId}")
     public ResponseEntity<List<EmptySlotResponseDTO>> viewBookedSlotCalendar(@PathVariable Long lecturerId){
         List<EmptySlotResponseDTO> emptySlotResponseDTOS = studentService.viewBookedSlotCalendar(lecturerId);
@@ -38,7 +38,7 @@ public class StudentController {
     }
 
 
-    //DONE
+    //DONE-DONE
     @PutMapping("/emptySlot/{emptySlotId}/student/{studentId}/subject/{subjectId}")
     public ResponseEntity<EmptySlotResponseDTO> bookEmptySlot(@PathVariable Long emptySlotId,
                                                                @PathVariable Long studentId,
@@ -48,7 +48,7 @@ public class StudentController {
         return new ResponseEntity<>(emptySlotResponseDTO,HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @PutMapping("{studentId}/bookedSlot/{bookedSlotId}")
     public ResponseEntity<String> deleteBookedSlot (@PathVariable Long bookedSlotId,
                                                     @PathVariable Long studentId){
@@ -56,27 +56,28 @@ public class StudentController {
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    //DONE
+    //DONE - DONE
     @PutMapping("/profile/subject")
     public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
         LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudentId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @PostMapping("/profile/subject")
     public ResponseEntity<LecturerSubjectResponseDTO> insertSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
         LecturerSubjectResponseDTO result = userService.insertSubjectsForStudent(subjectLecturerStudentId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    @DeleteMapping("/profile/subject")
+    //DONE-DONE
+    @PutMapping("/profile/subject-deleting")
     public ResponseEntity<String> deleteSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
         String result = userService.deleteSubjectsForStudent(subjectLecturerStudentId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @GetMapping("/{studentId}")
     public ResponseEntity<List<LecturerSubjectResponseDTO>> recommendRelatedCourses(@PathVariable Long studentId){
         List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = studentService.recommendRelatedCourses(studentId);

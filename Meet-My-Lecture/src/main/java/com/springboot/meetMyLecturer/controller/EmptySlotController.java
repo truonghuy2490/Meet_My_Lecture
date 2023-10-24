@@ -19,6 +19,8 @@ public class EmptySlotController {
     UserService userService;
     @Autowired
     EmptySlotService slotService;
+    @Autowired
+    RoomService roomService;
 
     //DONE
     @PostMapping("lecturer/{lecturerId}")
@@ -41,6 +43,11 @@ public class EmptySlotController {
         return new ResponseEntity<>(emptySlotResponseDTO, HttpStatus.OK);
     }
 
+    //DONE - DONE
+    @GetMapping("lecturer/room")
+    public ResponseEntity<List<Room>> getAllRooms(){
+        List<Room> roomList = roomService.getAllRooms();
+        return new ResponseEntity<>(roomList, HttpStatus.OK);
     @PutMapping("{slotId}/lecturer/{lecturerId}")
     public ResponseEntity<EmptySlotResponseDTO> updateEmptySlot(
             @PathVariable Long slotId,

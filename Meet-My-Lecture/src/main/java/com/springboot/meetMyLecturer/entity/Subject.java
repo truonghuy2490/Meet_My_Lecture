@@ -44,4 +44,7 @@ public class Subject {
     @OneToMany(mappedBy = "subject")
     private Set<MeetingRequest> meetingRequests;
 
+    @JoinColumn(name = "status")
+    private String status;
+
 }

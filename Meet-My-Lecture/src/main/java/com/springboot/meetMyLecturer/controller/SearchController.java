@@ -20,7 +20,7 @@ public class SearchController {
     @Autowired
     SubjectService subjectService;
 
-    //DONE
+    //DONE-DONE
     @GetMapping("/lecturer")
     public ResponseEntity<List<LecturerSubjectResponseDTO>> searchLecturerByLecturerName(@RequestParam String name){
 
@@ -28,15 +28,15 @@ public class SearchController {
              return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @GetMapping("/subject")
     public ResponseEntity<List<LecturerSubjectResponseDTO> > searchSubjectBySubjectId(@RequestParam String keyword){
         List<LecturerSubjectResponseDTO> subjectList = subjectService.searchSubject(keyword);
         return new ResponseEntity<>(subjectList, HttpStatus.OK);
     }
 
-    //DONE
-    @GetMapping("/major/{majorId}")
+    //DONE-DONE
+    @GetMapping("subjects/major/{majorId}")
     public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjectsByMajorId(@PathVariable Long majorId){
         List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = subjectService.getSubjectByMajorId(majorId);
         return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.OK);

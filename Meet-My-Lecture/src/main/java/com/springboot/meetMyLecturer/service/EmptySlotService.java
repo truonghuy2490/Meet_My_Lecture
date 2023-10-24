@@ -7,5 +7,6 @@ public interface EmptySlotService {
     EmptySlotResponseDTO creatEmptySlot(Long lecturerId, EmptySlotDTO emptySlotDTO);
     EmptySlotResponseDTO assignRequestToSlot(Long meetingRequestId, Long emptySlotId);
 
+
     EmptySlotResponseDTO updateEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO);
 }

@@ -23,5 +23,8 @@ public class SlotTime {
     @Column(name = "end_time")
     private Time endTime;
 
+    @JoinColumn(name = "status")
+    private String status;
+
 
 }

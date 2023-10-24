@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
@@ -8,30 +9,33 @@ import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
-import com.springboot.meetMyLecturer.utils.SlotUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
-
-
 
 
 @Service
 public class EmptySlotServiceImpl implements EmptySlotService {
     @Autowired
     ModelMapper mapper;
+
     @Autowired
     RoomRepository roomRepository;
+
     @Autowired
     EmptySlotRepository emptySlotRepository;
+
     @Autowired
     UserRepository userRepository;
+
     @Autowired
     MeetingRequestRepository meetingRequestRepository;
     @Autowired
@@ -96,6 +100,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
+
 
     //assign meeting request to empty slot DONE
     @Override
@@ -199,6 +204,39 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
     }
 
+
+    // check if slot is expired
+    @Scheduled(cron = "0 0 6,12 * * ?")
+    public void checkIfEmptySlotIsExpired() {
+
+        java.sql.Date dateNow = java.sql.Date.valueOf(LocalDate.now());
+
+        Time timeNow = Time.valueOf(LocalTime.now());
+        Time plus = Time.valueOf("06:00:00");
+        LocalTime timePlus = plus.toLocalTime();
+        Time timeLater = Time.valueOf(addTimes(timeNow.toLocalTime(), timePlus)) ;
+
+        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByStatus(Constant.OPEN);
+
+        for (EmptySlot emptySlot : emptySlotList) {
+            java.sql.Date dateStart = emptySlot.getDateStart();
+            Time timeStart = emptySlot.getTimeStart();
+
+            if (dateStart.before(dateNow)) {
+                emptySlot.setStatus("EXPIRED");
+                emptySlotRepository.save(emptySlot);
+
+            } else if (dateStart.equals(dateNow)) {
+                if (timeStart.after(timeNow) && timeStart.before(timeLater)) {
+                    emptySlot.setStatus("EXPIRED");
+                    emptySlotRepository.save(emptySlot);
+                }
+            }
+        }
+
+
+    }
+
     public static LocalTime addTimes(LocalTime time1, LocalTime time2) {
         Duration duration1 = Duration.between(LocalTime.MIDNIGHT, time1);
         Duration duration2 = Duration.between(LocalTime.MIDNIGHT, time2);
@@ -207,7 +245,5 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         return LocalTime.MIDNIGHT.plus(totalDuration);
     }
-
-
 
 }

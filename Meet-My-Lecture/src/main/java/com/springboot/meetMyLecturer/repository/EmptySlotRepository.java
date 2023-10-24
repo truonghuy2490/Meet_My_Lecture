@@ -15,6 +15,12 @@ public interface EmptySlotRepository extends JpaRepository<EmptySlot, Long> {
     List<EmptySlot> findEmptySlotsByLecturer_UserId(Long userId);
 
     List<EmptySlot> findEmptySlotsByStudent_UserId(Long userId);
+
+    List<EmptySlot> findEmptySlotsByWeeklySlot_WeeklySlotId(Long weeklySlotId);
+
+    List<EmptySlot> findEmptySlotsByWeeklySlot_WeeklySlotIdAndLecturer_UserId(Long weeklySlotId, Long lecturerId);
+
+    List<EmptySlot> findEmptySlotsByStatus(String status);
     @Query("select em from EmptySlot em where em.dateStart =:date")
     List<EmptySlot> findEmptySlotByDateStart(Date date);
 

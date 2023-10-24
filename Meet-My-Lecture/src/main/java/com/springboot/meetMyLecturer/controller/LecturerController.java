@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/lecturer")
 public class LecturerController {
 
-
-
     @Autowired
     MeetingRequestService meetingRequestService;
 
@@ -29,12 +27,7 @@ public class LecturerController {
     @Autowired
     UserService userService;
 
-    // REQUESTS : GET ALL MEETING REQUESTS
-    /*@GetMapping("requests")
-    public List<MeetingRequestDTO> getAllRequestsMeeting (){
-        return meetingRequestService.getAllRequest();
-    }*/
-
+    //DONE-DONE
     @PostMapping("/subject")
     public ResponseEntity<LecturerSubjectResponseDTO> insertTaughtSubjects(@RequestBody LecturerSubjectId lecturerSubjectId){
         LecturerSubjectResponseDTO lecturerSubjectResponseDTO = lecturerService.insertTaughtSubjects(lecturerSubjectId);
@@ -42,7 +35,10 @@ public class LecturerController {
         return  new ResponseEntity<>(lecturerSubjectResponseDTO, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/subject")
+
+
+    //DONE-DONE
+    @PutMapping("/subject")
     public ResponseEntity<String> deleteSubjectsForLecturer(@RequestBody LecturerSubjectId lecturerSubjectId){
 
         String result = lecturerService.deleteSubjectsForLecturer(lecturerSubjectId);

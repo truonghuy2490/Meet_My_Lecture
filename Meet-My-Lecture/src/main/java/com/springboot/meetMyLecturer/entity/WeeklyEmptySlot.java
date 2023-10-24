@@ -35,5 +35,8 @@ public class WeeklyEmptySlot {
     @JoinColumn(name = "semester_id")
     private Semester semester;
 
+    @JoinColumn(name = "status")
+    private String status;
+
 }
 

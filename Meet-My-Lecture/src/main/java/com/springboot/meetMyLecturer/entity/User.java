@@ -28,6 +28,9 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
+    @Column(name = "status")
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "major_id")
     private Major major;
@@ -70,15 +73,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private Set<Subject> subjectSet;
-
-    /*@OneToMany(mappedBy = "lecturer")
-    private Set<SubjectLecturerStudent> subjectLecturerSet;
-
-    @OneToMany(mappedBy = "student")
-    private Set<SubjectLecturerStudent> subjectStudentSet;*/
-
-
-
 
 
 }

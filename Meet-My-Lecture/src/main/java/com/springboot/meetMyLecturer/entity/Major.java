@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "Major")
 public class Major {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "major_id")
     private Long majorId;
 
@@ -34,6 +34,9 @@ public class Major {
 
     @OneToMany(mappedBy = "major")
     private Set<User> student;
+
+    @JoinColumn(name = "status")
+    private String status;
 
 
 
