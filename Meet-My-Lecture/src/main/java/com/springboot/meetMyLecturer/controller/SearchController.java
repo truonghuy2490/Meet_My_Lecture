@@ -1,6 +1,8 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.service.MajorService;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/student/search")
+@RequestMapping("/api/v1/student/searching")
 public class SearchController {
 
     @Autowired
@@ -19,6 +21,9 @@ public class SearchController {
 
     @Autowired
     SubjectService subjectService;
+
+    @Autowired
+    MajorService majorService;
 
     //DONE-DONE
     @GetMapping("/lecturer")
@@ -40,6 +45,13 @@ public class SearchController {
     public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjectsByMajorId(@PathVariable Long majorId){
         List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = subjectService.getSubjectByMajorId(majorId);
         return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.OK);
+    }
+
+    //DONE
+    @GetMapping("/majors")
+    public ResponseEntity<List<MajorResponseDTO>> getAllMajors(){
+        List<MajorResponseDTO> majorResponseDTOList = majorService.getAllMajors();
+        return new ResponseEntity<>(majorResponseDTOList, HttpStatus.OK);
     }
 
 }
