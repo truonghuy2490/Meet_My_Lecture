@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.ResponseDTO;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -20,5 +21,5 @@ public class MeetingRequestResponseDTO {
 
     private String requestStatus;
 
-    private LocalDateTime createAt;
+    private Timestamp createAt;
 }

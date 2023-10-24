@@ -32,4 +32,7 @@ public class SubjectLecturerStudent {
     @MapsId("subjectId")
     private Subject subject;
 
+    @JoinColumn(name = "status")
+    private String status;
+
 }

@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.repository.RoomRepository;
 import com.springboot.meetMyLecturer.service.RoomService;
@@ -12,9 +13,9 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
     @Autowired
     RoomRepository roomRepository;
-    //get all room DONE
+    //get all room DONE - DONE
     @Override
     public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+        return roomRepository.findRoomsByStatus(Constant.OPEN);
     }
 }

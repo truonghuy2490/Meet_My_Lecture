@@ -25,4 +25,7 @@ public class LecturerSubject {
     @MapsId("subjectId")
     private Subject subject;
 
+    @Column(name = "status")
+    private String status;
+
 }

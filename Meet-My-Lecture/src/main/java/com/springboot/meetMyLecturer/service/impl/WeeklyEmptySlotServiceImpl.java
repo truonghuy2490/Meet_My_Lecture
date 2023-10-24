@@ -1,13 +1,13 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseForAdminDTO;
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.entity.WeeklyEmptySlot;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
-import com.springboot.meetMyLecturer.modelDTO.WeeklyEmptySlotDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -65,38 +65,45 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
         return weeklyDTO;
     }
 
-    // view all week for amin DONE
+    // view all week for amin DONE-DONE
     @Override
-    public List<WeeklyEmptySlotResponseDTO> viewAllWeeks() {
+    public List<WeeklyEmptySlotResponseForAdminDTO> viewAllWeeks() {
         List<WeeklyEmptySlot> weeklyEmptySlotList = weeklySlotRepository.findAll();
 
         if(weeklyEmptySlotList.isEmpty()){
             throw new RuntimeException("Error");
         }
-
-        return weeklyEmptySlotList.stream().map(weeklyEmptySlot -> mapper.map(weeklyEmptySlot, WeeklyEmptySlotResponseDTO.class)).collect(Collectors.toList());
+        return weeklyEmptySlotList.stream().map(weeklyEmptySlot -> mapper.map(weeklyEmptySlot, WeeklyEmptySlotResponseForAdminDTO.class)).collect(Collectors.toList());
     }
 
 
-    //delete week for amin DONE
+    //delete week for amin DONE-DONE
     @Override
-    public String deleteWeeklyEmptySlot(Long weeklyEmptySlotId) {
+    public String updateWeeklyEmptySlotStatus(Long weeklyEmptySlotId, String status) {
         WeeklyEmptySlot weeklyEmptySlot = weeklySlotRepository.findById(weeklyEmptySlotId).orElseThrow(
                 ()-> new ResourceNotFoundException("This week","id",String.valueOf(weeklyEmptySlotId))
         );
 
-        weeklySlotRepository.delete(weeklyEmptySlot);
+        String statusDB = status.toUpperCase();
+        if(statusDB.equals(Constant.CLOSED)){
+            weeklyEmptySlot.setStatus(Constant.CLOSED);
+        }else if(statusDB.equals(Constant.OPEN)){
+            weeklyEmptySlot.setStatus(Constant.OPEN);
+        }
+
+        weeklySlotRepository.save(weeklyEmptySlot);
 
         return "This week has been deleted!";
     }
 
-    // view empty slot in this week by weekId or weekId and lecturerId DONE
+    // view empty slot in this week by weekId or weekId and lecturerId DONE-DONE
     @Override
     public List<EmptySlotResponseDTO> getEmptySlotsInWeek(Long lecturerId, Long weeklyEmptySlotId) {
 
-        User lecturer = userRepository.findUserByUserId(lecturerId);
+        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed");
 
-        if(lecturer == null){
+        if(lecturerId == null){
             List<EmptySlot> emptySlotList = emptySlotRepository.
                     findEmptySlotsByWeeklySlot_WeeklySlotId(weeklyEmptySlotId);
 

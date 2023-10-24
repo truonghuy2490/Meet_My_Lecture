@@ -28,21 +28,14 @@ public class UserController {
     RoleRepository roleRepository;
 
 
-    //DONE
-    @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponseDTO> registerUser (@RequestParam String userName){
-        UserRegisterResponseDTO userRegisterResponseDTO = userService.registerUser(userName);
-        return new  ResponseEntity<>(userRegisterResponseDTO, HttpStatus.CREATED);
-    }
-
-    //DONE
+    //DONE-DONE
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserProfileDTO> viewProfileUser(@PathVariable long userId){
         UserProfileDTO userDTO = userService.viewProfileUser(userId);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @PutMapping("profile/{userId}")
     public ResponseEntity<UserProfileDTO> updateProfile(@PathVariable Long userId,
                                                       @RequestBody UserRegister userRegister) {
@@ -50,7 +43,7 @@ public class UserController {
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @GetMapping("/emptySlot/lecturer/{lecturerId}")
     public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlot (@PathVariable Long lecturerId){
         List<EmptySlotResponseDTO> emptySlotDTOList = userService.viewEmptySlot(lecturerId);

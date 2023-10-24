@@ -3,10 +3,10 @@ package com.springboot.meetMyLecturer.modelDTO;
 import lombok.Data;
 
 @Data
-public class WeeklyEmptySlotDTO {
-
+public class MeetingRequestForStudentDTO {
     private Long lecturerId;
 
-    private Long weeklyEmptySlotId;
+    private String subjectId;
 
+    private String requestContent;
 }

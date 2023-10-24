@@ -45,7 +45,7 @@ public class EmptySlotController {
         return new ResponseEntity<>(emptySlotResponseDTO, HttpStatus.OK);
     }
 
-    //DONE
+    //DONE - DONE
     @GetMapping("lecturer/room")
     public ResponseEntity<List<Room>> getAllRooms(){
         List<Room> roomList = roomService.getAllRooms();

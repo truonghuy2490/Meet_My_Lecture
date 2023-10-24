@@ -2,7 +2,6 @@ package com.springboot.meetMyLecturer.repository;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +16,6 @@ public interface EmptySlotRepository extends JpaRepository<EmptySlot, Long> {
 
     List<EmptySlot> findEmptySlotsByWeeklySlot_WeeklySlotIdAndLecturer_UserId(Long weeklySlotId, Long lecturerId);
 
+    List<EmptySlot> findEmptySlotsByStatus(String status);
 
 }

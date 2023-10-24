@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
+import com.springboot.meetMyLecturer.modelDTO.MeetingRequestForStudentDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,36 +17,35 @@ public class MeetingRequestController {
     @Autowired
     MeetingRequestService meetingRequestService;
 
-    //DONE
-    @PutMapping("/{requestId}/subject/{subjectId}")
+    //DONE-DONE
+    @PutMapping("/{requestId}/student/{studentId}/subject/{subjectId}")
     public ResponseEntity<MeetingRequestResponseDTO> updateRequestMeeting(@PathVariable Long requestId,
                                                                           @PathVariable String subjectId,
+                                                                          @PathVariable Long studentId,
                                                                           @RequestParam String requestContent)
     {
-        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.updateRequest(requestContent, subjectId, requestId);
+        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.updateRequest(requestContent,studentId, subjectId, requestId);
 
         return new ResponseEntity<>(meetingRequestResponseDTO,HttpStatus.OK);
     }
 
-    //DONE
-    @PostMapping("student/{studentId}/lecturer/{lecturerId}/subject/{subjectId}")
-    public ResponseEntity<MeetingRequestResponseDTO> createRequest(@PathVariable Long studentId,
-                                                                   @PathVariable Long lecturerId,
-                                                                   @PathVariable String subjectId
-            , @RequestBody MeetingRequestDTO meetingRequestDTO){
-            MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.createRequest(studentId,lecturerId,subjectId,meetingRequestDTO);
+    //DONE-DONE
+    @PostMapping("student/{studentId}")
+    public ResponseEntity<MeetingRequestResponseDTO> createRequest(@PathVariable Long studentId
+                                            , @RequestBody MeetingRequestForStudentDTO meetingRequestDTO){
+            MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.createRequest(studentId,meetingRequestDTO);
         return new ResponseEntity<>(meetingRequestResponseDTO,HttpStatus.CREATED);
     }
 
-    //DONE
+    //DONE-DONE
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByUserId(@PathVariable Long studentId){
+    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByStudentId(@PathVariable Long studentId){
         List<MeetingRequestResponseDTO> meetingRequestResponseDTOList = meetingRequestService.getAllRequestByStudentId(studentId);
         return new ResponseEntity<>(meetingRequestResponseDTOList,HttpStatus.OK);
     }
 
 
-    //DONE
+    //DONE-DONE
     @DeleteMapping("/{requestId}/student/{studentId}")
     public ResponseEntity<String> deleteRequest(@PathVariable Long requestId, @PathVariable Long studentId){
         String result = meetingRequestService.deleteRequest(requestId, studentId);
@@ -62,11 +62,10 @@ public class MeetingRequestController {
         return new ResponseEntity<>(meetingRequestResponseDTO, HttpStatus.OK);
     }
 
-    //DONE
+    //DONE-DONE
     @GetMapping("lecturer/{lecturerId}")
     public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByLecturerId(
-            @PathVariable Long lecturerId
-    ){
+                                            @PathVariable Long lecturerId){
         List<MeetingRequestResponseDTO> requestDTOList = meetingRequestService.getRequestByLecturerId(lecturerId);
         return new ResponseEntity<>(requestDTOList, HttpStatus.OK);
     }

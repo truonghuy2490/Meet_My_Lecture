@@ -11,10 +11,15 @@ import java.util.List;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject,String> {
 
-    List<Subject> findSubjectBySubjectIdContains(String keyword);
+    List<Subject> findSubjectBySubjectIdContainsAndStatus(String keyword, String status);
 
-    @Query("select s from Subject s join LecturerSubject ls on ls.subject.subjectId = s.subjectId and ls.lecturer.userId = :id ")
-    List<Subject> findSubjectsByLecturerId(long id);
+    @Query("select s from Subject s join LecturerSubject ls on ls.subject.subjectId = s.subjectId and ls.lecturer.userId = :lecturerId where s.status =:status")
+    List<Subject> findSubjectsByLecturerIdAndStatus(long lecturerId, String status);
+
+    @Query("select u from User u join LecturerSubject ls on ls.lecturer.userId = u.userId and ls.subject.subjectId = :subjectId where u.status =:status")
+    List<User> findLecturerBySubjectIdAndStatus(String subjectId, String status);
+
+    Subject findSubjectBySubjectIdAndStatus(String subjectId, String status);
 
     @Query("select u from User u join LecturerSubject ls on ls.lecturer.userId = u.userId and ls.subject.subjectId = :subjectId")
     List<User> findLecturerBySubjectId(String subjectId);

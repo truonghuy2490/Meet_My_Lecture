@@ -10,15 +10,18 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query( "select u from User u join Role r on u.role.roleId = r.roleId where u.userName like %:name% and r.roleName ='LECTURER' ")
-    List<User> findLecturerByUserName(String name);
+    @Query( "select u from User u join Role r on u.role.roleId = r.roleId where u.userName like %:name% and r.roleName ='LECTURER' and u.status =:status ")
+    List<User> findLecturerByUserNameAndStatus(String name, String status);
 
-    @Query("select u from User u join Role r on r.roleId = u.role.roleId and r.roleName !='Admin' ")
+    @Query("select u from User u join Role r on r.roleId = u.role.roleId and r.roleName !='ADMIN' ")
     List<User> findUserNotAdmin();
 
     User findUserByEmail(String email);
 
-    User findUserByUserId(Long lecturerId);
+    User findUserByUserIdAndStatus(Long lecturerId, String status);
+
+    List<User> findUserByUniqueContains(String unique);
+
 
 
 
