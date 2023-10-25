@@ -1,8 +1,11 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
+import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestForStudentDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,15 @@ public class MeetingRequestController {
     @Autowired
     MeetingRequestService meetingRequestService;
 
+    @GetMapping
+    public RequestResponse getAllRequest(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = PageConstant.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return meetingRequestService.getAllRequest(pageNo, pageSize, sortBy, sortDir);
+    }
 
     //DONE
     @PutMapping("/{requestId}/student/{studentId}/subject/{subjectId}")

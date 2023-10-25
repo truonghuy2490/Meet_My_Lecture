@@ -18,4 +18,6 @@ public class EmptySlotDTO {
 
     private String roomId;
 
+    private String mode;
+
 }

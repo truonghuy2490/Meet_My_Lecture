@@ -15,6 +15,10 @@ import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -127,6 +131,35 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         ).collect(Collectors.toList());
     }
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot
+
+    @Override
+    public RequestResponse getAllRequest(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+
+        // SAVE TO REPO
+        Page<MeetingRequest> requests = meetingRequestRepository.findAll(pageable);
+
+        // get content for page object
+        List<MeetingRequest> listOfRequests = requests.getContent();
+
+        List<MeetingRequestResponseDTO> content = listOfRequests.stream().map(request -> modelMapper.map(request, MeetingRequestResponseDTO.class)).collect(Collectors.toList());
+
+        RequestResponse requestResponse = new RequestResponse();
+        requestResponse.setContent(content);
+        requestResponse.setTotalPage(requests.getTotalPages());
+        requestResponse.setTotalElement(requests.getTotalElements());
+        requestResponse.setPageNo(requests.getNumber());
+        requestResponse.setPageSize(requests.getSize());
+        requestResponse.setLast(requests.isLast());
+
+        return requestResponse;
+    }
 
     //student get all requests DONE - DONE
     @Override

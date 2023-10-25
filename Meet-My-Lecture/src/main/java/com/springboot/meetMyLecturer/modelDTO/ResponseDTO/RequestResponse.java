@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.modelDTO.ResponseDTO;
 
 
+import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestResponse {
-    private List<MeetingRequestDTO> content;
+    private List<MeetingRequestResponseDTO> content;
     private int pageNo;
     private int pageSize;
     private Long totalElement;
