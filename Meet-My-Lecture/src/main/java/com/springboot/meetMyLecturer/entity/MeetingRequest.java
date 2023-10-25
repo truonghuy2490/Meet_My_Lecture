@@ -14,7 +14,7 @@ public class MeetingRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
-    private int meetingRequestId;
+    private Long requestId;
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
@@ -27,7 +27,6 @@ public class MeetingRequest {
     private String requestContent;
 
     private String requestStatus;
-
     @Column(name = "create_at")
     private LocalDateTime createAt;
 

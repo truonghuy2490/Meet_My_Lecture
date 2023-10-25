@@ -17,13 +17,13 @@ public class MajorController {
     @Autowired
     MajorService majorService;
 
-
     //DONE-DONE
-    @GetMapping("/majors")
+    @GetMapping("/admin")
     public ResponseEntity<List<MajorResponseDTO>> getAllMajors (){
         List<MajorResponseDTO> majorResponseDTOList = majorService.getAllMajors();
         return new ResponseEntity<>(majorResponseDTOList, HttpStatus.OK);
     }
+
 
     //DONE-DONE
     @PostMapping("/admin/{adminId}")

@@ -18,4 +18,6 @@ public interface SubjectMajorRepository extends JpaRepository<SubjectMajor, Subj
     @Query("select sm.major.majorId from SubjectMajor sm where sm.subject.subjectId =:subjectId")
     List<Long> findMajorIdBySubjectId(String subjectId);
 
+    SubjectMajor findSubjectMajorBySubjectMajorId(SubjectMajorId subjectMajorId);
+
 }
