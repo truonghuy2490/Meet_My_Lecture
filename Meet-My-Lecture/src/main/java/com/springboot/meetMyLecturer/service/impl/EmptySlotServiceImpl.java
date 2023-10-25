@@ -72,10 +72,10 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         Page<EmptySlot> slots = emptySlotRepository.findAll(pageable);
 
         // get content for page object
-        List<EmptySlot> listOfPosts = slots.getContent();
+        List<EmptySlot> listOfSlots = slots.getContent();
 
-        List<EmptySlotResponseDTO> content = listOfPosts.stream().map(
-                post -> mapper.map(post, EmptySlotResponseDTO.class)
+        List<EmptySlotResponseDTO> content = listOfSlots.stream().map(
+                slot -> mapper.map(slot, EmptySlotResponseDTO.class)
         ).collect(Collectors.toList());
 
         SlotResponse slotResponse = new SlotResponse();
@@ -115,13 +115,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // [DONE] - get Weekly [if not have in db, create new week]
         WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
         WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
-//        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
-//        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime()); // get first day of week
-//        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());    // get last day of week
-//
-//        // save to entity
-//        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
-//        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
         // set entity
@@ -129,6 +122,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setSlotTime(slotTime);
         emptySlot.setRoom(room);
         emptySlot.setWeeklySlot(weeklyEmptySlot);
+
         // set attribute
         emptySlot.setDateStart(emptySlotDTO.getDateStart());
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
@@ -137,6 +131,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         if(emptySlotDTO.getMode().equals("Private")){
             emptySlot.setCode(generateRandomNumber());
         } // check private slot and create code
+
         emptySlot.setStatus("Open");
 
         // save to DB
