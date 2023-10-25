@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -22,7 +21,7 @@ public class EmptySlot {
     @Column(name = "slot_id")
     private int emptySlotId;
 
-    @ManyToOne(optional = true)
+    @ManyToOne
     @JoinColumn(name = "lecturer_id", nullable = false)
     private User lecturer;
 
