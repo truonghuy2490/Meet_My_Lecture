@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
+import com.springboot.meetMyLecturer.modelDTO.MeetingRequestForStudentDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,21 +17,15 @@ public class MeetingRequestController {
     @Autowired
     MeetingRequestService meetingRequestService;
 
-    //DONE-DONE
+
+    //DONE
     @PutMapping("/{requestId}/student/{studentId}/subject/{subjectId}")
     public ResponseEntity<MeetingRequestResponseDTO> updateRequestMeeting(@PathVariable Long requestId,
                                                                           @PathVariable String subjectId,
                                                                           @PathVariable Long studentId,
                                                                           @RequestParam String requestContent)
-    //DONE
-    @PutMapping("/{requestId}/subject/{subjectId}")
-    public ResponseEntity<MeetingRequestResponseDTO> updateRequestMeeting(
-            @PathVariable Long requestId,
-            @PathVariable String subjectId,
-            @RequestParam String requestContent
-    )
     {
-        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.updateRequest(requestContent,studentId, subjectId, requestId);
+        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.updateRequest(requestContent, studentId,subjectId,requestId);
 
         return new ResponseEntity<>(meetingRequestResponseDTO,HttpStatus.OK);
     }
@@ -66,7 +61,7 @@ public class MeetingRequestController {
             @PathVariable Long lecturerId
     )
     {
-        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(status, requestId);
+        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(meetingRequestDTO, requestId, lecturerId);
         return new ResponseEntity<>(meetingRequestResponseDTO, HttpStatus.OK);
     }
 

@@ -1,10 +1,10 @@
 package com.springboot.meetMyLecturer.controller;
 
 
-import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.*;
+import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
+import com.springboot.meetMyLecturer.service.UserService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import com.springboot.meetMyLecturer.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,29 +59,36 @@ public class AdminController {
     }
 
     //DONE-DONE
-    @GetMapping("emptySlots/weeklyEmptySlot")
+    @GetMapping("/emptySlots/weeklyEmptySlot")
     public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlotInWeek(@RequestParam Long lecturerId, @RequestParam Long weeklyEmptySlotId){
         List<EmptySlotResponseDTO> emptySlotResponseDTOList = weeklyEmptySlotService.getEmptySlotsInWeek(lecturerId, weeklyEmptySlotId);
         return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);
     }
 
     //DONE-DONE
-    @PutMapping("/weeklyEmptySlot/{weeklyEmptySlotId}")
-    public ResponseEntity<String> updateWeeklyEmptySlotStatus(@PathVariable Long weeklyEmptySlotId,
-                                                              @RequestParam String status){
+    @PutMapping("/weeklyEmptySlot/{weeklyEmptySlotId}/update") // them update sau url
+    public ResponseEntity<String> updateWeeklyEmptySlotStatus(
+            @PathVariable Long weeklyEmptySlotId,
+            @RequestParam String status
+    ) {
         String result = weeklyEmptySlotService.updateWeeklyEmptySlotStatus(weeklyEmptySlotId, status);
-        return  new ResponseEntity<>(result, HttpStatus.OK);
-//    @PutMapping("/weeklyEmptySlot/{weeklyEmptySlotId}")
-//    public ResponseEntity<WeeklyEmptySlotResponseDTO> editWeeklyEmptySlot(@PathVariable Long weeklyEmptySlotId,
-//                                                                                @RequestBody WeeklyEmptySlotDTO weeklyEmptySlotDTO){
-//        WeeklyEmptySlotResponseDTO weeklyEmptySlotResponseDTO = weeklyEmptySlotService.editWeeklyEmptySlot(weeklyEmptySlotId, weeklyEmptySlotDTO);
-//        return new ResponseEntity<>(weeklyEmptySlotResponseDTO, HttpStatus.OK);
-//    }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @PutMapping("/weeklyEmptySlot/{weeklyEmptySlotId}/edit") // them edit sau url
+    public ResponseEntity<WeeklyEmptySlotResponseDTO> editWeeklyEmptySlot(
+            @PathVariable Long weeklyEmptySlotId,
+            @RequestBody WeeklyDTO weeklyEmptySlotDTO
+    ){
+        WeeklyEmptySlotResponseDTO weeklyEmptySlotResponseDTO = weeklyEmptySlotService.editWeeklyEmptySlot(weeklyEmptySlotId, weeklyEmptySlotDTO);
+        return new ResponseEntity<>(weeklyEmptySlotResponseDTO, HttpStatus.OK);
+    }
 
 
     //DONE-DONE
-    @GetMapping("emptySlots/lecturer/{lecturerId}")
-    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlots(@PathVariable Long lecturerId){
+    @GetMapping("/emptySlots/lecturer/{lecturerId}")
+    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlots(
+            @PathVariable Long lecturerId
+    ){
 
         List<EmptySlotResponseDTO> emptySlotResponseDTOList = userService.viewEmptySlotForAdmin(lecturerId);
         return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);

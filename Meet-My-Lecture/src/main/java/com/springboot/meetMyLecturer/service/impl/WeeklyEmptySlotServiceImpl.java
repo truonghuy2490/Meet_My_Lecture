@@ -11,8 +11,8 @@ import com.springboot.meetMyLecturer.entity.WeeklyEmptySlot;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
-import com.springboot.meetMyLecturer.modelDTO.WeeklyEmptySlotDTO;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
+import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.repository.WeeklySlotRepository;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
@@ -29,13 +29,16 @@ import java.util.stream.Collectors;
 public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
     @Autowired
     WeeklySlotRepository weeklySlotRepository;
-
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     ModelMapper mapper;
     @Autowired
     SemesterService semesterService;
     @Autowired
     SemesterRepository semesterRepository;
+    @Autowired
+    EmptySlotRepository emptySlotRepository;
     @Override
     public List<WeeklyDTO> getAllWeekly() {
         List<WeeklyEmptySlot> weeklyEmptySlots = weeklySlotRepository.findAll();
@@ -45,11 +48,11 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
         return weeklyDTOList;
     }
 
+    // test create weekly before automation adding
     @Override
     public WeeklyDTO createWeekly(WeeklyDTO weeklyDTO) {
         WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
         weeklySlotRepository.save(weeklyEmptySlot);
-
         return weeklyDTO;
     }
 
@@ -164,7 +167,7 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
     }
     //edit week for admin
     @Override
-    public WeeklyEmptySlotResponseDTO editWeeklyEmptySlot(Long weeklyEmptySlotId, WeeklyEmptySlotDTO weeklyEmptySlotDTO) {
+    public WeeklyEmptySlotResponseDTO editWeeklyEmptySlot(Long weeklyEmptySlotId, WeeklyDTO weeklyEmptySlotDTO) {
         WeeklyEmptySlot weeklyEmptySlot = weeklySlotRepository.findById(weeklyEmptySlotId).orElseThrow(
                 ()-> new ResourceNotFoundException("This week","id",String.valueOf(weeklyEmptySlotId))
         );

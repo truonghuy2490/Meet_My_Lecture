@@ -32,8 +32,8 @@ public class NotificationServiceImpl implements NotificationService {
     NotificationRepository notificationRepository;
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    MessageChannel notificationChannel;
+//    @Autowired
+//    MessageChannel notificationChannel;
 
     @Override
     public List<NotificationDTO> getAllNotificationByUser(Long userId) {
@@ -55,10 +55,10 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     public void sendNotification(String message) {
-        Message<String> notification = MessageBuilder
-                .withPayload(message)
-                .build();
-        notificationChannel.send(notification);
+//        Message<String> notification = MessageBuilder
+//                .withPayload(message)
+//                .build();
+//        notificationChannel.send(notification);
     }
 
     // Method to send a notification to a student
