@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
@@ -49,5 +50,8 @@ public class UserController {
         List<EmptySlotResponseDTO> emptySlotDTOList = userService.viewEmptySlot(lecturerId);
         return new ResponseEntity<>(emptySlotDTOList, HttpStatus.OK);
     }
+
+
+
 
 }

@@ -25,4 +25,6 @@ public class SubjectMajor {
     @MapsId("majorId")
     @JoinColumn(name = "major_id")
     private Major major;
+
+
 }

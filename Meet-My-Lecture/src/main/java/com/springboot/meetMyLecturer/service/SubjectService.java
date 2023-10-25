@@ -4,6 +4,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public interface SubjectService {
 
     List<SubjectMajorResponseDTO> getAllSubjects();
 
-    SubjectResponseDTO createSubject(SubjectDTO subjectDTO);
+    SubjectResponseDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO);
 
 }

@@ -18,7 +18,6 @@ import java.util.Set;
 )
 public class Subject {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "subject_id")
     private String subjectId;
 

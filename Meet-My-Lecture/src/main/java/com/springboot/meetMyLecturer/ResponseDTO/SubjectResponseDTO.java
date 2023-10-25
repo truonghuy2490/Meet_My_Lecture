@@ -6,4 +6,5 @@ import lombok.Data;
 public class SubjectResponseDTO {
     private String subjectId;
     private String subjectName;
+    private Long majorId;
 }

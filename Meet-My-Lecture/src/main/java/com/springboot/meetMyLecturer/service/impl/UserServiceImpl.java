@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
+import com.springboot.meetMyLecturer.exception.MmlAPIException;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
@@ -197,6 +198,16 @@ public class UserServiceImpl implements UserService {
         subjectLecturerStudentRepository.save(subjectLecturerStudentDB);
 
         return "This subject with this lecturer has been deleted!";
+    }
+
+    // get all majors for user DONE-DONE
+    @Override
+    public List<MajorResponseDTO> getAllMajors() {
+        List<Major> majorList = majorRepository.findMajorsByStatus(Constant.OPEN);
+        if(majorList.isEmpty()) throw new RuntimeException("There are no majors");
+
+        return majorList.stream().map
+                (major -> modelMapper.map(major, MajorResponseDTO.class)).toList();
     }
 
 

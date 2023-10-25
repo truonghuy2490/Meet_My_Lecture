@@ -5,11 +5,10 @@ import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
-import com.springboot.meetMyLecturer.entity.Major;
-import com.springboot.meetMyLecturer.entity.Subject;
-import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.SubjectService;
 import org.modelmapper.ModelMapper;
@@ -129,11 +128,40 @@ public class SubjectServiceImpl implements SubjectService {
 
     //create subject for admin DONE - DONE
     @Override
-    public SubjectResponseDTO createSubject(SubjectDTO subjectDTO) {
+    public SubjectResponseDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO) {
+
+        Set<Long> majorSet = subjectDTO.getMajorId();
+
+        List<Long> majorList = majorSet.stream().toList();
+
+        List<Major> majors = new ArrayList<>();
+
+        User admin = userRepository.findById(adminId).orElseThrow(
+                ()-> new ResourceNotFoundException("Admin","id",String.valueOf(adminId))
+        );
+
         Subject subject = new Subject();
         subject.setSubjectName(subjectDTO.getSubjectName());
         subject.setSubjectId(subjectDTO.getSubjectId());
         subject.setStatus(Constant.OPEN);
+        subject.setAdmin(admin);
+
+        SubjectMajor subjectMajor = new SubjectMajor();
+        SubjectMajorId subjectMajorId = new SubjectMajorId();
+
+        for(int i = 0; i < majorList.size(); i++){
+            Major major = majorRepository.findMajorByMajorIdAndStatus(majorList.get(i), Constant.OPEN);
+            if(major != null){
+                subjectMajorId.setSubjectId(subjectDTO.getSubjectId());
+                subjectMajorId.setMajorId(major.getMajorId());
+                subjectMajor.setSubjectMajorId(subjectMajorId);
+                subjectMajor.setMajor(major);
+                subjectMajor.setSubject(subject);
+                subjectMajorRepository.save(subjectMajor);
+            }else{
+                throw new ResourceNotFoundException("Major","id",String.valueOf(majorList.get(i)));
+            }
+        }
         subjectRepository.save(subject);
         return modelMapper.map(subject, SubjectResponseDTO.class);
     }

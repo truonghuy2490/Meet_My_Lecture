@@ -27,4 +27,6 @@ public interface UserService {
     LecturerSubjectResponseDTO insertSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
 
     String deleteSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
+
+    List<MajorResponseDTO> getAllMajors();
 }

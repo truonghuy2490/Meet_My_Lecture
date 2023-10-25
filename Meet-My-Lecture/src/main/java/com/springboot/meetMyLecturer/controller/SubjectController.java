@@ -4,6 +4,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 import com.springboot.meetMyLecturer.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,18 @@ public class SubjectController {
     }
 
     //DONE-DONE
-    @PostMapping("/admin")
-    public ResponseEntity<SubjectResponseDTO> createSubject(@RequestBody SubjectDTO subjectDTO){
-        SubjectResponseDTO subjectResponseDTO = subjectService.createSubject(subjectDTO);
+    @PostMapping("/admin/{adminId}")
+    public ResponseEntity<SubjectResponseDTO> createSubject(@PathVariable Long adminId,
+                                                    @RequestBody SubjectForAminDTO subjectDTO){
+        SubjectResponseDTO subjectResponseDTO = subjectService.createSubject(adminId,subjectDTO);
         return new ResponseEntity<>(subjectResponseDTO, HttpStatus.CREATED);
     }
+
+    @PutMapping("/admin")
+    public ResponseEntity<SubjectMajorResponseDTO> insertSubjectsIntoMajor(){
+        SubjectMajorResponseDTO subject = null;
+        return new ResponseEntity<>(subject, HttpStatus.OK);
+    }
+
 
 }
