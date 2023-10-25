@@ -5,13 +5,20 @@ import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import com.springboot.meetMyLecturer.utils.SlotUtils;
 import org.modelmapper.ModelMapper;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +28,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -48,6 +57,37 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     @Autowired
     SlotUtils slotUtils;
 
+
+    @Override
+    public SlotResponse getAllSlot(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+
+        // SAVE TO REPO
+        Page<EmptySlot> slots = emptySlotRepository.findAll(pageable);
+
+        // get content for page object
+        List<EmptySlot> listOfPosts = slots.getContent();
+
+        List<EmptySlotResponseDTO> content = listOfPosts.stream().map(
+                post -> mapper.map(post, EmptySlotResponseDTO.class)
+        ).collect(Collectors.toList());
+
+        SlotResponse slotResponse = new SlotResponse();
+        slotResponse.setContent(content);
+        slotResponse.setTotalPage(slots.getTotalPages());
+        slotResponse.setTotalElement(slots.getTotalElements());
+        slotResponse.setPageNo(slots.getNumber());
+        slotResponse.setPageSize(slots.getSize());
+        slotResponse.setLast(slots.isLast());
+
+        return slotResponse;
+    }
 
     //lecturer create empty slot DONE
     @Override
@@ -94,6 +134,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
+        if(emptySlotDTO.getMode().equals("Private")){
+            emptySlot.setCode(generateRandomNumber());
+        } // check private slot and create code
         emptySlot.setStatus("Open");
 
         // save to DB
@@ -245,6 +288,13 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         Duration totalDuration = duration1.plus(duration2);
 
         return LocalTime.MIDNIGHT.plus(totalDuration);
+    }
+
+    public int generateRandomNumber() {
+        Random random = new Random();
+        int min = 1000;
+        int max = 9999;
+        return random.nextInt(max - min + 1) + min;
     }
 
 }
