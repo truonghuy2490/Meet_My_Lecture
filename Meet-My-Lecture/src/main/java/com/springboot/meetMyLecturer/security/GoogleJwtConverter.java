@@ -4,6 +4,7 @@ import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,9 +51,7 @@ public class GoogleJwtConverter implements Converter<Jwt, Collection<GrantedAuth
             List<User> userList = userRepository.findUserByUniqueContains(result.toString());
             if(userList != null){
                 int i = userList.size();
-                if(i != 0){
-                    result.append(i);
-                }
+                result.append(i);
             }
 
             User user = new User();

@@ -5,7 +5,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseForAdmin
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.User;
-
+import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.entity.Semester;
 import com.springboot.meetMyLecturer.entity.WeeklyEmptySlot;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
@@ -14,7 +14,6 @@ import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.repository.WeeklySlotRepository;
-
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,27 +32,27 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
     UserRepository userRepository;
     @Autowired
     ModelMapper mapper;
+
     @Autowired
     SemesterRepository semesterRepository;
     @Autowired
     EmptySlotRepository emptySlotRepository;
-
-//    @Override
-//    public List<WeeklyDTO> getAllWeekly() {
-//        List<WeeklyEmptySlot> weeklyEmptySlots = weeklySlotRepository.findAll();
-//        List<WeeklyDTO> weeklyDTOList = weeklyEmptySlots.stream().map(
-//                weeklyEmptySlot -> mapper.map(weeklyEmptySlot,WeeklyDTO.class)
-//        ).collect(Collectors.toList());
-//        return weeklyDTOList;
-//    }
+    @Override
+    public List<WeeklyDTO> getAllWeekly() {
+        List<WeeklyEmptySlot> weeklyEmptySlots = weeklySlotRepository.findAll();
+        List<WeeklyDTO> weeklyDTOList = weeklyEmptySlots.stream().map(
+                weeklyEmptySlot -> mapper.map(weeklyEmptySlot,WeeklyDTO.class)
+        ).collect(Collectors.toList());
+        return weeklyDTOList;
+    }
 
     // test create weekly before automation adding
-//    @Override
-//    public WeeklyDTO createWeekly(WeeklyDTO weeklyDTO) {
-//        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
-//        weeklySlotRepository.save(weeklyEmptySlot);
-//        return weeklyDTO;
-//    }
+    @Override
+    public WeeklyDTO createWeekly(WeeklyDTO weeklyDTO) {
+        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO, WeeklyEmptySlot.class);
+        weeklySlotRepository.save(weeklyEmptySlot);
+        return weeklyDTO;
+    }
 
     @Override
     public WeeklyDTO createWeeklyByDateAt(Date date) {
@@ -150,7 +149,7 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
     @Override
     public String updateWeeklyEmptySlotStatus(Long weeklyEmptySlotId, String status) {
         WeeklyEmptySlot weeklyEmptySlot = weeklySlotRepository.findById(weeklyEmptySlotId).orElseThrow(
-                () -> new ResourceNotFoundException("This week", "id", String.valueOf(weeklyEmptySlotId))
+                ()-> new ResourceNotFoundException("This week","id",String.valueOf(weeklyEmptySlotId))
         );
 
         String statusDB = status.toUpperCase();
@@ -162,7 +161,16 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
 
         weeklySlotRepository.save(weeklyEmptySlot);
 
-        return "This week has been " + status.toUpperCase();
+        return "This week has been deleted!";
+    }
+    //edit week for admin
+    @Override
+    public WeeklyEmptySlotResponseDTO editWeeklyEmptySlot(Long weeklyEmptySlotId, WeeklyDTO weeklyEmptySlotDTO) {
+        WeeklyEmptySlot weeklyEmptySlot = weeklySlotRepository.findById(weeklyEmptySlotId).orElseThrow(
+                ()-> new ResourceNotFoundException("This week","id",String.valueOf(weeklyEmptySlotId))
+        );
+
+        return mapper.map(weeklyEmptySlot, WeeklyEmptySlotResponseDTO.class);
     }
 
     // view empty slot in this week by weekId or weekId and lecturerId DONE-DONE

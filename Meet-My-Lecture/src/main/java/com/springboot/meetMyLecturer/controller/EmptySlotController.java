@@ -1,8 +1,10 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.RoomService;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -23,6 +25,16 @@ public class EmptySlotController {
     EmptySlotService slotService;
     @Autowired
     RoomService roomService;
+
+    @GetMapping
+    public SlotResponse getAllSlot(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "emptySlotId", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return slotService.getAllSlot(pageNo, pageSize, sortBy, sortDir);
+    }
 
     //DONE
     @PostMapping("lecturer/{lecturerId}")
@@ -47,8 +59,18 @@ public class EmptySlotController {
 
     //DONE - DONE
     @GetMapping("lecturer/room")
-    public ResponseEntity<List<Room>> getAllRooms(){
+    public ResponseEntity<List<Room>> getAllRooms() {
         List<Room> roomList = roomService.getAllRooms();
         return new ResponseEntity<>(roomList, HttpStatus.OK);
+    }
+
+    @PutMapping("{slotId}/lecturer/{lecturerId}")
+    public ResponseEntity<EmptySlotResponseDTO> updateEmptySlot(
+            @PathVariable Long slotId,
+            @PathVariable Long lecturerId,
+            @RequestBody EmptySlotDTO emptySlotDTO
+    ){
+        EmptySlotResponseDTO responseDTO = slotService.updateEmptySlot(lecturerId, slotId, emptySlotDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }

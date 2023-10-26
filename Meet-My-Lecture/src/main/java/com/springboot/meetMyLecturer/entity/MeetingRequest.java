@@ -3,7 +3,9 @@ package com.springboot.meetMyLecturer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class MeetingRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
-    private Long requestId;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
@@ -27,6 +29,7 @@ public class MeetingRequest {
     private String requestContent;
 
     private String requestStatus;
+
     @Column(name = "create_at")
     private LocalDateTime createAt;
 

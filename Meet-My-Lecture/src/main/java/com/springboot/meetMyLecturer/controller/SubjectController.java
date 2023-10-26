@@ -36,13 +36,9 @@ public class SubjectController {
         return new ResponseEntity<>(subjectResponseDTO, HttpStatus.CREATED);
     }
 
-    //DONE-DONE
-    @PutMapping("/admin/{adminId}")
-    public ResponseEntity<SubjectResponseDTO> editSubjectsInMajor(@PathVariable Long adminId,
-                                                                       @RequestParam String subjectId,
-                                                                       @RequestParam Long majorId){
-        SubjectResponseDTO subject = subjectService.editSubjectsInMajor(adminId, subjectId, majorId);
-
+    @PutMapping("/admin")
+    public ResponseEntity<SubjectMajorResponseDTO> insertSubjectsIntoMajor(){
+        SubjectMajorResponseDTO subject = null;
         return new ResponseEntity<>(subject, HttpStatus.OK);
     }
 

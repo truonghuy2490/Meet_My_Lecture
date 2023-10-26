@@ -134,6 +134,8 @@ public class SubjectServiceImpl implements SubjectService {
 
         List<Long> majorList = majorSet.stream().toList();
 
+        List<Major> majors = new ArrayList<>();
+
         User admin = userRepository.findById(adminId).orElseThrow(
                 ()-> new ResourceNotFoundException("Admin","id",String.valueOf(adminId))
         );
@@ -143,65 +145,24 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setSubjectId(subjectDTO.getSubjectId());
         subject.setStatus(Constant.OPEN);
         subject.setAdmin(admin);
-        subjectRepository.save(subject);
 
         SubjectMajor subjectMajor = new SubjectMajor();
         SubjectMajorId subjectMajorId = new SubjectMajorId();
 
-        for (Long aLong : majorList) {
-            Major major = majorRepository.findMajorByMajorIdAndStatus(aLong, Constant.OPEN);
-            if (major != null) {
+        for(int i = 0; i < majorList.size(); i++){
+            Major major = majorRepository.findMajorByMajorIdAndStatus(majorList.get(i), Constant.OPEN);
+            if(major != null){
                 subjectMajorId.setSubjectId(subjectDTO.getSubjectId());
                 subjectMajorId.setMajorId(major.getMajorId());
                 subjectMajor.setSubjectMajorId(subjectMajorId);
                 subjectMajor.setMajor(major);
                 subjectMajor.setSubject(subject);
                 subjectMajorRepository.save(subjectMajor);
-            } else {
-                throw new ResourceNotFoundException("Major", "id", String.valueOf(aLong));
+            }else{
+                throw new ResourceNotFoundException("Major","id",String.valueOf(majorList.get(i)));
             }
         }
+        subjectRepository.save(subject);
         return modelMapper.map(subject, SubjectResponseDTO.class);
-    }
-
-    // edit subject and major for admin DONE-DONE
-    @Override
-    public SubjectResponseDTO editSubjectsInMajor(Long adminId, String subjectId, Long majorId) {
-        User admin = userRepository.findById(adminId).orElseThrow(
-                ()-> new ResourceNotFoundException("Admin","id",String.valueOf(adminId))
-        );
-
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                ()-> new ResourceNotFoundException("Subject","id",subjectId)
-        );
-
-        if(subject.getStatus().equals(Constant.CLOSED)){
-            throw new RuntimeException("This subject is disable.");
-        }
-
-        Major major = majorRepository.findById(majorId).orElseThrow(
-                ()-> new ResourceNotFoundException("Major","id",String.valueOf(majorId))
-        );
-
-        if (major.getStatus().equals(Constant.CLOSED)){
-            throw new RuntimeException("This major is disable.");
-        }
-
-        SubjectMajorId subjectMajorId = new SubjectMajorId();
-        subjectMajorId.setMajorId(majorId);
-        subjectMajorId.setSubjectId(subjectId);
-
-        SubjectMajor subjectMajor = subjectMajorRepository.findSubjectMajorBySubjectMajorId(subjectMajorId);
-        if(subjectMajor == null){
-            throw new RuntimeException("These subject and major is not existed.");
-        }
-
-        subjectMajor.setMajor(major);
-        subjectMajor.setSubject(subject);
-        subjectMajor.setSubjectMajorId(subjectMajorId);
-
-        subjectMajorRepository.save(subjectMajor);
-
-        return modelMapper.map(subjectMajor, SubjectResponseDTO.class);
     }
 }

@@ -16,7 +16,7 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "noti_id")
-    private Long notiId;
+    private int notiId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

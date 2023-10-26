@@ -20,13 +20,16 @@ public class WeeklyEmptySlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weekly_slot_id")
-    private Long weeklySlotId;
+    private int weeklySlotId;
 
     @Column(name = "first_day_of_week", nullable = false)
     private Date firstDayOfWeek;
 
     @Column(name = "last_day_of_week", nullable = false)
     private Date lastDayOfWeek;
+
+    @OneToMany(mappedBy = "weeklySlot")
+    private Set<EmptySlot> emptySlots;
 
     @ManyToOne
     @JoinColumn(name = "semester_id")
