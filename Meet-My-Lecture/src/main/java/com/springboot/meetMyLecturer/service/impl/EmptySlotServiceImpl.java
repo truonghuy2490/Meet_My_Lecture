@@ -4,6 +4,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotCheckExpiredDTO;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
@@ -113,7 +114,13 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // [DONE] - get Weekly [if not have in db, create new week]
         WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
         WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
-
+//        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
+//        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime()); // get first day of week
+//        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());    // get last day of week
+//
+//        // save to entity
+//        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
+//        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
         // set entity
@@ -126,7 +133,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
-        if(emptySlotDTO.getMode().equalsIgnoreCase(Constant.PRIVATE)){
+        if(emptySlotDTO.getMode().equals("Private")){
             emptySlot.setCode(generateRandomNumber());
         } // check private slot and create code
         emptySlot.setStatus("Open");
@@ -156,8 +163,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setSubject(meetingRequest.getSubject());
         emptySlot.setStudent(meetingRequest.getStudent());
         emptySlot.setBookedDate(meetingRequest.getCreateAt());
-        emptySlot.setStatus("Booked");
-
         emptySlotRepository.save(emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
@@ -176,11 +181,11 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         if(!emptySlot.getLecturer().getUserId().equals(lecturer.getUserId())){
             throw new RuntimeException("Slot not belong to this lecturer");
         }
+
         // if duplicate with other slot
         if(!isSlotAvaiable(emptySlotDTO)){
             throw new RuntimeException("There are Slot booked before!");
         }
-
 
         // updating
         emptySlot.setDateStart(emptySlotDTO.getDateStart()); // update date start -> update weekly
@@ -243,7 +248,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
     // check if slot is expired
     @Scheduled(cron = "0 0 22,6 * * ?")
-    //@Scheduled(cron = "0 44 11 * * *")
     public void checkIfEmptySlotIsExpired() {
 
         java.sql.Date dateNow = java.sql.Date.valueOf(LocalDate.now());

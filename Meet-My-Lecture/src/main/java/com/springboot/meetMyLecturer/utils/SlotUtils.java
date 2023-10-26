@@ -31,20 +31,3 @@ public class SlotUtils {
         return null;
     }
 }
-
-//@Component
-//public class SlotUtils {
-//    @Autowired
-//    EmptySlotRepository emptySlotRepository;
-//    public EmptySlotDTO getSlotByTimeStart(Time timeStart){
-//        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByTimeStart(timeStart);
-//        if(!emptySlotList.isEmpty()){
-//            emptySlotList.stream().map(
-//                    emptySlot -> (){
-//
-//                    }
-//            )
-//        }
-//        return null;
-//    }
-//}

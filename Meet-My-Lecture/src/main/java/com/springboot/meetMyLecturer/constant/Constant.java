@@ -6,5 +6,4 @@ import org.springframework.stereotype.Component;
 public class Constant {
     public static final String CLOSED = "CLOSED";
     public static final String OPEN = "OPEN";
-    public static final String PRIVATE = "PRIVATE";
 }
