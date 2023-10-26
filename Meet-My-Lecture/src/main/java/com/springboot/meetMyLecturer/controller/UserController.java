@@ -46,7 +46,7 @@ public class UserController {
 
     //DONE-DONE
     @GetMapping("/emptySlot/lecturer/{lecturerId}")
-    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlot (@PathVariable Long lecturerId){
+    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlotForLecturer (@PathVariable Long lecturerId){
         List<EmptySlotResponseDTO> emptySlotDTOList = userService.viewEmptySlot(lecturerId);
         return new ResponseEntity<>(emptySlotDTOList, HttpStatus.OK);
     }

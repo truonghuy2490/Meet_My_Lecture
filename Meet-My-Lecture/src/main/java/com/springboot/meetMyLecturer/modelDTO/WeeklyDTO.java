@@ -6,6 +6,6 @@ import java.sql.Date;
 
 @Data
 public class WeeklyDTO {
-    private Date firstDateOfWeek;
-    private Date lastDateOfWeek;
+    private Date firstDayOfWeek;
+    private Date lastDayOfWeek;
 }

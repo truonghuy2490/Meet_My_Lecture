@@ -45,8 +45,6 @@ public class EmptySlot {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @OneToMany(mappedBy = "emptySlot")
-    private Set<Notification> notifications;
 
     @OneToOne
     @JoinColumn(name = "meeting_request_id")

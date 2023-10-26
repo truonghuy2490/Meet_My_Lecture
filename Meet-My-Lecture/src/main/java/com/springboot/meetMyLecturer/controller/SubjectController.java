@@ -37,7 +37,6 @@ public class SubjectController {
     }
 
     //DONE-DONE
-
     @PutMapping("/admin/{adminId}")
     public ResponseEntity<SubjectResponseDTO> editSubjectsInMajor(@PathVariable Long adminId,
                                                                        @RequestParam String subjectId,

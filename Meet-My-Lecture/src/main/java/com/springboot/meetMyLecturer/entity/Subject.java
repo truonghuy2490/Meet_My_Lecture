@@ -40,8 +40,6 @@ public class Subject {
     @ManyToMany(mappedBy = "subjectSet")
     private Set<Semester> semesterSet;
 
-    @OneToMany(mappedBy = "subject")
-    private Set<MeetingRequest> meetingRequests;
 
     @JoinColumn(name = "status")
     private String status;

@@ -38,9 +38,6 @@ public class Semester {
     )
     private Set<Subject> subjectSet;
 
-    @OneToMany(mappedBy = "semester")
-    private Set<WeeklyEmptySlot> weeklyEmptySlots;
-
     @JoinColumn(name = "status")
     private String status;
 }
