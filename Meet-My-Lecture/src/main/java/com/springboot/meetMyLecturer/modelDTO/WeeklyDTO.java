@@ -6,6 +6,8 @@ import java.sql.Date;
 
 @Data
 public class WeeklyDTO {
+    private int weeklySlotId;
+    private String semesterName;
     private Date firstDayOfWeek;
     private Date lastDayOfWeek;
 }

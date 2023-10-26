@@ -8,15 +8,19 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Notification")
+@Entity
+@Table(name = "notification")
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "noti_id")
-    private Long notiId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notification_id")
+    private Long notificationId;
+    @Column(name = "notification_message")
+    private String notificationMessage;
+    @Column(name = "timestamp")
+    private Date timestamp;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -25,9 +29,5 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "slot_id", nullable = false)
     private EmptySlot emptySlot;
-
-    private String notiContent;
-
-    private Date notiDate;
 
 }

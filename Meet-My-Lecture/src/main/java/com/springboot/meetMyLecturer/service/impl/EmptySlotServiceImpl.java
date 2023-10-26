@@ -10,8 +10,11 @@ import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
+import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
+import com.springboot.meetMyLecturer.utils.NotificationType;
 import com.springboot.meetMyLecturer.utils.SlotUtils;
+import jakarta.validation.constraints.Null;
 import org.modelmapper.ModelMapper;
 
 
@@ -55,6 +58,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     WeeklySlotRepository weeklySlotRepository;
     @Autowired
     SlotUtils slotUtils;
+    @Autowired
+    NotificationService notificationService;
 
 
     @Override
@@ -116,6 +121,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
+
         // set entity
         emptySlot.setLecturer(lecturer);
         emptySlot.setSlotTime(slotTime);
@@ -127,7 +133,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
-        if(emptySlotDTO.getMode().equals("Private")){
+        if(emptySlotDTO.getMode().equalsIgnoreCase(Constant.PRIVATE)){
             emptySlot.setCode(generateRandomNumber());
         } // check private slot and create code
 
@@ -135,6 +141,14 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         // save to DB
         emptySlotRepository.save(emptySlot);
+
+        // Create and save a notification
+        String notificationMessage = "Slot created in room " + emptySlot.getRoom().getRoomId() +
+                " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
+                " for slot duration " + emptySlot.getDuration();
+        NotificationType notificationType = NotificationType.SlotCreate;
+        notificationService.createSlotNotification(notificationMessage, notificationType, emptySlot);
+
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
