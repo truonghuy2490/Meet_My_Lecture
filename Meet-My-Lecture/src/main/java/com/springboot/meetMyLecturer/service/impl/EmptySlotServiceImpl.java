@@ -26,10 +26,7 @@ import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -245,30 +242,40 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
 
     // check if slot is expired
-    @Scheduled(cron = "0 0 6,12 * * ?")
+    @Scheduled(cron = "0 0 22,6 * * ?")
+    //@Scheduled(cron = "0 44 11 * * *")
     public void checkIfEmptySlotIsExpired() {
 
         java.sql.Date dateNow = java.sql.Date.valueOf(LocalDate.now());
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR,1);
+        java.sql.Date nextDate = new java.sql.Date(calendar.getTime().getTime());
+
         Time timeNow = Time.valueOf(LocalTime.now());
-        Time plus = Time.valueOf("06:00:00");
-        LocalTime timePlus = plus.toLocalTime();
-        Time timeLater = Time.valueOf(addTimes(timeNow.toLocalTime(), timePlus)) ;
 
-        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByStatus(Constant.OPEN);
+        List<Long> emptySlotList = emptySlotRepository.findEmptySlotsByStatus(Constant.OPEN);
 
-        for (EmptySlot emptySlot : emptySlotList) {
-            java.sql.Date dateStart = emptySlot.getDateStart();
-            Time timeStart = emptySlot.getTimeStart();
+        for (Long emptySlotId : emptySlotList) {
+            EmptySlot emptySlotDB = emptySlotRepository.findById(emptySlotId).orElseThrow();
+            java.sql.Date dateStart = emptySlotDB.getDateStart();
+            Time timeStart = emptySlotDB.getTimeStart();
 
             if (dateStart.before(dateNow)) {
-                emptySlot.setStatus("EXPIRED");
-                emptySlotRepository.save(emptySlot);
+                emptySlotDB.setStatus("EXPIRED");
+                emptySlotRepository.save(emptySlotDB);
 
+                //expired slots from 12:00AM-20:00PM at 6AM at the same day
             } else if (dateStart.equals(dateNow)) {
-                if (timeStart.after(timeNow) && timeStart.before(timeLater)) {
-                    emptySlot.setStatus("EXPIRED");
-                    emptySlotRepository.save(emptySlot);
+                if (timeStart.after(Time.valueOf("12:00:00")) && timeStart.before(Time.valueOf("20:00:00"))) {
+                    emptySlotDB.setStatus("EXPIRED");
+                    emptySlotRepository.save(emptySlotDB);
+                }
+                // expired slots from 6:00AM-12:00AM at 10PM the day before
+            }else if(dateStart.after(nextDate) && timeNow.equals(Time.valueOf("22:00:00"))){
+                if(timeStart.after(Time.valueOf("06:00:00")) && timeStart.before(Time.valueOf("12:00:00"))){
+                    emptySlotDB.setStatus("EXPIRED");
+                    emptySlotRepository.save(emptySlotDB);
                 }
             }
         }
