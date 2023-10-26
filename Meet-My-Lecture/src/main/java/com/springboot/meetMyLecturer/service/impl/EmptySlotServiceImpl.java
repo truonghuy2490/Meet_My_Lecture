@@ -243,7 +243,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
 
     // check if slot is expired
-    @Scheduled(cron = "0 0 6,12 * * ?")
+   /* @Scheduled(cron = "0 0 6,12 * * ?")
     public void checkIfEmptySlotIsExpired() {
 
         java.sql.Date dateNow = java.sql.Date.valueOf(LocalDate.now());
@@ -272,7 +272,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         }
 
 
-    }
+    }*/
 
     public static LocalTime addTimes(LocalTime time1, LocalTime time2) {
         Duration duration1 = Duration.between(LocalTime.MIDNIGHT, time1);
