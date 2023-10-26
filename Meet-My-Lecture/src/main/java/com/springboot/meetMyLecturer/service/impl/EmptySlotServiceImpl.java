@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -115,13 +116,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // [DONE] - get Weekly [if not have in db, create new week]
         WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
         WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
-//        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
-//        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime()); // get first day of week
-//        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());    // get last day of week
-//
-//        // save to entity
-//        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
-//        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
+
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
         // set entity
@@ -134,7 +129,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
-        if(emptySlotDTO.getMode().equals("Private")){
+        if(emptySlotDTO.getMode().equalsIgnoreCase(Constant.PRIVATE)){
             emptySlot.setCode(generateRandomNumber());
         } // check private slot and create code
         emptySlot.setStatus("Open");
