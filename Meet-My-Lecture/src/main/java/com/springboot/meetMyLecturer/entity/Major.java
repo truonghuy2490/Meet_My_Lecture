@@ -32,9 +32,6 @@ public class Major {
     )
     private Set<Subject> subjectSet;
 
-    @OneToMany(mappedBy = "major")
-    private Set<User> student;
-
     @JoinColumn(name = "status")
     private String status;
 

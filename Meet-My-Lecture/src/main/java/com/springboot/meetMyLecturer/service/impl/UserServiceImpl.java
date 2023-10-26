@@ -103,7 +103,6 @@ public class UserServiceImpl implements UserService {
 
         List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
 
-//        List<EmptySlotResponseDTO> responseDTOS =
         return emptySlotList.stream().map(
                 emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)).toList();
 

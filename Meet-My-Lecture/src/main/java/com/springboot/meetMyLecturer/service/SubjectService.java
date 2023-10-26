@@ -19,4 +19,6 @@ public interface SubjectService {
 
     SubjectResponseDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO);
 
+    SubjectResponseDTO editSubjectsInMajor(Long adminId, String subjectId, Long majorId);
+
 }
