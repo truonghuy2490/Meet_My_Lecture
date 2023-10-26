@@ -141,7 +141,6 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-
         // SAVE TO REPO
         Page<MeetingRequest> requests = meetingRequestRepository.findAll(pageable);
 
