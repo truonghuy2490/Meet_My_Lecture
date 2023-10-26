@@ -14,7 +14,6 @@ import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.repository.WeeklySlotRepository;
-import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,7 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
     UserRepository userRepository;
     @Autowired
     ModelMapper mapper;
-    @Autowired
-    SemesterService semesterService;
+
     @Autowired
     SemesterRepository semesterRepository;
     @Autowired
