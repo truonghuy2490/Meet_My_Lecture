@@ -1,9 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.UserProfileDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -46,9 +43,17 @@ public class UserController {
 
     //DONE-DONE
     @GetMapping("/emptySlot/lecturer/{lecturerId}")
-    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlotForLecturer (@PathVariable Long lecturerId){
+    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlots (@PathVariable Long lecturerId){
         List<EmptySlotResponseDTO> emptySlotDTOList = userService.viewEmptySlot(lecturerId);
         return new ResponseEntity<>(emptySlotDTOList, HttpStatus.OK);
+    }
+
+    //DONE-DONE
+    @GetMapping("/emptySlot/user/{userId}/semester/{semesterId}")
+    public ResponseEntity<List<EmptySlotResponseForSemesterDTO>> getEmptySlotsInSemester(@PathVariable Long userId,
+                                                                                         @PathVariable Long semesterId){
+        List<EmptySlotResponseForSemesterDTO> emptySlotList = userService.getEmptySlotsInSemester(userId,semesterId);
+        return new ResponseEntity<>(emptySlotList, HttpStatus.OK);
     }
 
 

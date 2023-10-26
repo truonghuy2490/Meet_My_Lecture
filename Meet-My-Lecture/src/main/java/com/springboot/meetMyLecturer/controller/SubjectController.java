@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/subject")
+@RequestMapping("/api/v1/subject/admin")
 public class SubjectController {
 
     @Autowired
     SubjectService subjectService;
 
     //DONE-DONE
-    @GetMapping("/admin")
+    @GetMapping
     public ResponseEntity<List<SubjectMajorResponseDTO>> getAllSubjects(){
         List<SubjectMajorResponseDTO> subjectList = subjectService.getAllSubjects();
         return new ResponseEntity<>(subjectList, HttpStatus.OK);
     }
 
     //DONE-DONE
-    @PostMapping("/admin/{adminId}")
+    @PostMapping("/{adminId}")
     public ResponseEntity<SubjectResponseDTO> createSubject(@PathVariable Long adminId,
                                                     @RequestBody SubjectForAminDTO subjectDTO){
         SubjectResponseDTO subjectResponseDTO = subjectService.createSubject(adminId,subjectDTO);
@@ -38,7 +38,7 @@ public class SubjectController {
 
     //DONE-DONE
 
-    @PutMapping("/admin/{adminId}")
+    @PutMapping("/{adminId}")
     public ResponseEntity<SubjectResponseDTO> editSubjectsInMajor(@PathVariable Long adminId,
                                                                        @RequestParam String subjectId,
                                                                        @RequestParam Long majorId){

@@ -16,7 +16,11 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "noti_id")
-    private Long notiId;
+    private Long notificationId;
+
+    private String notificationMessage;
+
+    private Date timestamp;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -25,9 +29,5 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "slot_id", nullable = false)
     private EmptySlot emptySlot;
-
-    private String notiContent;
-
-    private Date notiDate;
 
 }

@@ -29,4 +29,6 @@ public interface UserService {
     String deleteSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
 
     List<MajorResponseDTO> getAllMajors();
+
+    List<EmptySlotResponseForSemesterDTO> getEmptySlotsInSemester(Long userId, Long semesterId);
 }
