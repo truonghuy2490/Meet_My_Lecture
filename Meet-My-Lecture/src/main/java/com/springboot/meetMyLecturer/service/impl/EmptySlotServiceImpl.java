@@ -147,7 +147,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
         NotificationType notificationType = NotificationType.SlotCreate;
-        notificationService.createSlotNotification(notificationMessage, notificationType, emptySlot);
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
 
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
@@ -217,8 +217,49 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // save to DB
         emptySlotRepository.save(emptySlot);
 
+        // Update and save a notification
+        String notificationMessage = "Slot update in room " + emptySlot.getRoom().getRoomId() +
+                " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
+                " for slot duration " + emptySlot.getDuration();
+        NotificationType notificationType = NotificationType.SlotUpdate;
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
 
+    }
+
+    @Override
+    public EmptySlotResponseDTO deleteSlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO) {
+
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
+        );
+        EmptySlot emptySlot = emptySlotRepository.findById(emptySlotId).orElseThrow(
+                () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
+        );
+        // if does not exist slot id
+        if(!emptySlot.getLecturer().getUserId().equals(lecturer.getUserId())){
+            throw new RuntimeException("Slot not belong to this lecturer");
+        }
+
+        // if duplicate with other slot
+        if(!isSlotAvaiable(emptySlotDTO)){
+            throw new RuntimeException("There are Slot booked before!");
+        }
+
+        // CLOSE SLOT
+        emptySlot.setStatus(Constant.CLOSED);
+
+
+        // save to DB
+        emptySlotRepository.save(emptySlot);
+
+        // delete and save a notification
+        String notificationMessage = "Slot delete success !";
+        NotificationType notificationType = NotificationType.SlotDelete;
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+
+        return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
 
     public boolean isSlotAvaiable(EmptySlotDTO emptySlotDTO){

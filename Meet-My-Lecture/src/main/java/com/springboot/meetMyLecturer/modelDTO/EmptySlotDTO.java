@@ -22,4 +22,6 @@ public class EmptySlotDTO {
 
     private String mode;
 
+    private String status;
+
 }

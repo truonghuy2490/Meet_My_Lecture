@@ -13,6 +13,8 @@ import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
+import com.springboot.meetMyLecturer.service.NotificationService;
+import com.springboot.meetMyLecturer.utils.NotificationType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,10 +40,11 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     @Autowired
     SubjectRepository subjectRepository;
 
-
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    NotificationService notificationService;
 
     //student create request DONE-DONE
     @Override
@@ -67,6 +70,12 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
 
         meetingRequestRepository.save(meetingRequest);
+
+        // Create and save a notification
+        String notificationMessage = "Requesting " + meetingRequest.getSubject().getSubjectId()  +
+                " to " + meetingRequest.getLecturer().getUserName() + " was created";
+        NotificationType notificationType = NotificationType.SlotCreate;
+        notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
 
         return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }
