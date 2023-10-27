@@ -3,6 +3,8 @@ package com.springboot.meetMyLecturer.service;
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.util.List;
 
@@ -31,4 +33,6 @@ public interface UserService {
     List<MajorResponseDTO> getAllMajors();
 
     List<EmptySlotResponseForSemesterDTO> getEmptySlotsInSemester(Long userId, Long semesterId);
+
+    Long getUserId(String email);
 }

@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.repository;
 import com.springboot.meetMyLecturer.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,9 +21,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserByUserIdAndStatus(Long lecturerId, String status);
 
-    List<User> findUserByUniqueContains(String unique);
+    @Query("select u.userId from User u where u.unique like %:unique%")
+    List<Long> findUserByUniqueContains(@Param("unique") String unique);
 
-
+    @Query("select u.userId from User u where u.email =:email")
+    Long findByEmail(String email);
 
 
 }

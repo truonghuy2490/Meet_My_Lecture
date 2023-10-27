@@ -16,6 +16,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,14 +30,18 @@ public class SecurityConfig {
     @Autowired
     RoleRepository roleRepository;
 
+
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+
 
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName("_csrf");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new GoogleJwtConverter(userRepository,roleRepository));
+
+
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
@@ -53,7 +58,7 @@ public class SecurityConfig {
                     }
                 })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("api/v1/students/**"
                                 ,"api/v1/requests/**"
-                                ,"api/v1/user/**"
+                                //,"api/v1/user/**"
                                 ,"api/v1/slots/**"
                                 ,"api/v1/admin/**"
                                 ,"api/v1/lecturer/**"
@@ -65,9 +70,11 @@ public class SecurityConfig {
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/v3/api-docs/**","/swagger-ui/**").permitAll()
+                        .requestMatchers("api/v1/user/**").hasRole("STUDENT")
                         .anyRequest().permitAll())
-                .oauth2ResourceServer(oauth2ResourceServerCustomizer ->
+               .oauth2ResourceServer(oauth2ResourceServerCustomizer ->
                         oauth2ResourceServerCustomizer.jwt(jwtCustomizer -> jwtCustomizer.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+
         return http.build();
     }
 

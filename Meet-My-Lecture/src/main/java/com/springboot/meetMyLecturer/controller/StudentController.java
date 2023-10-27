@@ -21,7 +21,11 @@ public class StudentController {
     StudentService studentService;
 
     @Autowired
+    EmailConverterJwt emailConverterJwt;
+
+    @Autowired
     UserService userService;
+
 
     //DONE-DONE
     @GetMapping("/bookedSlot/homePage/{studentId}")
@@ -79,7 +83,7 @@ public class StudentController {
 
     //DONE-DONE
     @GetMapping("/{studentId}")
-    public ResponseEntity<List<LecturerSubjectResponseDTO>> recommendRelatedCourses(@PathVariable Long studentId){
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> recommendRelatedCourses(@PathVariable Long studentId) {
         List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = studentService.recommendRelatedCourses(studentId);
         return new ResponseEntity<>(lecturerSubjectResponseDTOList, HttpStatus.OK);
     }
