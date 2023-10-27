@@ -29,7 +29,10 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "slot_id", nullable = false)
     private EmptySlot emptySlot;
+
     @ManyToOne
     @JoinColumn(name = "request_id", nullable = false)
     private MeetingRequest meetingRequest;
+
+
 }

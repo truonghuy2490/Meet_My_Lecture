@@ -27,5 +27,10 @@ public interface EmptySlotRepository extends JpaRepository<EmptySlot, Long> {
     @Query("select em from EmptySlot em where em.dateStart =:date")
     List<EmptySlot> findEmptySlotByDateStart(Date date);
 
+    @Query("select em from EmptySlot em " +
+            "join WeeklyEmptySlot w on w.weeklySlotId = em.weeklySlot.weeklySlotId and (em.student.userId =:userId or em.lecturer.userId =:userId)" +
+            "join Semester s on s.semesterId = w.semester.semesterId and s.semesterId =:semesterId")
+    List<EmptySlot> findEmptySlotsBySemester(Long semesterId, Long userId);
+
 }
 

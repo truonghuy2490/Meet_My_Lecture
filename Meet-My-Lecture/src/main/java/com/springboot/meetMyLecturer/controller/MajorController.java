@@ -11,30 +11,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/major")
+@RequestMapping("/api/v1/major/admin")
 public class MajorController {
 
     @Autowired
     MajorService majorService;
 
     //DONE-DONE
-    @GetMapping("/admin")
-    public ResponseEntity<List<MajorResponseDTO>> getAllMajors (){
+    @GetMapping
+    public ResponseEntity<List<MajorResponseDTO>> getAllMajorsForAdmin(){
         List<MajorResponseDTO> majorResponseDTOList = majorService.getAllMajors();
         return new ResponseEntity<>(majorResponseDTOList, HttpStatus.OK);
     }
 
 
     //DONE-DONE
-    @PostMapping("/admin/{adminId}")
-    public ResponseEntity<MajorResponseDTO> createMajor(@PathVariable Long adminId, @RequestParam String majorName ){
+    @PostMapping("/{adminId}")
+    public ResponseEntity<MajorResponseDTO> createMajorForAdmin(@PathVariable Long adminId, @RequestParam String majorName ){
         MajorResponseDTO majorResponseDTO = majorService.createMajor(adminId,majorName);
         return new ResponseEntity<>(majorResponseDTO, HttpStatus.CREATED);
     }
 
     //DONE-DONE
-    @PutMapping("/admin/{adminId}")
-    public ResponseEntity<MajorResponseDTO> editMajor(@PathVariable Long adminId,
+    @PutMapping("/{adminId}")
+    public ResponseEntity<MajorResponseDTO> editMajorForAdmin(@PathVariable Long adminId,
                                                       @RequestBody MajorDTO majorDTO){
         MajorResponseDTO majorResponseDTO = majorService.editMajor(adminId,majorDTO);
         return new ResponseEntity<>(majorResponseDTO, HttpStatus.CREATED);
