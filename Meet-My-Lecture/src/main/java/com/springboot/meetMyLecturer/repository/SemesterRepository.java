@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface SemesterRepository extends JpaRepository<Semester, Long> {
@@ -13,5 +14,7 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
     Semester findSemesterByDateStart(Date date);
 
     Semester findSemesterBySemesterIdAndStatus(Long semesterId, String status);
+
+    List<Semester> findSemestersByStatus(String status);
 
 }

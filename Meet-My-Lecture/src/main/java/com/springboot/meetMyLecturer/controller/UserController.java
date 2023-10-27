@@ -5,6 +5,7 @@ import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
+import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,10 +23,10 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
-    UserService userService;
+    SemesterService semesterService;
 
     @Autowired
     RoleRepository roleRepository;
@@ -61,9 +62,17 @@ public class UserController {
         return new ResponseEntity<>(emptySlotList, HttpStatus.OK);
     }
 
+    //DONE-DONE
     @GetMapping("/userId")
     public Long getUserId(){
         return userService.getUserId(Constant.EMAIL);
+    }
+
+    //DONE-DONE
+    @GetMapping("/semester")
+    public ResponseEntity<List<SemesterResponseDTO>> getAllSemester(){
+        List<SemesterResponseDTO> responseDTOList = semesterService.getAllSemesters();
+        return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
     }
 
 }

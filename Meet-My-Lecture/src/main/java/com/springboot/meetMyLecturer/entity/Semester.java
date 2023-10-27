@@ -3,7 +3,7 @@ package com.springboot.meetMyLecturer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Set;
 
 @Setter

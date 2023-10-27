@@ -100,7 +100,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         );
         String roomId = emptySlotDTO.getRoomId();
         Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new ResourceNotFoundException("Room", "id", String.valueOf(roomId))
+                () -> new ResourceNotFoundException("Room", "id", roomId)
         );
 
         int SlotTimeId = emptySlotDTO.getSlotTimeId();
@@ -145,7 +145,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
         NotificationType notificationType = NotificationType.SlotCreate;
-        //notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
 
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
@@ -220,7 +220,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
         NotificationType notificationType = NotificationType.SlotUpdate;
-       // notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
 

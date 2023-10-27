@@ -242,6 +242,7 @@ public class UserServiceImpl implements UserService {
         ).toList();
     }
 
+    //get userId DONE-DONE
     @Override
     public Long getUserId(String email) {
         return userRepository.findByEmail(email);
