@@ -2,7 +2,6 @@ package com.springboot.meetMyLecturer.controller;
 
 
 import com.springboot.meetMyLecturer.ResponseDTO.NotificationDTO;
-import com.springboot.meetMyLecturer.entity.Notification;
 import com.springboot.meetMyLecturer.service.NotificationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

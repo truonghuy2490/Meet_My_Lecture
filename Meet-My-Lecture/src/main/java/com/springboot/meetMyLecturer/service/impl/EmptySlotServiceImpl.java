@@ -4,7 +4,6 @@ import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.EmptySlotCheckExpiredDTO;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
@@ -14,7 +13,6 @@ import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import com.springboot.meetMyLecturer.utils.NotificationType;
 import com.springboot.meetMyLecturer.utils.SlotUtils;
-import jakarta.validation.constraints.Null;
 import org.modelmapper.ModelMapper;
 
 
@@ -147,7 +145,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
         NotificationType notificationType = NotificationType.SlotCreate;
-        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+        //notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
 
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
@@ -222,7 +220,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
         NotificationType notificationType = NotificationType.SlotUpdate;
-        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+       // notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
 

@@ -22,10 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,8 +54,6 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(meetingRequestDTO.getSubjectId(), Constant.OPEN);
         if(subject == null) throw new RuntimeException("This subject is not existed.");
-
-        LocalDateTime localDateTime = LocalDateTime.now();
 
         MeetingRequest meetingRequest = new MeetingRequest();
 
