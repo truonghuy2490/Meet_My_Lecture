@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -34,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    SemesterRepository semesterRepository;
 
     @Autowired
     SubjectLecturerStudentRepository subjectLecturerStudentRepository;
@@ -105,7 +108,6 @@ public class UserServiceImpl implements UserService {
 
         return emptySlotList.stream().map(
                 emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)).toList();
-
     }
 
 
@@ -207,6 +209,27 @@ public class UserServiceImpl implements UserService {
 
         return majorList.stream().map
                 (major -> modelMapper.map(major, MajorResponseDTO.class)).toList();
+    }
+
+    //get empty slot by semester for user DONE-DONE
+    @Override
+    public List<EmptySlotResponseForSemesterDTO> getEmptySlotsInSemester(Long userId, Long semesterId) {
+
+        User user = userRepository.findUserByUserIdAndStatus(userId, Constant.OPEN);
+        if(user == null) throw new RuntimeException("This user is not existed.");
+
+        Semester semester = semesterRepository.findSemesterBySemesterIdAndStatus(semesterId, Constant.OPEN);
+        if (semester == null) throw new RuntimeException("This semester is not existed.");
+
+        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsBySemester(semesterId, userId);
+
+        return emptySlotList.stream().map(
+                emptySlot -> {
+                    EmptySlotResponseForSemesterDTO emptySlotResponseForSemesterDTO = modelMapper.map(emptySlot, EmptySlotResponseForSemesterDTO.class);
+                    emptySlotResponseForSemesterDTO.setSemesterId(semester.getSemesterId());
+                    return emptySlotResponseForSemesterDTO;
+                }
+        ).toList();
     }
 
 

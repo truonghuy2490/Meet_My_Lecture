@@ -12,4 +12,6 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
     @Query("select s from Semester s where ?1 between s.dateStart and s.dateEnd")
     Semester findSemesterByDateStart(Date date);
 
+    Semester findSemesterBySemesterIdAndStatus(Long semesterId, String status);
+
 }
