@@ -10,8 +10,11 @@ import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
+import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
+import com.springboot.meetMyLecturer.utils.NotificationType;
 import com.springboot.meetMyLecturer.utils.SlotUtils;
+import jakarta.validation.constraints.Null;
 import org.modelmapper.ModelMapper;
 
 
@@ -55,6 +58,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     WeeklySlotRepository weeklySlotRepository;
     @Autowired
     SlotUtils slotUtils;
+    @Autowired
+    NotificationService notificationService;
 
 
     @Override
@@ -71,10 +76,10 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         Page<EmptySlot> slots = emptySlotRepository.findAll(pageable);
 
         // get content for page object
-        List<EmptySlot> listOfPosts = slots.getContent();
+        List<EmptySlot> listOfSlots = slots.getContent();
 
-        List<EmptySlotResponseDTO> content = listOfPosts.stream().map(
-                post -> mapper.map(post, EmptySlotResponseDTO.class)
+        List<EmptySlotResponseDTO> content = listOfSlots.stream().map(
+                slot -> mapper.map(slot, EmptySlotResponseDTO.class)
         ).collect(Collectors.toList());
 
         SlotResponse slotResponse = new SlotResponse();
@@ -114,32 +119,36 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // [DONE] - get Weekly [if not have in db, create new week]
         WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
         WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
-//        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
-//        Date dateStart = new Date(weeklyDTO.getFirstDateOfWeek().getTime()); // get first day of week
-//        Date dateEnd = new Date(weeklyDTO.getLastDateOfWeek().getTime());    // get last day of week
-//
-//        // save to entity
-//        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
-//        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
 
         EmptySlot emptySlot = mapper.map(emptySlotDTO, EmptySlot.class);
+
         // set entity
         emptySlot.setLecturer(lecturer);
         emptySlot.setSlotTime(slotTime);
         emptySlot.setRoom(room);
         emptySlot.setWeeklySlot(weeklyEmptySlot);
+
         // set attribute
         emptySlot.setDateStart(emptySlotDTO.getDateStart());
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
-        if(emptySlotDTO.getMode().equals("Private")){
+        if(emptySlotDTO.getMode().equalsIgnoreCase(Constant.PRIVATE)){
             emptySlot.setCode(generateRandomNumber());
         } // check private slot and create code
+
         emptySlot.setStatus("Open");
 
         // save to DB
         emptySlotRepository.save(emptySlot);
+
+        // Create and save a notification
+        String notificationMessage = "Slot created in room " + emptySlot.getRoom().getRoomId() +
+                " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
+                " for slot duration " + emptySlot.getDuration();
+        NotificationType notificationType = NotificationType.SlotCreate;
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
@@ -208,8 +217,49 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // save to DB
         emptySlotRepository.save(emptySlot);
 
+        // Update and save a notification
+        String notificationMessage = "Slot update in room " + emptySlot.getRoom().getRoomId() +
+                " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
+                " for slot duration " + emptySlot.getDuration();
+        NotificationType notificationType = NotificationType.SlotUpdate;
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
 
+    }
+
+    @Override
+    public EmptySlotResponseDTO deleteSlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO) {
+
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
+        );
+        EmptySlot emptySlot = emptySlotRepository.findById(emptySlotId).orElseThrow(
+                () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
+        );
+        // if does not exist slot id
+        if(!emptySlot.getLecturer().getUserId().equals(lecturer.getUserId())){
+            throw new RuntimeException("Slot not belong to this lecturer");
+        }
+
+        // if duplicate with other slot
+        if(!isSlotAvaiable(emptySlotDTO)){
+            throw new RuntimeException("There are Slot booked before!");
+        }
+
+        // CLOSE SLOT
+        emptySlot.setStatus(Constant.CLOSED);
+
+
+        // save to DB
+        emptySlotRepository.save(emptySlot);
+
+        // delete and save a notification
+        String notificationMessage = "Slot delete success !";
+        NotificationType notificationType = NotificationType.SlotDelete;
+        notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
+
+        return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
 
     public boolean isSlotAvaiable(EmptySlotDTO emptySlotDTO){

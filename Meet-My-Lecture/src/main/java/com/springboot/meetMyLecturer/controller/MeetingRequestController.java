@@ -44,9 +44,11 @@ public class MeetingRequestController {
 
     //DONE-DONE
     @PostMapping("student/{studentId}")
-    public ResponseEntity<MeetingRequestResponseDTO> createRequest(@PathVariable Long studentId
-                                            , @RequestBody MeetingRequestForStudentDTO meetingRequestDTO){
-            MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.createRequest(studentId,meetingRequestDTO);
+    public ResponseEntity<MeetingRequestResponseDTO> createRequest(
+            @PathVariable Long studentId,
+            @RequestBody MeetingRequestForStudentDTO meetingRequestDTO)
+    {
+        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.createRequest(studentId,meetingRequestDTO);
         return new ResponseEntity<>(meetingRequestResponseDTO,HttpStatus.CREATED);
     }
 
