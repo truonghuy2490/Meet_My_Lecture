@@ -61,7 +61,7 @@ public class UserController {
         return new ResponseEntity<>(emptySlotList, HttpStatus.OK);
     }
 
-    @GetMapping("userId")
+    @GetMapping("/userId")
     public Long getUserId(){
         return userService.getUserId(Constant.EMAIL);
     }

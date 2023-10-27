@@ -21,9 +21,6 @@ public class StudentController {
     StudentService studentService;
 
     @Autowired
-    EmailConverterJwt emailConverterJwt;
-
-    @Autowired
     UserService userService;
 
 
