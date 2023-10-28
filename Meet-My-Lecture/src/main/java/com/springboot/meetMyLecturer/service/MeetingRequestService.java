@@ -22,4 +22,6 @@ public interface MeetingRequestService {
     MeetingRequestResponseDTO processRequest(MeetingRequestDTO meetingRequestDTO, Long requestId, Long lecturerId);
 
     List<MeetingRequestResponseDTO> getRequestByLecturerId(Long lecturerId);
+
+    RequestResponse getAllRequestByStudentId(int pageNo, int pageSize, String sortBy, String sortDir, Long studentId);
 }

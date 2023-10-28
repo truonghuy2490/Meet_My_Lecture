@@ -24,10 +24,21 @@ public class MeetingRequestController {
     public RequestResponse getAllRequest(
             @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = PageConstant.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "requestId", required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ){
         return meetingRequestService.getAllRequest(pageNo, pageSize, sortBy, sortDir);
+    }
+    @GetMapping("/homepage/students/{studentId}")
+    public RequestResponse getAllRequestByStudentId(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "requestId", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @PathVariable Long studentId
+    ){
+
+        return meetingRequestService.getAllRequestByStudentId(pageNo, pageSize, sortBy, sortDir, studentId);
     }
 
     //DONE

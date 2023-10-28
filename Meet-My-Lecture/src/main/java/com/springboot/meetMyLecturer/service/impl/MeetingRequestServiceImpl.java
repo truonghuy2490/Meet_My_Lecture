@@ -22,7 +22,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,12 +58,14 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(meetingRequestDTO.getSubjectId(), Constant.OPEN);
         if(subject == null) throw new RuntimeException("This subject is not existed.");
 
+        LocalDateTime localDateTime = LocalDateTime.now();
+
         MeetingRequest meetingRequest = new MeetingRequest();
 
         meetingRequest.setSubject(subject);
         meetingRequest.setStudent(student);
         meetingRequest.setLecturer(lecturer);
-        meetingRequest.setRequestStatus("PENDING");
+        meetingRequest.setRequestStatus(Constant.PENDING);
         meetingRequest.setCreateAt(LocalDateTime.now());
         meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
 
@@ -68,7 +73,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         // Create and save a notification
         String notificationMessage = "Requesting " + meetingRequest.getSubject().getSubjectId()  +
-                " to " + meetingRequest.getLecturer().getUserName() + " was created";
+                " to " + lecturer.getUserName() + " was created";
         NotificationType notificationType = NotificationType.SlotCreate;
         notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
 
@@ -210,7 +215,38 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }
+    @Override
+    public RequestResponse getAllRequestByStudentId(int pageNo, int pageSize, String sortBy, String sortDir, Long studentId) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
 
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
+
+        // SAVE TO REPO
+        Page<MeetingRequest> requests = meetingRequestRepository.findAll(pageable); // findAllByStudentId()
+
+
+        // get content for page object
+        List<MeetingRequest> listOfRequests = requests.getContent().stream()
+                .filter(request -> request.getStudent().getUserId().equals(studentId))
+                .collect(Collectors.toList());
+
+        List<MeetingRequestResponseDTO> content = listOfRequests.stream().map(
+                request -> modelMapper.map(request, MeetingRequestResponseDTO.class)
+        ).collect(Collectors.toList());
+
+        RequestResponse requestResponse = new RequestResponse();
+        requestResponse.setContent(content);
+        requestResponse.setTotalPage(requests.getTotalPages());
+        requestResponse.setTotalElement(requests.getTotalElements());
+        requestResponse.setPageNo(requests.getNumber());
+        requestResponse.setPageSize(requests.getSize());
+        requestResponse.setLast(requests.isLast());
+
+        return requestResponse;
+    }
 
 }
 
