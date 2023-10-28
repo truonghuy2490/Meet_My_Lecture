@@ -62,7 +62,7 @@ public class SecurityConfig {
                                 ,"api/v1/slots/**"
                                 ,"api/v1/admin/**"
                                 ,"api/v1/lecturer/**"
-                                , "api/v1/schedule/**"
+                                ,"api/v1/schedule/**"
                                 ,"api/v1/major/**"
                                 ,"api/v1/subject/admin/**"
                                 ,"api/v1/room/admin/**")

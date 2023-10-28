@@ -64,8 +64,8 @@ public class UserController {
 
     //DONE-DONE
     @GetMapping("/userId")
-    public Long getUserId(){
-        return userService.getUserId(Constant.EMAIL);
+    public ResponseEntity<Long> getUserId(){
+        return new ResponseEntity<>(userService.getUserId(Constant.EMAIL), HttpStatus.OK);
     }
 
     //DONE-DONE
