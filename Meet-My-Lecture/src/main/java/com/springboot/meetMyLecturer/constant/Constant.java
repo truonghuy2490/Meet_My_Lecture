@@ -9,7 +9,7 @@ public class Constant {
     public static final String BANNED = "BANNED";
     public static final String LECTURER = "LECTURER";
     public static final String STUDENT = "STUDENT";
-
+    public static final String PENDING = "PENDING";
     public static String EMAIL;
     public static final String PRIVATE = "PRIVATE";
 }
