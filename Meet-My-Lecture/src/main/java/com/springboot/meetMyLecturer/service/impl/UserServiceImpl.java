@@ -3,18 +3,20 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
-import com.springboot.meetMyLecturer.exception.MmlAPIException;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -124,8 +126,16 @@ public class UserServiceImpl implements UserService {
             user.setStatus(Constant.CLOSED);
         }else if(statusDB.equals(Constant.OPEN)){
             user.setStatus(Constant.OPEN);
+        }else if(user.getStatus().equals(Constant.BANNED)){
+            user.setAbsentCount(0);
+            user.setStatus(Constant.OPEN);
         }
-        userRepository.save(user);
+
+
+        if (!statusDB.equals(user.getStatus())) {
+            userRepository.save(user);
+        }
+
         return modelMapper.map(user, UserProfileForAdminDTO.class);
     }
 
@@ -230,6 +240,11 @@ public class UserServiceImpl implements UserService {
                     return emptySlotResponseForSemesterDTO;
                 }
         ).toList();
+    }
+
+    @Override
+    public Long getUserId(String email) {
+        return userRepository.findByEmail(email);
     }
 
 

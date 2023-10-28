@@ -1,15 +1,20 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.List;
 
 @RestController
@@ -56,7 +61,9 @@ public class UserController {
         return new ResponseEntity<>(emptySlotList, HttpStatus.OK);
     }
 
-
-
+    @GetMapping("userId")
+    public Long getUserId(){
+        return userService.getUserId(Constant.EMAIL);
+    }
 
 }
