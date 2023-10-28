@@ -60,7 +60,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequest.setSubject(subject);
         meetingRequest.setStudent(student);
         meetingRequest.setLecturer(lecturer);
-        meetingRequest.setRequestStatus("Pending");
+        meetingRequest.setRequestStatus("PENDING");
         meetingRequest.setCreateAt(LocalDateTime.now());
         meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
 

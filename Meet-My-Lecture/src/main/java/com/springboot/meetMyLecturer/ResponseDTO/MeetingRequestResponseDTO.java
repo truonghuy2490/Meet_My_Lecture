@@ -1,7 +1,6 @@
 package com.springboot.meetMyLecturer.ResponseDTO;
 
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Data

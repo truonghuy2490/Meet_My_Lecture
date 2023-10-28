@@ -37,6 +37,11 @@ public class MajorServiceImpl implements MajorService {
         return majorList.stream().map(major -> modelMapper.map(major, MajorResponseDTO.class)).collect(Collectors.toList());
     }
 
+    @Override
+    public List<MajorResponseDTO> getAllMajorsForAdmin() {
+        return null;
+    }
+
     //create major for admin DONE-DONE
     @Override
     public MajorResponseDTO createMajor(Long adminId, String majorName) {

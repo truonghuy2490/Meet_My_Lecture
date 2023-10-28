@@ -3,7 +3,6 @@ package com.springboot.meetMyLecturer.ResponseDTO;
 import lombok.Data;
 
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
