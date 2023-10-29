@@ -10,6 +10,8 @@ public class MeetingRequestResponseDTO {
 
     private String studentName;
 
+    private int studentId;
+
     private String lecturerName;
 
     private String subjectId;
