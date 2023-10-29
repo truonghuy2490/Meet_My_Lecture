@@ -79,8 +79,4 @@ public class AdminController {
         return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);
     }
 
-
-
-    
-
 }
