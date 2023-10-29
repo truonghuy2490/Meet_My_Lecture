@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
+import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -24,7 +25,7 @@ public interface UserService {
 
     UserProfileForAdminDTO updateUserStatus(Long userId, String status);
 
-    LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
+    LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentDTO subjectLecturerStudent);
 
     LecturerSubjectResponseDTO insertSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
 
@@ -34,5 +35,5 @@ public interface UserService {
 
     List<EmptySlotResponseForSemesterDTO> getEmptySlotsInSemester(Long userId, Long semesterId);
 
-    Long getUserId(String email);
+    UserRoleResponseDTO getUserId(String email);
 }

@@ -4,17 +4,13 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     EmptySlotRepository emptySlotRepository;
+
+    @Autowired
+    LecturerSubjectRepository lecturerSubjectRepository;
 
     @Autowired
     MajorRepository majorRepository;
@@ -140,73 +139,70 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    //update subject for student DONE - DONE
+    //update subject for student DONE-DONE
     @Override
-    public LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId) {
-        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectLecturerStudentId.getSubjectId(), Constant.OPEN);
-        if(subject == null) throw new RuntimeException("This subject is not existed.");
+    public LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentDTO subjectLecturerStudentDTO){
+        SubjectLecturerStudent subjectLecturerStudent = getSubjectLecturerStudentOrThrowException(subjectLecturerStudentDTO.getSubjectLecturerStudentId());
 
-        User lecturer = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getLecturerId(), Constant.OPEN);
-        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+        SubjectLecturerStudentId subjectLecturerStudentIdNew = getSubjectLecturerStudentId(subjectLecturerStudentDTO);
 
-        User student = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getStudentId(), Constant.OPEN);
-        if(student == null) throw new RuntimeException("This student is not existed.");
+        Subject subject = getSubjectOrThrowException(subjectLecturerStudentIdNew.getSubjectId());
+        User lecturer = getUserOrThrowException(subjectLecturerStudentIdNew.getLecturerId());
+        User student = getUserOrThrowException(subjectLecturerStudentDTO.getSubjectLecturerStudentId().getStudentId());
 
-        SubjectLecturerStudent subjectLecturerStudent =  subjectLecturerStudentRepository
-                .searchSubjectLecturerStudentBySubjectLecturerStudentId(subjectLecturerStudentId);
+        LecturerSubjectId lecturerSubjectId = new LecturerSubjectId();
+        lecturerSubjectId.setSubjectId(subject.getSubjectId());
+        lecturerSubjectId.setLecturerId(lecturer.getUserId());
 
-        if(subjectLecturerStudent == null){
-            throw new RuntimeException("You do not have this subject with this lecturer");
-        }
+        LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+        if(lecturerSubject == null) throw new RuntimeException("This lecturer does not teach this subject.");
 
-        return getLecturerSubjectResponseDTO(subjectLecturerStudentId, subject, lecturer, student, subjectLecturerStudent);
+        subjectLecturerStudentRepository.delete(subjectLecturerStudent);
+
+        return getLecturerSubjectResponseDTO(subjectLecturerStudentIdNew, subject, lecturer, student, subjectLecturerStudent);
     }
 
     //insert subject for student DONE-DONE
     @Override
     public LecturerSubjectResponseDTO insertSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId) {
-        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectLecturerStudentId.getSubjectId(), Constant.OPEN);
-        if(subject == null) throw new RuntimeException("This subject is not existed.");
+        Subject subject = getSubjectOrThrowException(subjectLecturerStudentId.getSubjectId());
+        User lecturer = getUserOrThrowException(subjectLecturerStudentId.getLecturerId());
+        User student = getUserOrThrowException(subjectLecturerStudentId.getStudentId());
 
-        User lecturer = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getLecturerId(), Constant.OPEN);
-        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
-
-        User student = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getStudentId(), Constant.OPEN);
-        if(student == null) throw new RuntimeException("This student is not existed.");
-
-        SubjectLecturerStudent subjectLecturerStudentDB =  subjectLecturerStudentRepository
-                .searchSubjectLecturerStudentBySubjectLecturerStudentId(subjectLecturerStudentId);
-
-        if(subjectLecturerStudentDB != null){
+        if (subjectLecturerStudentRepository.searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(subjectLecturerStudentId, Constant.OPEN) != null) {
             throw new RuntimeException("You already have this subject with this lecturer");
         }
+
+        LecturerSubjectId lecturerSubjectId = new LecturerSubjectId();
+        lecturerSubjectId.setSubjectId(subject.getSubjectId());
+        lecturerSubjectId.setLecturerId(lecturer.getUserId());
+
+        LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+        if(lecturerSubject == null) throw new RuntimeException("This lecturer does not teach this subject.");
+
+
+        SubjectLecturerStudent subjectLecturerStudentDB = subjectLecturerStudentRepository.searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(subjectLecturerStudentId, Constant.CLOSED);
+
+        if(subjectLecturerStudentDB != null){
+            subjectLecturerStudentDB.setStatus(Constant.OPEN);
+            subjectLecturerStudentRepository.save(subjectLecturerStudentDB);
+        }
+
+
         SubjectLecturerStudent subjectLecturerStudent = new SubjectLecturerStudent();
+        subjectLecturerStudent.setStatus(Constant.OPEN);
 
         return getLecturerSubjectResponseDTO(subjectLecturerStudentId, subject, lecturer, student, subjectLecturerStudent);
     }
 
-    // delete subject for student DONE-DONE
+    //delete subject for student DONE-DONE
     @Override
     public String deleteSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId) {
-        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectLecturerStudentId.getSubjectId(), Constant.OPEN);
-        if(subject == null) throw new RuntimeException("This subject is not existed.");
 
-        User lecturer = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getLecturerId(), Constant.OPEN);
-        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+        SubjectLecturerStudent subjectLecturerStudent = getSubjectLecturerStudentOrThrowException(subjectLecturerStudentId);
 
-        User student = userRepository.findUserByUserIdAndStatus(subjectLecturerStudentId.getStudentId(), Constant.OPEN);
-        if(student == null) throw new RuntimeException("This student is not existed.");
-
-
-        SubjectLecturerStudent subjectLecturerStudentDB =  subjectLecturerStudentRepository
-                .searchSubjectLecturerStudentBySubjectLecturerStudentId(subjectLecturerStudentId);
-
-        if(subjectLecturerStudentDB == null){
-            throw new RuntimeException("You do not have this subject with this lecturer");
-        }
-
-        subjectLecturerStudentDB.setStatus(Constant.CLOSED);
-        subjectLecturerStudentRepository.save(subjectLecturerStudentDB);
+        subjectLecturerStudent.setStatus(Constant.CLOSED);
+        subjectLecturerStudentRepository.save(subjectLecturerStudent);
 
         return "This subject with this lecturer has been deleted!";
     }
@@ -244,8 +240,16 @@ public class UserServiceImpl implements UserService {
 
     //get userId DONE-DONE
     @Override
-    public Long getUserId(String email) {
-        return userRepository.findByEmail(email);
+    public UserRoleResponseDTO getUserId(String email) {
+        Long userId = userRepository.findUserIdByEmail(email);
+        String roleName = userRepository.findRoleOfUser(userId);
+
+        UserRoleResponseDTO user = new UserRoleResponseDTO();
+
+        user.setUserId(userId);
+        user.setRoleName(roleName);
+
+        return user;
     }
 
 
@@ -254,6 +258,7 @@ public class UserServiceImpl implements UserService {
         subjectLecturerStudent.setLecturer(lecturer);
         subjectLecturerStudent.setStudent(student);
         subjectLecturerStudent.setSubjectLecturerStudentId(subjectLecturerStudentId);
+        subjectLecturerStudent.setStatus(Constant.OPEN);
         subjectLecturerStudentRepository.save(subjectLecturerStudent);
 
         LecturerSubjectResponseDTO lecturerSubjectResponseDTO = modelMapper
@@ -262,6 +267,43 @@ public class UserServiceImpl implements UserService {
         lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
         return lecturerSubjectResponseDTO;
     }
+
+    private User getUserOrThrowException(Long userId) {
+        User user = userRepository.findUserByUserIdAndStatus(userId, Constant.OPEN);
+        if (user == null) {
+            throw new ResourceNotFoundException("User","id", String.valueOf(userId));
+        }
+        return user;
+    }
+
+    private SubjectLecturerStudent getSubjectLecturerStudentOrThrowException(SubjectLecturerStudentId subjectLecturerStudentId) {
+        SubjectLecturerStudent subjectLecturerStudentDB = subjectLecturerStudentRepository.searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(subjectLecturerStudentId, Constant.OPEN);
+        if (subjectLecturerStudentDB == null) {
+            throw new RuntimeException("You do not have this subject with this lecturer");
+        }
+        return subjectLecturerStudentDB;
+    }
+
+    private Subject getSubjectOrThrowException(String subjectId) {
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectId, Constant.OPEN);
+        if (subject == null) {
+            throw new RuntimeException("This subject is not existed.");
+        }
+        return subject;
+    }
+
+    private static SubjectLecturerStudentId getSubjectLecturerStudentId(SubjectLecturerStudentDTO subjectLecturerStudentDTO) {
+        SubjectLecturerStudentId subjectLecturerStudentIdNew = new SubjectLecturerStudentId();
+        subjectLecturerStudentIdNew.setStudentId(subjectLecturerStudentDTO.getSubjectLecturerStudentId().getStudentId());
+        subjectLecturerStudentIdNew.setSubjectId(subjectLecturerStudentDTO.getSubjectIdNew());
+        subjectLecturerStudentIdNew.setLecturerId(subjectLecturerStudentDTO.getLecturerIdNew());
+
+        if(subjectLecturerStudentDTO.getSubjectLecturerStudentId().equals(subjectLecturerStudentIdNew)){
+            throw new RuntimeException("Duplicate subject and lecturer.");
+        }
+        return subjectLecturerStudentIdNew;
+    }
+
 
 
 }

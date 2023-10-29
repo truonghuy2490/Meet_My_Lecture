@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.service.MajorService;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -56,6 +57,13 @@ public class SearchController {
     public ResponseEntity<List<MajorResponseDTO>> getAllMajors (){
         List<MajorResponseDTO> majorResponseDTOList = userService.getAllMajors();
         return new ResponseEntity<>(majorResponseDTOList, HttpStatus.OK);
+    }
+
+    //DONE-DONE
+    @GetMapping("/{subjectId}/subjectName")
+    public ResponseEntity<SubjectResponseDTO> getSubject(@PathVariable String subjectId){
+        SubjectResponseDTO subjectResponseDTO = subjectService.getSubjectBySubjectId(subjectId);
+        return new ResponseEntity<>(subjectResponseDTO, HttpStatus.OK);
     }
 
 }

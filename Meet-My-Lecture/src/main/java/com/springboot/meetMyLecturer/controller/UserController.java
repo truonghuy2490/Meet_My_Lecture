@@ -64,7 +64,7 @@ public class UserController {
 
     //DONE-DONE
     @GetMapping("/userId")
-    public ResponseEntity<Long> getUserId(){
+    public ResponseEntity<UserRoleResponseDTO> getUserId(){
         return new ResponseEntity<>(userService.getUserId(Constant.EMAIL), HttpStatus.OK);
     }
 

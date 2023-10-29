@@ -4,6 +4,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +62,9 @@ public class StudentController {
     }
 
     //DONE - DONE
-    @PutMapping("/profile/subject")
-    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
-        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudentId);
+    @PutMapping("/profile")
+    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentDTO subjectLecturerStudent) {
+        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudent);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
@@ -82,7 +83,7 @@ public class StudentController {
     }
 
     //DONE-DONE
-    @GetMapping("/{studentId}")
+    @GetMapping("/{studentId}/subjects/lecturers")
     public ResponseEntity<List<LecturerSubjectResponseDTO>> recommendRelatedCourses(@PathVariable Long studentId) {
         List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = studentService.recommendRelatedCourses(studentId);
         return new ResponseEntity<>(lecturerSubjectResponseDTOList, HttpStatus.OK);

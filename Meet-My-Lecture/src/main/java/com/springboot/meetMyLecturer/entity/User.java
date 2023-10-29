@@ -40,33 +40,6 @@ public class User {
 
     private int absentCount;
 
-    @OneToMany(mappedBy = "admin")
-    private Set<Major> majors;
-
-    @OneToMany(mappedBy = "admin")
-    private Set<Semester> semesters;
-
-    @OneToMany(mappedBy = "admin")
-    private Set<Subject> subjects;
-
-    @OneToMany(mappedBy = "lecturer")
-    private Set<EmptySlot> emptySlots;
-
-    @OneToMany(mappedBy = "student")
-    private Set<EmptySlot> bookedSlots;
-
-    @OneToMany(mappedBy = "student")
-    private Set<MeetingRequest> meetingRequests;
-
-    @OneToMany(mappedBy = "lecturer")
-    private Set<MeetingRequest> requests;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Notification> notifications;
-
-    @OneToMany(mappedBy = "lecturer")
-    private Set<TeachingSchedule> teachingSchedules;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "lecturer_subject",
             joinColumns = @JoinColumn(name = "lecturer_id"),

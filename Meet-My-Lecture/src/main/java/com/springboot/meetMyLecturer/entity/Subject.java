@@ -31,15 +31,8 @@ public class Subject {
     @ManyToMany(mappedBy = "subjectSet")
     private Set<Major> majorSet;
 
-    @OneToMany(mappedBy = "subject")
-    private Set<EmptySlot> emptySlots;
-
-    @ManyToMany(mappedBy = "subjectSet")
-    private Set<User> lecturerSet;
-
     @ManyToMany(mappedBy = "subjectSet")
     private Set<Semester> semesterSet;
-
 
     @JoinColumn(name = "status")
     private String status;
