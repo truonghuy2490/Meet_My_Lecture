@@ -8,6 +8,7 @@ import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -66,8 +67,8 @@ public class SubjectController {
 
     //DONE - DONE
     @PutMapping("/profile/subject")
-    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
-        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudentId);
+    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentDTO subjectLecturerStudent) {
+        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudent);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
