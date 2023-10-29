@@ -1,9 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.entity.TeachingSchedule;
 import com.springboot.meetMyLecturer.modelDTO.TeachingScheduleDTO;
 import com.springboot.meetMyLecturer.service.ImportTeachingScheduleService;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
