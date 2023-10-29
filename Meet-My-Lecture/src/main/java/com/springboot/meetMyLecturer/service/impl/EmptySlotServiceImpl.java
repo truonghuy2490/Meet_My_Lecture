@@ -135,7 +135,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
             emptySlot.setCode(generateRandomNumber());
         } // check private slot and create code
 
-        emptySlot.setStatus("Open");
+        emptySlot.setStatus(Constant.OPEN);
 
         // save to DB
         emptySlotRepository.save(emptySlot);
@@ -163,7 +163,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                () -> new ResourceNotFoundException("Meeting Request", "id", String.valueOf(meetingRequestId))
        );
 
-       if(!meetingRequest.getRequestStatus().equals("Approved")){
+       if(!meetingRequest.getRequestStatus().equals(Constant.APPROVED)){
            throw new RuntimeException("Please wait for teacher approve!");
        }
 
@@ -268,7 +268,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         for(int i = 0; i < emptySlots.size(); i++){
 
             // check status
-            if(emptySlots.get(i).getStatus().equals("Open")){
+            if(emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.OPEN)){
 
                 // check Slot
                 if(emptySlots.get(i).getSlotTime().getSlotTimeId() == emptySlotDTO.getSlotTimeId()){
@@ -277,13 +277,12 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                     LocalTime duration = emptySlots.get(i).getDuration().toLocalTime();
                     LocalTime endTimeExist = addTimes(startTime, duration);
                     LocalTime newStartTime = emptySlotDTO.getTimeStart().toLocalTime();
-
-                    // Check if newStartTime is within the existing time slot
-                    if (newStartTime.compareTo(startTime) >= 0 && newStartTime.compareTo(endTimeExist) <= 0) {
-                        throw new RuntimeException("Slot have been booked already !"); // Replace this with your desired action or error message.
-
-                    } else if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
-                        throw  new RuntimeException("This have been booked!");
+                    // check Room
+                    if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
+                        // Check if newStartTime is within the existing time slot
+                        if (newStartTime.compareTo(startTime) >= 0 && newStartTime.compareTo(endTimeExist) <= 0) {
+                            throw new RuntimeException("Slot have been booked already !");
+                        }
                     }
                 }
             }
@@ -314,19 +313,19 @@ public class EmptySlotServiceImpl implements EmptySlotService {
             Time timeStart = emptySlotDB.getTimeStart();
 
             if (dateStart.before(dateNow)) {
-                emptySlotDB.setStatus("EXPIRED");
+                emptySlotDB.setStatus(Constant.EXPIRED);
                 emptySlotRepository.save(emptySlotDB);
 
                 //expired slots from 12:00AM-20:00PM at 6AM at the same day
             } else if (dateStart.equals(dateNow)) {
                 if (timeStart.after(Time.valueOf("12:00:00")) && timeStart.before(Time.valueOf("20:00:00"))) {
-                    emptySlotDB.setStatus("EXPIRED");
+                    emptySlotDB.setStatus(Constant.EXPIRED);
                     emptySlotRepository.save(emptySlotDB);
                 }
                 // expired slots from 6:00AM-12:00AM at 10PM the day before
             }else if(dateStart.after(nextDate) && timeNow.equals(Time.valueOf("22:00:00"))){
                 if(timeStart.after(Time.valueOf("06:00:00")) && timeStart.before(Time.valueOf("12:00:00"))){
-                    emptySlotDB.setStatus("EXPIRED");
+                    emptySlotDB.setStatus(Constant.EXPIRED);
                     emptySlotRepository.save(emptySlotDB);
                 }
             }

@@ -89,7 +89,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
             throw new RuntimeException("You do not have this request.");
         }
 
-        if(meetingRequest.getRequestStatus().equals("Accepted")){
+        if(meetingRequest.getRequestStatus().equals(Constant.ACCEPTED)){
             throw new RuntimeException("This meeting request is accepted. Please update information in booked slot.");
         }
 
@@ -112,8 +112,8 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         if(!meetingRequest.getLecturer().getUserId().equals(lecturer.getUserId())){
             throw new RuntimeException("This request not belong to this lecturer");
         }
-
-        meetingRequest.setRequestStatus(meetingRequestDTO.getRequestStatus());
+//        if(!meetingRequestDTO.getRequestStatus().equalsIgnoreCase(Constant.APPROVED))
+        meetingRequest.setRequestStatus(Constant.APPROVED);
 
         meetingRequestRepository.save(meetingRequest);
 
@@ -200,7 +200,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectId, Constant.OPEN);
         if (subject == null) throw new RuntimeException("This subject is not existed.");
 
-        if(!meetingRequest.getRequestStatus().equals("Accepted")){
+        if(!meetingRequest.getRequestStatus().equalsIgnoreCase(Constant.ACCEPTED)){
             throw new RuntimeException("This meeting request is accepted. Please update information in booked slot.");
         }
 

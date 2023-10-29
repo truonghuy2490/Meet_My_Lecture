@@ -103,7 +103,7 @@ public class StudentServiceImpl implements StudentService {
                 () -> new ResourceNotFoundException("Empty Slot", "id", String.valueOf(emptySlotId))
         );
 
-        if(emptySlot.getStatus().equals("EXPIRED")){
+        if(emptySlot.getStatus().equalsIgnoreCase(Constant.EXPIRED)){
             throw new RuntimeException("This empty slot is expired.");
         }
 
@@ -124,7 +124,7 @@ public class StudentServiceImpl implements StudentService {
         emptySlot.setStudent(student);
         emptySlot.setSubject(subject);
         emptySlot.setDescription(bookSlotDTO.getDescription());
-        emptySlot.setStatus("BOOKED");
+        emptySlot.setStatus(Constant.BOOK);
         emptySlot.setBookedDate(currentDateTime);
 
         emptySlotRepository.save(emptySlot);
@@ -147,7 +147,7 @@ public class StudentServiceImpl implements StudentService {
         emptySlot.setStudent(null);
         emptySlot.setSubject(null);
         emptySlot.setBookedDate(null);
-        emptySlot.setStatus("OPEN");
+        emptySlot.setStatus(Constant.OPEN);
 
         emptySlotRepository.save(emptySlot);
 
