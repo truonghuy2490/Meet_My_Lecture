@@ -11,8 +11,10 @@ import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -73,6 +75,27 @@ public class NotificationServiceImpl implements NotificationService {
 
         // Call sendNotification with the created notification
         sendNotificationViaWebSocket(notificationDTO);
+    }
+//    @Scheduled(fixedRate = 6000)
+    @Override
+    public void schedulingNotification(String message, NotificationType type, EmptySlot emptySlot) {
+        // set entity
+        Notification notification = new Notification();
+        notification.setNotificationMessage(message);
+        notification.setTimestamp(new Date());
+        notification.setUser(emptySlot.getLecturer());
+        notification.setEmptySlot(emptySlot);
+
+        // convert into dto
+        NotificationDTO notificationDTO = mapper.map(notification, NotificationDTO.class);
+        notificationDTO.setNotificationType(type.toString());
+
+        // Save the notification to the database
+        notificationRepository.save(notification);
+
+        // Call sendNotification with the created notification
+        sendNotificationViaWebSocket(notificationDTO);
+
     }
 
     private void sendNotificationViaWebSocket(NotificationDTO notificationDTO) {

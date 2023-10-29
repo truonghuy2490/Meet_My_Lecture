@@ -69,10 +69,10 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         meetingRequestRepository.save(meetingRequest);
 
-        // Create and save a notification
+        // Create and save a notification to STUDENT
         String notificationMessage = "Requesting " + meetingRequest.getSubject().getSubjectId()  +
                 " to " + lecturer.getUserName() + " was created";
-        NotificationType notificationType = NotificationType.SlotCreate;
+        NotificationType notificationType = NotificationType.RequestCreateSuccessful;
         notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
 
         return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
@@ -95,6 +95,12 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         meetingRequestRepository.deleteById(requestId);
 
+        // Delete a notification to STUDENT
+        String notificationMessage = "Request was deleted";
+        NotificationType notificationType = NotificationType.RequestDeleteSuccessful;
+        notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
+
+
         return "This meeting request has been deleted!";
     }
 
@@ -116,6 +122,16 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequest.setRequestStatus(Constant.APPROVED);
 
         meetingRequestRepository.save(meetingRequest);
+
+        // send notification about status request to STUDENT
+        String notificationMessage = "Your " +
+                meetingRequest.getSubject().getSubjectId() +
+                " request to " +
+                meetingRequest.getLecturer().getUserName()  +
+                " was" +
+                meetingRequest.getRequestStatus();
+        NotificationType notificationType = NotificationType.RequestApprovedRejected;
+        notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
 
         return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }
@@ -211,6 +227,15 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequest.setSubject(subject);
         meetingRequest.setRequestContent(requestContent);
         meetingRequestRepository.save(meetingRequest);
+
+        // Create and save a notification to STUDENT
+        String notificationMessage = "Requesting " +
+                meetingRequest.getSubject().getSubjectId()  +
+                " to " +
+                meetingRequest.getLecturer().getUserName() +
+                " was updated";
+        NotificationType notificationType = NotificationType.RequestCreateSuccessful;
+        notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
 
         return modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
     }

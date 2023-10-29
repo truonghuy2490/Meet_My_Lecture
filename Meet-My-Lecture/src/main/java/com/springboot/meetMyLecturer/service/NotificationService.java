@@ -20,4 +20,9 @@ public interface NotificationService {
             NotificationType type,
             MeetingRequest meetingRequest
     );
+    void schedulingNotification(
+            String message,
+            NotificationType type,
+            EmptySlot emptySlot
+    );
 }

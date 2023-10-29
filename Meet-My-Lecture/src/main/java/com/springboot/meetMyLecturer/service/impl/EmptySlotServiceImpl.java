@@ -140,7 +140,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // save to DB
         emptySlotRepository.save(emptySlot);
 
-        // Create and save a notification
+        // Create and save a notification to LECTURER
         String notificationMessage = "Slot created in room " + emptySlot.getRoom().getRoomId() +
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
@@ -164,13 +164,36 @@ public class EmptySlotServiceImpl implements EmptySlotService {
        );
 
        if(!meetingRequest.getRequestStatus().equals(Constant.APPROVED)){
-           throw new RuntimeException("Please wait for teacher approve!");
+           throw new RuntimeException("Please wait for teacher approved!");
        }
 
         emptySlot.setSubject(meetingRequest.getSubject());
         emptySlot.setStudent(meetingRequest.getStudent());
         emptySlot.setBookedDate(meetingRequest.getCreateAt());
         emptySlotRepository.save(emptySlot);
+
+        // Send Notification assign to STUDENT
+        String notificationMessageToStudent = emptySlot.getLecturer().getUserName() +
+                " assigned you to " +
+                emptySlot.getSubject().getSubjectId() +
+                " at" +
+                emptySlot.getRoom().getRoomId() +
+                " on" +
+                emptySlot.getTimeStart();
+        NotificationType notificationType1 = NotificationType.SlotAssign;
+        notificationService.slotNotification(notificationMessageToStudent, notificationType1, emptySlot);
+
+        // Send Notification adding student to Slot for LECTURER
+        String notificationMessageToLecture = emptySlot.getStudent().getUserName() +
+                " been adding to " +
+                emptySlot.getSubject().getSubjectId() +
+                " at" +
+                emptySlot.getRoom().getRoomId() +
+                " on" +
+                emptySlot.getTimeStart() +
+                "successfully";
+        NotificationType notificationType2 = NotificationType.SlotAssign;
+        notificationService.slotNotification(notificationMessageToLecture, notificationType2, emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
@@ -215,7 +238,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // save to DB
         emptySlotRepository.save(emptySlot);
 
-        // Update and save a notification
+        // Update and save a notification to LECTURER
         String notificationMessage = "Slot update in room " + emptySlot.getRoom().getRoomId() +
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
@@ -252,7 +275,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // save to DB
         emptySlotRepository.save(emptySlot);
 
-        // delete and save a notification
+        // delete and save a notification to LECTURER
         String notificationMessage = "Slot delete success !";
         NotificationType notificationType = NotificationType.SlotDelete;
         notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
