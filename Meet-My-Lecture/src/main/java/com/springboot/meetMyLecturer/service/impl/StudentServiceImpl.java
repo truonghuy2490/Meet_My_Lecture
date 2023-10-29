@@ -103,8 +103,8 @@ public class StudentServiceImpl implements StudentService {
                 () -> new ResourceNotFoundException("Empty Slot", "id", String.valueOf(emptySlotId))
         );
 
-        if(emptySlot.getStatus().equalsIgnoreCase(Constant.EXPIRED)){
-            throw new RuntimeException("This empty slot is expired.");
+        if(emptySlot.getStatus().equals("EXPIRED") || emptySlot.getStatus().equals("BOOKED")){
+            throw new RuntimeException("This empty slot is not available.");
         }
 
         User student = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
@@ -124,7 +124,7 @@ public class StudentServiceImpl implements StudentService {
         emptySlot.setStudent(student);
         emptySlot.setSubject(subject);
         emptySlot.setDescription(bookSlotDTO.getDescription());
-        emptySlot.setStatus(Constant.BOOK);
+        emptySlot.setStatus("BOOKED");
         emptySlot.setBookedDate(currentDateTime);
 
         emptySlotRepository.save(emptySlot);
@@ -147,7 +147,7 @@ public class StudentServiceImpl implements StudentService {
         emptySlot.setStudent(null);
         emptySlot.setSubject(null);
         emptySlot.setBookedDate(null);
-        emptySlot.setStatus(Constant.OPEN);
+        emptySlot.setStatus("OPEN");
 
         emptySlotRepository.save(emptySlot);
 
@@ -157,22 +157,13 @@ public class StudentServiceImpl implements StudentService {
     // recommend related courses for student DONE - DONE
     @Override
     public List<LecturerSubjectResponseDTO> recommendRelatedCourses(Long studentId) {
-        User student = userRepository.findById(studentId).orElseThrow(
-                ()-> new ResourceNotFoundException("Student","id",String.valueOf(studentId))
-        );
+        User student = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
+        if(student == null) throw new RuntimeException("This student is not existed.");
 
         List<SubjectLecturerStudent> subjectLecturerStudentList = subjectLecturerStudentRepository
-                                .searchSubjectLecturerStudentsByStudent_UserId(student.getUserId());
+                                .searchSubjectLecturerStudentsByStudent_UserIdAndStatus(student.getUserId(), Constant.OPEN);
         if(subjectLecturerStudentList.isEmpty()){
             throw new RuntimeException("There are no related courses with this student Id:" + studentId);
-        }
-
-        for(int i = 0; i < subjectLecturerStudentList.size(); i++){
-            Subject subject = subjectRepository
-                    .findSubjectBySubjectIdAndStatus(subjectLecturerStudentList.get(i).getSubject().getSubjectId(),Constant.CLOSED);
-            if(subject != null){
-                subjectLecturerStudentList.remove(i);
-            }
         }
 
         return subjectLecturerStudentList.stream().map(

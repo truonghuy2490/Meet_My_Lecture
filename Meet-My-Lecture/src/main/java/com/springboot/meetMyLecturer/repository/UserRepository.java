@@ -25,7 +25,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Long> findUserByUniqueContains(@Param("unique") String unique);
 
     @Query("select u.userId from User u where u.email =:email")
-    Long findByEmail(String email);
+    Long findUserIdByEmail(String email);
+
+    @Query("select r.roleName from Role r join User u on u.role.roleId = r.roleId and u.userId =:userId")
+    String findRoleOfUser(Long userId);
+
+    @Query("select u.userId from User  u join LecturerSubject ls on ls.lecturer.userId = u.userId and ls.subject.subjectId =:subjectId")
+    List<Long> findLecturerIdBySubjectId(String subjectId);
+
+    @Query("select u.userName from User u where u.userId =:userId")
+    String findUserNameByUserId(Long userId);
+
+    @Query("select u.unique from User u where u.userId =:userId")
+    String findUniqueByUserId(Long userId);
 
 
 }

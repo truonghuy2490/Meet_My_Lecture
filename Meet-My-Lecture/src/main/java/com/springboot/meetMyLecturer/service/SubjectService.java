@@ -21,4 +21,6 @@ public interface SubjectService {
 
     SubjectResponseDTO editSubjectsInMajor(Long adminId, String subjectId, Long majorId);
 
+    SubjectResponseDTO getSubjectBySubjectId(String subjectId);
+
 }

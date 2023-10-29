@@ -7,7 +7,6 @@ import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -97,10 +96,10 @@ public class SubjectServiceImpl implements SubjectService {
             throw new RuntimeException("There are no subjects");
         }
 
-        List<SubjectMajorResponseDTO> result = subjectList.stream()
-                .flatMap(subject -> {
-                    List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subject.getSubjectId());
-                    List<Long> majorList = subjectMajorRepository.findMajorIdBySubjectId(subject.getSubjectId());
+        return subjectList.stream()
+                .map(subject -> {
+                    List<Long> lecturerList = userRepository.findLecturerIdBySubjectId(subject.getSubjectId());
+                    List<Long> majorList = majorRepository.findMajorIdBySubjectId(subject.getSubjectId());
 
                     Set<MajorResponseDTO> majorSet = majorList.stream()
                             .map(majorId -> majorRepository.findById(majorId)
@@ -109,21 +108,33 @@ public class SubjectServiceImpl implements SubjectService {
                             .map(major -> modelMapper.map(major, MajorResponseDTO.class))
                             .collect(Collectors.toSet());
 
-                    return lecturerList.stream()
-                            .map(lecturer -> {
-                                SubjectMajorResponseDTO dto = new SubjectMajorResponseDTO();
-                                dto.setLecturerId(lecturer.getUserId());
-                                dto.setSubjectId(subject.getSubjectId());
-                                dto.setSubjectName(subject.getSubjectName());
-                                dto.setLecturerName(lecturer.getUserName());
-                                dto.setUnique(lecturer.getUnique());
-                                dto.setStatus(subject.getStatus());
-                                dto.setMajor(majorSet);
-                                return dto;
-                            });
-                }).collect(Collectors.toList());
-
-        return result;
+                    if (lecturerList.isEmpty()) {
+                        SubjectMajorResponseDTO subjectMajorResponseDTO = new SubjectMajorResponseDTO();
+                        subjectMajorResponseDTO.setSubjectId(subject.getSubjectId());
+                        subjectMajorResponseDTO.setMajor(majorSet);
+                        subjectMajorResponseDTO.setSubjectName(subject.getSubjectName());
+                        subjectMajorResponseDTO.setStatus(subject.getStatus());
+                        return Collections.singletonList(subjectMajorResponseDTO);
+                    } else {
+                        return lecturerList.stream()
+                                .map(lecturer -> {
+                                    String lecturerName = userRepository.findUserNameByUserId(lecturer);
+                                    String unique = userRepository.findUniqueByUserId(lecturer);
+                                    SubjectMajorResponseDTO dto = new SubjectMajorResponseDTO();
+                                    dto.setLecturerId(lecturer);
+                                    dto.setSubjectId(subject.getSubjectId());
+                                    dto.setSubjectName(subject.getSubjectName());
+                                    dto.setLecturerName(lecturerName);
+                                    dto.setUnique(unique);
+                                    dto.setStatus(subject.getStatus());
+                                    dto.setMajor(majorSet);
+                                    return dto;
+                                })
+                                .collect(Collectors.toList());
+                    }
+                })
+                .flatMap(List::stream) // Flatten the inner lists
+                .collect(Collectors.toList());
     }
 
     //create subject for admin DONE - DONE
@@ -204,4 +215,15 @@ public class SubjectServiceImpl implements SubjectService {
 
         return modelMapper.map(subjectMajor, SubjectResponseDTO.class);
     }
+
+    // get subject by subjectId for student DONE-DONE
+    @Override
+    public SubjectResponseDTO getSubjectBySubjectId(String subjectId) {
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectId, Constant.OPEN);
+
+        if(subject == null) throw new ResourceNotFoundException("Subject","id",subjectId);
+        return modelMapper.map(subject, SubjectResponseDTO.class);
+    }
+
+
 }

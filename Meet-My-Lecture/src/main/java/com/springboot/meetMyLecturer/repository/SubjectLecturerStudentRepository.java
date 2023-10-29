@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface SubjectLecturerStudentRepository extends JpaRepository<SubjectLecturerStudent, SubjectLecturerStudentId> {
 
-    List<SubjectLecturerStudent> searchSubjectLecturerStudentsByStudent_UserId(Long studentId);
+    List<SubjectLecturerStudent> searchSubjectLecturerStudentsByStudent_UserIdAndStatus(Long studentId, String status);
 
-    SubjectLecturerStudent searchSubjectLecturerStudentBySubjectLecturerStudentId(SubjectLecturerStudentId subjectLecturerStudentId);
-}
+    SubjectLecturerStudent searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(SubjectLecturerStudentId subjectLecturerStudentId, String status)
+;}

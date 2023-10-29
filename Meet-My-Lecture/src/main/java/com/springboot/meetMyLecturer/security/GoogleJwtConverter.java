@@ -33,8 +33,6 @@ public class GoogleJwtConverter implements Converter<Jwt, Collection<GrantedAuth
         String givenName = jwt.getClaim("given_name");
         User userExisted = userRepository.findUserByEmail(email);
 
-        Constant.EMAIL = jwt.getClaim("email");
-
         if (userExisted == null) {
             String unique = generateUnique(givenName);
             User user = new User();
@@ -43,6 +41,7 @@ public class GoogleJwtConverter implements Converter<Jwt, Collection<GrantedAuth
             user.setUnique(unique);
             user.setStatus(Constant.OPEN);
             user.setRole(assignRole(email));
+            Constant.EMAIL = jwt.getClaim("email");
 
             userRepository.save(user);
 
@@ -54,9 +53,12 @@ public class GoogleJwtConverter implements Converter<Jwt, Collection<GrantedAuth
 
         if (userExisted.getAbsentCount() == 3) {
             userExisted.setStatus(Constant.BANNED);
+            Constant.EMAIL = jwt.getClaim("email");
             userRepository.save(userExisted);
             return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+userExisted.getStatus()));
         }
+
+        Constant.EMAIL = jwt.getClaim("email");
 
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+userExisted.getRole().getRoleName()));
     }
@@ -79,7 +81,10 @@ public class GoogleJwtConverter implements Converter<Jwt, Collection<GrantedAuth
         }
         List<Long> userList = userRepository.findUserByUniqueContains(result.toString());
         if(!userList.isEmpty()){
-            result.append(userList.size());
+            int i = userList.size();
+            if(i != 0){
+                result.append(userList.size());
+            }
         }
 
         return result.toString();
