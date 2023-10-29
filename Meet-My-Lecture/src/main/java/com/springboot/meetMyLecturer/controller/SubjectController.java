@@ -1,11 +1,17 @@
 package com.springboot.meetMyLecturer.controller;
 
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
+import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
+import com.springboot.meetMyLecturer.repository.UserRepository;
+import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
+import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,31 +26,70 @@ public class SubjectController {
 
     @Autowired
     SubjectService subjectService;
+    @Autowired
+    StudentService studentService;
+    @Autowired
+    UserService userService;
 
     //DONE-DONE
-    @GetMapping
-    public ResponseEntity<List<SubjectMajorResponseDTO>> getAllSubjects(){
-        List<SubjectMajorResponseDTO> subjectList = subjectService.getAllSubjects();
-        return new ResponseEntity<>(subjectList, HttpStatus.OK);
+    @GetMapping("/bookedSlot/homePage/{studentId}")
+    public ResponseEntity<List<EmptySlotResponseDTO>> viewBookedSlotHomePage(@PathVariable Long studentId){
+        List<EmptySlotResponseDTO> emptySlotResponseDTOS = studentService.viewBookedSlotHomePage(studentId);
+        return new ResponseEntity<>(emptySlotResponseDTOS,HttpStatus.OK);
     }
 
     //DONE-DONE
-    @PostMapping("/{adminId}")
-    public ResponseEntity<SubjectResponseDTO> createSubject(@PathVariable Long adminId,
-                                                    @RequestBody SubjectForAminDTO subjectDTO){
-        SubjectResponseDTO subjectResponseDTO = subjectService.createSubject(adminId,subjectDTO);
-        return new ResponseEntity<>(subjectResponseDTO, HttpStatus.CREATED);
+    @GetMapping("bookedSlot/calendar/{lecturerId}")
+    public ResponseEntity<List<EmptySlotResponseDTO>> viewBookedSlotCalendar(@PathVariable Long lecturerId){
+        List<EmptySlotResponseDTO> emptySlotResponseDTOS = studentService.viewBookedSlotCalendar(lecturerId);
+        return new ResponseEntity<>(emptySlotResponseDTOS,HttpStatus.OK);
+    }
+
+
+    //DONE-DONE
+    @PutMapping("/emptySlot/{emptySlotId}/student/{studentId}/subject/{subjectId}")
+    public ResponseEntity<EmptySlotResponseDTO> bookEmptySlot(@PathVariable Long emptySlotId,
+                                                              @PathVariable Long studentId,
+                                                              @RequestBody BookSlotDTO bookSlotDTO){
+        EmptySlotResponseDTO emptySlotResponseDTO = studentService.bookEmptySlot(emptySlotId, studentId, bookSlotDTO);
+
+        return new ResponseEntity<>(emptySlotResponseDTO,HttpStatus.OK);
     }
 
     //DONE-DONE
+    @PutMapping("{studentId}/bookedSlot/{bookedSlotId}")
+    public ResponseEntity<String> deleteBookedSlot (@PathVariable Long bookedSlotId,
+                                                    @PathVariable Long studentId){
+        String result = studentService.deleteBookedSlot(bookedSlotId,studentId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
 
-    @PutMapping("/{adminId}")
-    public ResponseEntity<SubjectResponseDTO> editSubjectsInMajor(@PathVariable Long adminId,
-                                                                       @RequestParam String subjectId,
-                                                                       @RequestParam Long majorId){
-        SubjectResponseDTO subject = subjectService.editSubjectsInMajor(adminId, subjectId, majorId);
+    //DONE - DONE
+    @PutMapping("/profile/subject")
+    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
+        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudentId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(subject, HttpStatus.OK);
+    //DONE-DONE
+    @PostMapping("/profile/subject")
+    public ResponseEntity<LecturerSubjectResponseDTO> insertSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
+        LecturerSubjectResponseDTO result = userService.insertSubjectsForStudent(subjectLecturerStudentId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    //DONE-DONE
+    @PutMapping("/profile/subject-deleting")
+    public ResponseEntity<String> deleteSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
+        String result = userService.deleteSubjectsForStudent(subjectLecturerStudentId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    //DONE-DONE
+    @GetMapping("/{studentId}")
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> recommendRelatedCourses(@PathVariable Long studentId) {
+        List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = studentService.recommendRelatedCourses(studentId);
+        return new ResponseEntity<>(lecturerSubjectResponseDTOList, HttpStatus.OK);
     }
 
 
