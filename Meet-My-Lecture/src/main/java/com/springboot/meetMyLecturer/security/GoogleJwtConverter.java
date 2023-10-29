@@ -81,7 +81,10 @@ public class GoogleJwtConverter implements Converter<Jwt, Collection<GrantedAuth
         }
         List<Long> userList = userRepository.findUserByUniqueContains(result.toString());
         if(!userList.isEmpty()){
-            result.append(userList.size());
+            int i = userList.size();
+            if(i != 0){
+                result.append(userList.size());
+            }
         }
 
         return result.toString();
