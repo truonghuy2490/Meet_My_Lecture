@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
@@ -45,6 +46,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    LecturerSubjectRepository lecturerSubjectRepository;
 
     @Autowired
     MeetingRequestRepository meetingRequestRepository;
@@ -281,6 +285,21 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
+    }
+
+    //get subjects by lecturerId
+    @Override
+    public List<SubjectResponseDTO> getSubjectsOfLecturer(Long lecturerId) {
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+        if(lecturer == null) throw new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId));
+
+        List<Subject> subjectList = lecturerSubjectRepository.findSubjectByLecturerId(lecturerId, Constant.OPEN);
+
+
+        return subjectList.stream().map(
+                subject -> mapper.map(subject, SubjectResponseDTO.class)
+        ).collect(Collectors.toList());
     }
 
     public boolean isSlotAvaiable(EmptySlotDTO emptySlotDTO){

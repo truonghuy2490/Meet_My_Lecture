@@ -95,7 +95,15 @@ public class UserServiceImpl implements UserService {
        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
 
         return emptySlotList.stream().map(
-                emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)).toList();
+                emptySlot -> {
+                    EmptySlotResponseDTO emptySlotResponseDTO = modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+                    if(emptySlot.getCode() != null){
+                        emptySlotResponseDTO.setMode("PRIVATE");
+                    }else{
+                        emptySlotResponseDTO.setMode("PUBLIC");
+                    }
+                    return emptySlotResponseDTO;
+                }).toList();
     }
 
     //view empty slots for admin DONE-DONE
