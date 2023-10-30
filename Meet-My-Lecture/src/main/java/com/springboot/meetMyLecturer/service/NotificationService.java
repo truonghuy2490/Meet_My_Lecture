@@ -10,6 +10,7 @@ import com.springboot.meetMyLecturer.utils.NotificationType;
 public interface NotificationService {
 
     void sendNotification(NotificationDTO notificationDTO);
+    public void sendNotificationToUser(Long userId, NotificationDTO notificationDTO);
     void slotNotification(
             String message,
             NotificationType type,

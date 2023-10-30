@@ -248,19 +248,16 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
-
         // SAVE TO REPO
-        Page<MeetingRequest> requests = meetingRequestRepository.findAll(pageable); // findAllByStudentId()
-
+        Page<MeetingRequest> requests = meetingRequestRepository.findMeetingRequestByStudent_UserId( studentId, pageable); // findAllByStudentId()
+        if(requests.isEmpty()){
+            throw new RuntimeException("There are no requests.");
+        }
 
         // get content for page object
-        List<MeetingRequest> listOfRequests = requests.getContent().stream()
-                .filter(request -> request.getStudent().getUserId().equals(studentId))
-                .collect(Collectors.toList());
+        List<MeetingRequest> listOfRequests = requests.getContent();
 
-        List<MeetingRequestResponseDTO> content = listOfRequests.stream().map(
-                request -> modelMapper.map(request, MeetingRequestResponseDTO.class)
-        ).collect(Collectors.toList());
+        List<MeetingRequestResponseDTO> content = listOfRequests.stream().map(request -> modelMapper.map(request, MeetingRequestResponseDTO.class)).collect(Collectors.toList());
 
         RequestResponse requestResponse = new RequestResponse();
         requestResponse.setContent(content);

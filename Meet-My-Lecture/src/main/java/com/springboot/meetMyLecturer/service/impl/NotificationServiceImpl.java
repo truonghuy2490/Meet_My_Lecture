@@ -4,17 +4,18 @@ import com.springboot.meetMyLecturer.ResponseDTO.NotificationDTO;
 import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.Notification;
+import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.repository.NotificationRepository;
+import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.utils.NotificationType;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -22,15 +23,21 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
     SimpMessagingTemplate getMessagingTemplate;
-
     @Autowired
     NotificationRepository notificationRepository;
     @Autowired
     ModelMapper mapper;
-
+    @Autowired
+    UserRepository userRepository;
+    // Send All
     @Override
     public void sendNotification(NotificationDTO notificationDTO) {
         getMessagingTemplate.convertAndSend("/topic/notifications", notificationDTO);
+    }
+    // Send Specific
+    public void sendNotificationToUser(Long userId, NotificationDTO notificationDTO) {
+        String destination = "/user/" + getUserNameFromUserId(userId) + "/queue/notifications";
+        getMessagingTemplate.convertAndSend(destination, notificationDTO);
     }
 
     @Override
@@ -38,7 +45,7 @@ public class NotificationServiceImpl implements NotificationService {
             String message,
             NotificationType type,
             EmptySlot emptySlot)
-    {
+        {
         // set entity
         Notification notification = new Notification();
         notification.setNotificationMessage(message);
@@ -54,7 +61,10 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(notification);
 
         // Call sendNotification with the created notification
-        sendNotificationViaWebSocket(notificationDTO);
+            sendNotificationToUser(
+                    emptySlot.getLecturer().getUserId(),
+                    notificationDTO
+            );
     }
 
     @Override
@@ -74,7 +84,10 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(notification);
 
         // Call sendNotification with the created notification
-        sendNotificationViaWebSocket(notificationDTO);
+        sendNotificationToUser(
+                meetingRequest.getStudent().getUserId() ,
+                notificationDTO
+        );
     }
 //    @Scheduled(fixedRate = 6000)
     @Override
@@ -98,6 +111,12 @@ public class NotificationServiceImpl implements NotificationService {
 
     }
 
+    public String getUserNameFromUserId(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("user", "id", String.valueOf(userId))
+        );
+        return user.getUserName();
+    }
     private void sendNotificationViaWebSocket(NotificationDTO notificationDTO) {
         getMessagingTemplate.convertAndSend("/topic/notifications", notificationDTO);
     }
