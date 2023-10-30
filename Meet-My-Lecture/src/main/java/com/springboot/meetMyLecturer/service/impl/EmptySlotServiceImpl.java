@@ -287,7 +287,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
 
-    //get subjects by lecturerId
+    // get subject of lecturer DONE-DONE
     @Override
     public List<SubjectResponseDTO> getSubjectsOfLecturer(Long lecturerId) {
 
@@ -322,7 +322,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                     // check Room
                     if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
                         // Check if newStartTime is within the existing time slot
-                        if (newStartTime.compareTo(startTime) >= 0 && newStartTime.compareTo(endTimeExist) <= 0) {
+                        if (!newStartTime.isBefore(startTime) && !newStartTime.isAfter(endTimeExist)) {
                             throw new RuntimeException("Slot have been booked already !");
                         }
                     }

@@ -147,7 +147,7 @@ public class StudentServiceImpl implements StudentService {
         emptySlot.setStudent(null);
         emptySlot.setSubject(null);
         emptySlot.setBookedDate(null);
-        emptySlot.setStatus("OPEN");
+        emptySlot.setStatus(Constant.OPEN);
 
         emptySlotRepository.save(emptySlot);
 

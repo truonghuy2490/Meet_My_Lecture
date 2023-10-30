@@ -8,6 +8,7 @@ import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -29,7 +30,7 @@ public class SubjectController {
 
     //DONE-DONE
     @GetMapping
-    public ResponseEntity<List<SubjectMajorResponseDTO>> getAllSubjects(){
+    public ResponseEntity<List<SubjectMajorResponseDTO>> getAllSubjects() {
         List<SubjectMajorResponseDTO> subjectList = subjectService.getAllSubjects();
         return new ResponseEntity<>(subjectList, HttpStatus.OK);
     }
@@ -37,22 +38,18 @@ public class SubjectController {
     //DONE-DONE
     @PostMapping("/{adminId}")
     public ResponseEntity<SubjectResponseDTO> createSubject(@PathVariable Long adminId,
-                                                            @RequestBody SubjectForAminDTO subjectDTO){
-        SubjectResponseDTO subjectResponseDTO = subjectService.createSubject(adminId,subjectDTO);
+                                                            @RequestBody SubjectForAminDTO subjectDTO) {
+        SubjectResponseDTO subjectResponseDTO = subjectService.createSubject(adminId, subjectDTO);
         return new ResponseEntity<>(subjectResponseDTO, HttpStatus.CREATED);
     }
 
     //DONE-DONE
-
     @PutMapping("/{adminId}")
     public ResponseEntity<SubjectResponseDTO> editSubjectsInMajor(@PathVariable Long adminId,
                                                                   @RequestParam String subjectId,
-                                                                  @RequestParam Long majorId){
+                                                                  @RequestParam Long majorId) {
         SubjectResponseDTO subject = subjectService.editSubjectsInMajor(adminId, subjectId, majorId);
 
         return new ResponseEntity<>(subject, HttpStatus.OK);
     }
-
-
 }
-
