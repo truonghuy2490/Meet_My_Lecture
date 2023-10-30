@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
@@ -45,6 +46,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    LecturerSubjectRepository lecturerSubjectRepository;
 
     @Autowired
     MeetingRequestRepository meetingRequestRepository;
@@ -283,6 +287,21 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
 
+    // get subject of lecturer DONE-DONE
+    @Override
+    public List<SubjectResponseDTO> getSubjectsOfLecturer(Long lecturerId) {
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+        if(lecturer == null) throw new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId));
+
+        List<Subject> subjectList = lecturerSubjectRepository.findSubjectByLecturerId(lecturerId, Constant.OPEN);
+
+
+        return subjectList.stream().map(
+                subject -> mapper.map(subject, SubjectResponseDTO.class)
+        ).collect(Collectors.toList());
+    }
+
     public boolean isSlotAvaiable(EmptySlotDTO emptySlotDTO){
         boolean check = true;
         // check date
@@ -303,7 +322,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                     // check Room
                     if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
                         // Check if newStartTime is within the existing time slot
-                        if (newStartTime.compareTo(startTime) >= 0 && newStartTime.compareTo(endTimeExist) <= 0) {
+                        if (!newStartTime.isBefore(startTime) && !newStartTime.isAfter(endTimeExist)) {
                             throw new RuntimeException("Slot have been booked already !");
                         }
                     }

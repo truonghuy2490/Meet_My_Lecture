@@ -1,8 +1,11 @@
 package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
+
+import java.util.List;
 
 public interface EmptySlotService {
 
@@ -16,6 +19,8 @@ public interface EmptySlotService {
 
     // lecturer
     EmptySlotResponseDTO deleteSlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO);
+
+    List<SubjectResponseDTO> getSubjectsOfLecturer(Long lecturerId);
 
 
 }

@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
@@ -50,5 +51,12 @@ public class EmptySlotController {
     public ResponseEntity<List<Room>> getAllRooms(){
         List<Room> roomList = roomService.getAllRooms();
         return new ResponseEntity<>(roomList, HttpStatus.OK);
+    }
+
+    //DONE-DONE
+    @GetMapping("subjects/lecturer/{lecturerId}")
+    public ResponseEntity<List<SubjectResponseDTO>> getSubjectsOfLecturer(@PathVariable Long lecturerId){
+        List<SubjectResponseDTO> responseDTOList = slotService.getSubjectsOfLecturer(lecturerId);
+        return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
     }
 }

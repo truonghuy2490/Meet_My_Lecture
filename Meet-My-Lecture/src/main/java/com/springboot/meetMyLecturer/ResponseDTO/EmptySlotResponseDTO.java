@@ -34,4 +34,8 @@ public class EmptySlotResponseDTO {
     private Time duration;
 
     private String roomId;
+
+    private Integer code;
+
+    private String mode;
 }
