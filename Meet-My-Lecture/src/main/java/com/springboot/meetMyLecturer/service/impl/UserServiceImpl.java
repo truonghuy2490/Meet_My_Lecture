@@ -249,15 +249,9 @@ public class UserServiceImpl implements UserService {
     //get userId DONE-DONE
     @Override
     public UserRoleResponseDTO getUserId(String email) {
-        Long userId = userRepository.findUserIdByEmail(email);
-        String roleName = userRepository.findRoleOfUser(userId);
+        User user = userRepository.findUserByEmail(email);
 
-        UserRoleResponseDTO user = new UserRoleResponseDTO();
-
-        user.setUserId(userId);
-        user.setRoleName(roleName);
-
-        return user;
+        return modelMapper.map(user, UserRoleResponseDTO.class);
     }
 
 

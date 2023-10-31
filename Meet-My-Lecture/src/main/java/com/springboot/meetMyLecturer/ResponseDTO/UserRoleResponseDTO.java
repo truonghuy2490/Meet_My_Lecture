@@ -6,4 +6,6 @@ import lombok.Data;
 public class UserRoleResponseDTO {
     private Long userId;
     private String roleName;
+    private String userName;
+    private Long majorId;
 }

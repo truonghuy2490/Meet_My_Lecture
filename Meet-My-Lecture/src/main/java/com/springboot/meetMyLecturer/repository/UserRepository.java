@@ -24,9 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.userId from User u where u.unique like %:unique%")
     List<Long> findUserByUniqueContains(@Param("unique") String unique);
 
-    @Query("select u.userId from User u where u.email =:email")
-    Long findUserIdByEmail(String email);
-
     @Query("select r.roleName from Role r join User u on u.role.roleId = r.roleId and u.userId =:userId")
     String findRoleOfUser(Long userId);
 
@@ -38,6 +35,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u.unique from User u where u.userId =:userId")
     String findUniqueByUserId(Long userId);
+
+    @Query("select u.unique from User u where u.userId =:userId and u.status =:status")
+    String findNickNameByUserId(Long userId, String status);
 
 
 }
