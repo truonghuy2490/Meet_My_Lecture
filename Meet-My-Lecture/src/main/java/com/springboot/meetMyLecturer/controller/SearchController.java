@@ -46,8 +46,8 @@ public class SearchController {
     }
 
     //DONE-DONE
-    @GetMapping("subjects/major/{majorId}")
-    public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjectsByMajorId(@PathVariable Long majorId){
+    @GetMapping("subject/major/{majorId}")
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjectByMajorId(@PathVariable Long majorId){
         List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTOList = subjectService.getSubjectByMajorId(majorId);
         return new ResponseEntity<>(lecturerSubjectResponseDTOList,HttpStatus.OK);
     }
@@ -64,6 +64,14 @@ public class SearchController {
     public ResponseEntity<SubjectResponseDTO> getSubject(@PathVariable String subjectId){
         SubjectResponseDTO subjectResponseDTO = subjectService.getSubjectBySubjectId(subjectId);
         return new ResponseEntity<>(subjectResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/subjects/major/{majorId}")
+    public ResponseEntity<List<SubjectResponseDTO>> getSubjectsByMajorId(
+            @PathVariable Long majorId
+    ){
+        List<SubjectResponseDTO> subjectResponseDTOs =  subjectService.getSubjectsByMajorId(majorId);
+        return new ResponseEntity<>(subjectResponseDTOs, HttpStatus.OK);
     }
 
 }

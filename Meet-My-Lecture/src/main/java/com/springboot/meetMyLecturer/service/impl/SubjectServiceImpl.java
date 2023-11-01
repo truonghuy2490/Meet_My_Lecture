@@ -7,6 +7,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -223,6 +224,16 @@ public class SubjectServiceImpl implements SubjectService {
 
         if(subject == null) throw new ResourceNotFoundException("Subject","id",subjectId);
         return modelMapper.map(subject, SubjectResponseDTO.class);
+    }
+
+    @Override
+    public List<SubjectResponseDTO> getSubjectsByMajorId(Long majorId) {
+        List<Subject> subjectList = subjectRepository.findSubjectsByMajorId(majorId, Constant.OPEN);
+
+        if(subjectList == null) throw new ResourceNotFoundException("Major", "id", String.valueOf(majorId));
+        return subjectList.stream().map(
+                subject -> modelMapper.map(subject, SubjectResponseDTO.class)
+        ).collect(Collectors.toList());
     }
 
 
