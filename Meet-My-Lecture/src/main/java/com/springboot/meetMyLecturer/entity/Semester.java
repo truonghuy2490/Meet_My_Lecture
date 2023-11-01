@@ -31,12 +31,12 @@ public class Semester {
     @JoinColumn(name = "admin_id", nullable = false)
     private User admin;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    /*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "subject_semester",
             joinColumns = @JoinColumn(name = "semester_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    private Set<Subject> subjectSet;
+    private Set<Subject> subjectSet;*/
 
     @JoinColumn(name = "status")
     private String status;

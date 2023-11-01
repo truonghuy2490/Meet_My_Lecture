@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -28,11 +29,11 @@ public class Subject {
     @JoinColumn(name = "admin_id", nullable = false)
     private User admin;
 
-    @ManyToMany(mappedBy = "subjectSet")
-    private Set<Major> majorSet;
+    /*@ManyToMany(mappedBy = "subjectSet",cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Major> majorSet = new HashSet<>();*/
 
-    @ManyToMany(mappedBy = "subjectSet", cascade = CascadeType.PERSIST)
-    private Set<Semester> semesterSet;
+    /*@ManyToMany(mappedBy = "subjectSet", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Semester> semesterSet = new HashSet<>();*/
 
     @JoinColumn(name = "status")
     private String status;

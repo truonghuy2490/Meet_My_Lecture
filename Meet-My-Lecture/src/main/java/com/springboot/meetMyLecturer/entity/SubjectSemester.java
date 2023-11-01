@@ -25,4 +25,6 @@ public class SubjectSemester {
     @JoinColumn(name = "semester_id")
     private Semester semester;
 
+    private String status;
+
 }

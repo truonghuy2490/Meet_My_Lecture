@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseForAdminDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
@@ -17,10 +18,12 @@ public interface SubjectService {
 
     List<SubjectMajorResponseDTO> getAllSubjects();
 
-    SubjectResponseDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO);
+    SubjectMajorResponseForAdminDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO);
 
     SubjectResponseDTO editSubjectsInMajor(Long adminId, String subjectId, Long majorId);
 
     SubjectResponseDTO getSubjectBySubjectId(String subjectId);
+
+    List<LecturerSubjectResponseDTO> getSubjectsByMajorId(Long majorId);
 
 }

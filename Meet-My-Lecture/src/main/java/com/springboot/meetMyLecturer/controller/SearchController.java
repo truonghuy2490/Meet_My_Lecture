@@ -66,11 +66,12 @@ public class SearchController {
         return new ResponseEntity<>(subjectResponseDTO, HttpStatus.OK);
     }
 
+    //DONE-DONE
     @GetMapping("/subjects/major/{majorId}")
-    public ResponseEntity<List<SubjectResponseDTO>> getSubjectsByMajorId(
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjectsByMajorId(
             @PathVariable Long majorId
     ){
-        List<SubjectResponseDTO> subjectResponseDTOs =  subjectService.getSubjectsByMajorId(majorId);
+        List<LecturerSubjectResponseDTO> subjectResponseDTOs =  subjectService.getSubjectByMajorId(majorId);
         return new ResponseEntity<>(subjectResponseDTOs, HttpStatus.OK);
     }
 

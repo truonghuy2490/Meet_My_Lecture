@@ -19,6 +19,8 @@ public class EmptySlotResponseDTO {
 
     private Long studentId;
 
+    private String studentName;
+
     private String subjectId;
 
     private Date dateStart;

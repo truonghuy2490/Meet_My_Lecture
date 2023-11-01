@@ -26,5 +26,7 @@ public class SubjectMajor {
     @JoinColumn(name = "major_id")
     private Major major;
 
+    private String status;
+
 
 }

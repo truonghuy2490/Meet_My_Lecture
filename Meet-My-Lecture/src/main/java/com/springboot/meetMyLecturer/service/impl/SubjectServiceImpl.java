@@ -1,9 +1,6 @@
 package com.springboot.meetMyLecturer.service.impl;
 
-import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
@@ -76,7 +73,7 @@ public class SubjectServiceImpl implements SubjectService {
 
         return subjectList.stream()
                 .flatMap(subject -> {
-                    List<User> lecturerList = subjectRepository.findLecturerBySubjectIdAndStatus(subject.getSubjectId(), Constant.OPEN);
+                    List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subject.getSubjectId());
                     return lecturerList.stream()
                             .map(lecturer -> {
                                 LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
@@ -140,15 +137,22 @@ public class SubjectServiceImpl implements SubjectService {
 
     //create subject for admin DONE - DONE
     @Override
-    public SubjectResponseDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO) {
+    public SubjectMajorResponseForAdminDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO) {
 
-        Set<Long> majorSet = subjectDTO.getMajorId();
-
-        List<Long> majorList = majorSet.stream().toList();
+        List<Long> majorList = subjectDTO.getMajorId().stream().toList();
 
         User admin = userRepository.findById(adminId).orElseThrow(
                 ()-> new ResourceNotFoundException("Admin","id",String.valueOf(adminId))
         );
+
+        Subject subjectDB = subjectRepository.findSubjectNameBySubjectId(subjectDTO.getSubjectId());
+        if(subjectDB != null){
+            if(subjectDB.getStatus().equals(Constant.CLOSED)){
+                subjectDB.setStatus(Constant.OPEN);
+            }else{
+                throw new RuntimeException("This subject is already existed.");
+            }
+        }
 
         Subject subject = new Subject();
         subject.setSubjectName(subjectDTO.getSubjectName());
@@ -157,23 +161,34 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setAdmin(admin);
         subjectRepository.save(subject);
 
-        SubjectMajor subjectMajor = new SubjectMajor();
-        SubjectMajorId subjectMajorId = new SubjectMajorId();
-
         for (Long aLong : majorList) {
             Major major = majorRepository.findMajorByMajorIdAndStatus(aLong, Constant.OPEN);
-            if (major != null) {
-                subjectMajorId.setSubjectId(subjectDTO.getSubjectId());
-                subjectMajorId.setMajorId(major.getMajorId());
-                subjectMajor.setSubjectMajorId(subjectMajorId);
-                subjectMajor.setMajor(major);
-                subjectMajor.setSubject(subject);
-                subjectMajorRepository.save(subjectMajor);
-            } else {
-                throw new ResourceNotFoundException("Major", "id", String.valueOf(aLong));
+            if(major == null) throw new ResourceNotFoundException("Major","id",String.valueOf(aLong));
+            SubjectMajorId subjectMajorId = new SubjectMajorId();
+            subjectMajorId.setSubjectId(subject.getSubjectId());
+            subjectMajorId.setMajorId(major.getMajorId());
+
+            SubjectMajor subjectMajor = subjectMajorRepository.findSubjectMajorBySubjectMajorId(subjectMajorId);
+
+            if(subjectMajor == null){
+                SubjectMajor subjectMajorDB = new SubjectMajor();
+                subjectMajorDB.setStatus(Constant.OPEN);
+                subjectMajorDB.setMajor(major);
+                subjectMajorDB.setSubject(subject);
+                subjectMajorDB.setSubjectMajorId(subjectMajorId);
+                subjectMajorRepository.save(subjectMajorDB);
+            }else {
+                if (subjectMajor.getStatus().equals(Constant.CLOSED)) {
+                    subjectMajor.setStatus(Constant.OPEN);
+                } else if (subjectMajor.getStatus().equals(Constant.OPEN)) {
+                    throw new RuntimeException("This " + subject.getSubjectId() + " " + major.getMajorId() + " is already existed.");
+                }
             }
         }
-        return modelMapper.map(subject, SubjectResponseDTO.class);
+
+        SubjectMajorResponseForAdminDTO subjectResponseDTO = modelMapper.map(subject, SubjectMajorResponseForAdminDTO.class);
+        subjectResponseDTO.setMajorId(subjectDTO.getMajorId());
+        return subjectResponseDTO;
     }
 
     // edit subject and major for admin DONE-DONE
@@ -227,14 +242,12 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<SubjectResponseDTO> getSubjectsByMajorId(Long majorId) {
+    public List<LecturerSubjectResponseDTO> getSubjectsByMajorId(Long majorId) {
         List<Subject> subjectList = subjectRepository.findSubjectsByMajorId(majorId, Constant.OPEN);
 
         if(subjectList == null) throw new ResourceNotFoundException("Major", "id", String.valueOf(majorId));
         return subjectList.stream().map(
-                subject -> modelMapper.map(subject, SubjectResponseDTO.class)
+                subject -> modelMapper.map(subject, LecturerSubjectResponseDTO.class)
         ).collect(Collectors.toList());
     }
-
-
 }

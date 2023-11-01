@@ -9,6 +9,7 @@ import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectSemesterDTO;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
+import com.springboot.meetMyLecturer.repository.SubjectSemesterRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import org.modelmapper.ModelMapper;
@@ -26,6 +27,8 @@ public class SemesterServiceImpl implements SemesterService {
     UserRepository userRepository;
     @Autowired
     SubjectRepository subjectRepository;
+    @Autowired
+    SubjectSemesterRepository subjectSemesterRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -138,10 +141,25 @@ public class SemesterServiceImpl implements SemesterService {
         Map<String, String> subjectResponse = subjectSemesterDTO.getSubjectSet().stream()
                 .map(s -> {
                     Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(s, Constant.OPEN);
-                    if (subject.getSubjectName() == null) throw new ResourceNotFoundException("Subject", "id", s);
+                    if (subject == null) throw new ResourceNotFoundException("Subject", "id", s);
 
-                    subject.getSemesterSet().add(semester);
-                    semester.getSubjectSet().add(subject);
+                    SubjectSemesterId subjectSemesterId = new SubjectSemesterId();
+                    subjectSemesterId.setSubjectId(subject.getSubjectId());
+                    subjectSemesterId.setSemesterId(semester.getSemesterId());
+
+                    SubjectSemester subjectSemester = subjectSemesterRepository.findById(subjectSemesterId).orElseThrow(
+                            ()-> new ResourceNotFoundException(subject.getSubjectId(), String.valueOf(semester.getSemesterId()), "are not found.")
+                    );
+
+                    if(subjectSemester.getStatus().equals(Constant.CLOSED)){
+                        subjectSemester.setStatus(Constant.OPEN);
+                    }else if(subjectSemester.getStatus().equals(Constant.OPEN)){
+                        throw new RuntimeException("This "+ subject.getSubjectId() + semester.getSemesterId() + "not found.");
+                    }
+
+                    subjectSemester.setSemester(semester);
+                    subjectSemester.setSubject(subject);
+                    subjectSemesterRepository.save(subjectSemester);
 
                     subjectRepository.save(subject);
 

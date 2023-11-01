@@ -1,9 +1,6 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
@@ -37,9 +34,9 @@ public class SubjectController {
 
     //DONE-DONE
     @PostMapping("/{adminId}")
-    public ResponseEntity<SubjectResponseDTO> createSubject(@PathVariable Long adminId,
+    public ResponseEntity<SubjectMajorResponseForAdminDTO> createSubject(@PathVariable Long adminId,
                                                             @RequestBody SubjectForAminDTO subjectDTO) {
-        SubjectResponseDTO subjectResponseDTO = subjectService.createSubject(adminId, subjectDTO);
+        SubjectMajorResponseForAdminDTO subjectResponseDTO = subjectService.createSubject(adminId, subjectDTO);
         return new ResponseEntity<>(subjectResponseDTO, HttpStatus.CREATED);
     }
 

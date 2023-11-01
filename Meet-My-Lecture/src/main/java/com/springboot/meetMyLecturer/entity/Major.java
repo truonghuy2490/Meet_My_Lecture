@@ -2,9 +2,6 @@ package com.springboot.meetMyLecturer.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -25,12 +22,12 @@ public class Major {
     @JoinColumn(name = "admin_id", nullable = false)
     private User admin;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    /*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "subject_major",
             joinColumns = @JoinColumn(name = "major_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    private Set<Subject> subjectSet;
+    private Set<Subject> subjectSet;*/
 
     @JoinColumn(name = "status")
     private String status;
