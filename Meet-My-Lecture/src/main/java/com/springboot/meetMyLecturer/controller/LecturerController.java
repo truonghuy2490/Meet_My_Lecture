@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/lecturer")
 public class LecturerController {
@@ -35,8 +37,6 @@ public class LecturerController {
         return  new ResponseEntity<>(lecturerSubjectResponseDTO, HttpStatus.CREATED);
     }
 
-
-
     //DONE-DONE
     @PutMapping("/subject")
     public ResponseEntity<String> deleteSubjectsForLecturer(@RequestBody LecturerSubjectId lecturerSubjectId){
@@ -45,6 +45,14 @@ public class LecturerController {
 
         return  new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/{lecturerId}/subjects")
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> getSubjects(@PathVariable Long lecturerId){
+
+        List<LecturerSubjectResponseDTO> responseDTOList = lecturerService.getAllSubjects(lecturerId);
+        return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
+    }
+
 
 
 }

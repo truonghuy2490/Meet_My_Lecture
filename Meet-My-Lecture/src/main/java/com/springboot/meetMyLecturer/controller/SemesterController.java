@@ -1,9 +1,9 @@
 package com.springboot.meetMyLecturer.controller;
 
-import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SemesterResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
-import com.springboot.meetMyLecturer.service.MajorService;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectSemesterResponseDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectSemesterDTO;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +49,12 @@ public class SemesterController {
     }
 
 
-
+    @PostMapping("/{adminId}/subjects")
+    public ResponseEntity<SubjectSemesterResponseDTO> insertSubjectIntoSemester(@PathVariable Long adminId,
+                                                                                      @RequestBody SubjectSemesterDTO semesterDTO){
+        SubjectSemesterResponseDTO responseList = semesterService.insertSubjectIntoSemester(adminId,semesterDTO);
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
 
     
 }

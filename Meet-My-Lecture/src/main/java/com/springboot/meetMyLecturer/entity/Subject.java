@@ -31,7 +31,7 @@ public class Subject {
     @ManyToMany(mappedBy = "subjectSet")
     private Set<Major> majorSet;
 
-    @ManyToMany(mappedBy = "subjectSet")
+    @ManyToMany(mappedBy = "subjectSet", cascade = CascadeType.PERSIST)
     private Set<Semester> semesterSet;
 
     @JoinColumn(name = "status")

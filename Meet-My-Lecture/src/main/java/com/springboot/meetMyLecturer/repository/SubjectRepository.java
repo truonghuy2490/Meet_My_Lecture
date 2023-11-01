@@ -2,7 +2,6 @@ package com.springboot.meetMyLecturer.repository;
 
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,6 +23,8 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
 
     @Query("select u from User u join LecturerSubject ls on ls.lecturer.userId = u.userId and ls.subject.subjectId = :subjectId")
     List<User> findLecturerBySubjectId(String subjectId);
+    @Query("select s.subjectName from Subject s where s.subjectId =:subjectId and s.status =:status")
+    String findSubjectNameBySubjectIdAndStatus(String subjectId, String status);
     @Query("select s from Subject s join SubjectMajor sm on sm.subject.subjectId = s.subjectId and sm.major.majorId = :majorId where s.status =:status")
     List<Subject> findSubjectsByMajorId(Long majorId, String status);
 }

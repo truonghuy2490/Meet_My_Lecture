@@ -31,7 +31,7 @@ public class Semester {
     @JoinColumn(name = "admin_id", nullable = false)
     private User admin;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "subject_semester",
             joinColumns = @JoinColumn(name = "semester_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
