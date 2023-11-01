@@ -5,12 +5,16 @@ import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
 import com.springboot.meetMyLecturer.entity.Notification;
 import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.NotificationResponse;
 import com.springboot.meetMyLecturer.utils.NotificationType;
+
+import java.util.List;
 
 public interface NotificationService {
 
     void sendNotification(NotificationDTO notificationDTO);
     public void sendNotificationToUser(Long userId, NotificationDTO notificationDTO);
+    NotificationResponse getAllNotificationByUserId(int pageNo, int pageSize, String sortBy, String sortDir, Long userId);
     void slotNotification(
             String message,
             NotificationType type,

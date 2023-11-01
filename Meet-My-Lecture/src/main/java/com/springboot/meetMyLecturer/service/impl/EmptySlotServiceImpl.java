@@ -170,19 +170,26 @@ public class EmptySlotServiceImpl implements EmptySlotService {
        if(!meetingRequest.getRequestStatus().equals(Constant.APPROVED)){
            throw new RuntimeException("Please wait for teacher approved!");
        }
+       if(!emptySlot.getStatus().equalsIgnoreCase(Constant.OPEN)){
+           throw new RuntimeException("This slot been booked or busy!");
+       }
+       if(!emptySlot.getLecturer().getUserId().equals(meetingRequest.getLecturer().getUserId())){
+           throw new RuntimeException("This request not belong to this slot!");
+       }
 
         emptySlot.setSubject(meetingRequest.getSubject());
         emptySlot.setStudent(meetingRequest.getStudent());
         emptySlot.setBookedDate(meetingRequest.getCreateAt());
+        emptySlot.setStatus(Constant.BOOK);
         emptySlotRepository.save(emptySlot);
 
         // Send Notification assign to STUDENT
         String notificationMessageToStudent = emptySlot.getLecturer().getUserName() +
                 " assigned you to " +
                 emptySlot.getSubject().getSubjectId() +
-                " at" +
+                " at " +
                 emptySlot.getRoom().getRoomId() +
-                " on" +
+                " on " +
                 emptySlot.getTimeStart();
         NotificationType notificationType1 = NotificationType.SlotAssign;
         notificationService.slotNotification(notificationMessageToStudent, notificationType1, emptySlot);
@@ -191,11 +198,11 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         String notificationMessageToLecture = emptySlot.getStudent().getUserName() +
                 " been adding to " +
                 emptySlot.getSubject().getSubjectId() +
-                " at" +
+                " at " +
                 emptySlot.getRoom().getRoomId() +
-                " on" +
+                " on " +
                 emptySlot.getTimeStart() +
-                "successfully";
+                " successfully";
         NotificationType notificationType2 = NotificationType.SlotAssign;
         notificationService.slotNotification(notificationMessageToLecture, notificationType2, emptySlot);
 

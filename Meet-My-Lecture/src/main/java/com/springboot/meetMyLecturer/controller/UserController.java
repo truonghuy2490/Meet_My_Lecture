@@ -2,13 +2,24 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
+import com.springboot.meetMyLecturer.constant.PageConstant;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.NotificationResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
+import com.springboot.meetMyLecturer.repository.RoleRepository;
+import com.springboot.meetMyLecturer.repository.UserRepository;
+import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Calendar;
 import java.util.List;
 
 @RestController
@@ -20,6 +31,12 @@ public class UserController {
 
     @Autowired
     SemesterService semesterService;
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    NotificationService notificationService;
 
 
     //DONE-DONE
@@ -63,5 +80,17 @@ public class UserController {
     public ResponseEntity<List<SemesterResponseDTO>> getAllSemester(){
         List<SemesterResponseDTO> responseDTOList = semesterService.getAllSemesters();
         return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
+    }
+    @GetMapping("/{userId}/notification")
+
+    public NotificationResponse getAllNotificationByUserId(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "timestamp", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @PathVariable Long userId
+    ){
+
+        return notificationService.getAllNotificationByUserId(pageNo, pageSize, sortBy, sortDir, userId);
     }
 }

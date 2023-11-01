@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -20,7 +21,9 @@ public class Notification {
     @Column(name = "notification_message")
     private String notificationMessage;
     @Column(name = "timestamp")
-    private Date timestamp;
+    private LocalDate timestamp;
+    @Column(name = "notification_type")
+    private String notificationType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

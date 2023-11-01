@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.ResponseDTO;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -10,5 +11,5 @@ public class NotificationDTO {
 
     private String notificationType;
 
-    private Date timestamp;
+    private LocalDate timestamp;
 }
