@@ -15,6 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class LecturerServiceImpl implements LecturerService {
 
@@ -90,5 +93,25 @@ public class LecturerServiceImpl implements LecturerService {
         lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
 
         return lecturerSubjectResponseDTO;
+    }
+
+    @Override
+    public List<LecturerSubjectResponseDTO> getAllSubjects(Long lecturerId) {
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+        if(lecturer == null) throw new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId));
+
+        List<Subject> subjectList = subjectRepository.findSubjectsByLecturerIdAndStatus(lecturer.getUserId(), Constant.OPEN);
+
+        return subjectList.stream().map(
+                subject -> {
+                    LecturerSubjectResponseDTO dto = new LecturerSubjectResponseDTO();
+                    dto.setLecturerId(lecturer.getUserId());
+                    dto.setUnique(lecturer.getUnique());
+                    dto.setLecturerName(lecturer.getUserName());
+                    dto.setSubjectId(subject.getSubjectId());
+                    return dto;
+                }
+        ).collect(Collectors.toList());
     }
 }
