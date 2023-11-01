@@ -250,7 +250,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRoleResponseDTO getUserId(String email) {
         User user = userRepository.findUserByEmail(email);
-
         return modelMapper.map(user, UserRoleResponseDTO.class);
     }
 

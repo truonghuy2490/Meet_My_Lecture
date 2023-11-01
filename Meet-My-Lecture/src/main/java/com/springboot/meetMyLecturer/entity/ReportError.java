@@ -22,8 +22,6 @@ public class ReportError {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String errorType;
-
     private String reportErrorContent;
 
     private String status;

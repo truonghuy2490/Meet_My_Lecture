@@ -3,7 +3,11 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.ResponseDTO.SemesterResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.Semester;
+import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
+import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,8 @@ import java.util.stream.Collectors;
 public class SemesterServiceImpl implements SemesterService {
     @Autowired
     SemesterRepository semesterRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -39,4 +45,84 @@ public class SemesterServiceImpl implements SemesterService {
         }
         return semesterList.stream().map(semester -> modelMapper.map(semester, SemesterResponseDTO.class)).collect(Collectors.toList());
     }
+
+    //create semester for admin DONE-DONE
+    @Override
+    public SemesterResponseDTO createSemester(Long adminId, SemesterDTO semesterDTO) {
+        User admin = userRepository.findById(adminId).orElseThrow(
+                ()-> new ResourceNotFoundException("User","id",String.valueOf(adminId))
+        );
+
+        String dateStart = String.valueOf(semesterDTO.getDateStart());
+
+        String[] parts = dateStart.split("-");
+        int yearCheck = Integer.parseInt(parts[0]);
+
+        if(yearCheck != semesterDTO.getYear()){
+            throw new RuntimeException("Year in date and year you input are not the same.");
+        }
+
+        Semester semester = modelMapper.map(semesterDTO, Semester.class);
+        semester.setStatus(Constant.OPEN);
+        semester.setAdmin(admin);
+        semesterRepository.save(semester);
+
+        return modelMapper.map(semester, SemesterResponseDTO.class);
+    }
+
+    //edit semester for admin DONE-DONE
+    @Override
+    public SemesterResponseDTO editSemester(Long adminId, Long semesterId, SemesterDTO semesterDTO) {
+        User admin = userRepository.findById(adminId).orElseThrow(
+                ()-> new ResourceNotFoundException("User","id",String.valueOf(adminId))
+        );
+
+        String dateStart = String.valueOf(semesterDTO.getDateStart());
+
+        String[] parts = dateStart.split("-");
+        int yearCheck = Integer.parseInt(parts[0]);
+
+        if(yearCheck != semesterDTO.getYear()){
+            throw new RuntimeException("Year in date and year you input are not the same.");
+        }
+
+        Semester semester = semesterRepository.findById(semesterId).orElseThrow(
+                ()-> new ResourceNotFoundException("Semester","id", String.valueOf(semesterId))
+        );
+        semester.setSemesterName(semesterDTO.getSemesterName());
+        semester.setDateStart(semesterDTO.getDateStart());
+        semester.setDateEnd(semesterDTO.getDateEnd());
+        semester.setYear(semesterDTO.getYear());
+        semester.setStatus(semesterDTO.getStatus().toUpperCase());
+
+        if(!semester.getAdmin().equals(admin)){
+            semester.setAdmin(admin);
+        }
+
+        semesterRepository.save(semester);
+
+        return modelMapper.map(semester, SemesterResponseDTO.class);
+    }
+
+    //DONE-DONE
+    @Override
+    public String deleteSemester(Long adminId, Long semesterId) {
+        User admin = userRepository.findById(adminId).orElseThrow(
+                ()-> new ResourceNotFoundException("User","id",String.valueOf(adminId))
+        );
+
+        Semester semester = semesterRepository.findById(semesterId).orElseThrow(
+                ()-> new ResourceNotFoundException("Semester","id",String.valueOf(semesterId))
+        );
+
+        if(!semester.getAdmin().equals(admin)){
+            semester.setAdmin(admin);
+        }
+
+        semester.setStatus(Constant.CLOSED);
+
+        return "This semester has been deleted.";
+    }
+
+
 }

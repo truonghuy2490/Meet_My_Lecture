@@ -5,13 +5,7 @@ import lombok.Data;
 @Data
 public class ReportErrorResponseDTO {
 
-    private Long reportErrorId;
-
-    private Long userId;
-
-    private String unique;
-
-    private String errorType;
+    private String userName;
 
     private String reportErrorContent;
 

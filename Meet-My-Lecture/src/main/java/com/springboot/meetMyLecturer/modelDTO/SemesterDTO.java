@@ -3,7 +3,6 @@ package com.springboot.meetMyLecturer.modelDTO;
 import lombok.Data;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 @Data
 public class SemesterDTO {
@@ -13,7 +12,7 @@ public class SemesterDTO {
 
     private Date dateEnd;
 
-    private int year;
+    private String status;
 
-    private Long adminId;
+    private int year;
 }

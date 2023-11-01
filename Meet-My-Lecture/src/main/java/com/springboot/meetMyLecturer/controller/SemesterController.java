@@ -2,14 +2,13 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SemesterResponseDTO;
+import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
 import com.springboot.meetMyLecturer.service.MajorService;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,4 +26,30 @@ public class SemesterController {
         return new ResponseEntity<>(majorList, HttpStatus.OK);
     }
 
+    //DONE-DONE
+    @PostMapping("/admin/{adminId}")
+    public ResponseEntity<SemesterResponseDTO> createSemester(@PathVariable Long adminId,
+                                                              @RequestBody SemesterDTO semesterDTO){
+        SemesterResponseDTO responseDTO = semesterService.createSemester(adminId, semesterDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    //DONE-DONE
+    @PutMapping("/{semesterId}/admin/{adminId}")
+    public ResponseEntity<SemesterResponseDTO> editSemester(@PathVariable Long adminId,@PathVariable Long semesterId,@RequestBody SemesterDTO semesterDTO){
+        SemesterResponseDTO responseDTO = semesterService.editSemester(adminId,semesterId, semesterDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    //DONE-DONE
+    @PutMapping("/{semesterId}/admin/{adminId}/deleting")
+    public ResponseEntity<String> deleteSemester(@PathVariable Long adminId, @PathVariable Long semesterId){
+        String result = semesterService.deleteSemester(adminId, semesterId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+
+
+    
 }

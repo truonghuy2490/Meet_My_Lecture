@@ -1,7 +1,7 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseDTO;
-import com.springboot.meetMyLecturer.modelDTO.ReportErrorDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseForAdminDTO;
 import com.springboot.meetMyLecturer.service.ReportErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,15 +19,31 @@ public class ReportErrorController {
 
     @PostMapping("/user/{userId}")
     public ResponseEntity<ReportErrorResponseDTO> createReportError(@PathVariable Long userId,
-                                                                    @RequestBody ReportErrorDTO reportErrorDTO){
-        ReportErrorResponseDTO responseDTO = reportErrorService.createReportError(reportErrorDTO, userId);
+                                                                    @RequestParam String reportError){
+        ReportErrorResponseDTO responseDTO = reportErrorService.createReportError(reportError, userId);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<ReportErrorResponseDTO>> getAllReports(){
+    //DONE-DONE
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReportErrorResponseDTO>> getReports(@PathVariable Long userId){
+        List<ReportErrorResponseDTO> responseDTO = reportErrorService.getReports(userId);
+        return  new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
 
-        List<ReportErrorResponseDTO> responseDTO = reportErrorService.getAllReportForAdmin();
+    //DONE-DONE
+    @GetMapping("/admin")
+    public ResponseEntity<List<ReportErrorResponseForAdminDTO>> getAllReports(){
+        List<ReportErrorResponseForAdminDTO> responseDTO = reportErrorService.getAllReportForAdmin();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
+
+    //DONE-DONE
+    @PutMapping("/{reportErrorId}/admin")
+    public ResponseEntity<ReportErrorResponseForAdminDTO> updateStatusReportFroAdmin(@PathVariable Long reportErrorId,
+                                                                                     @RequestParam String status){
+        ReportErrorResponseForAdminDTO response = reportErrorService.updateStatusReportForAdmin(reportErrorId, status);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }
