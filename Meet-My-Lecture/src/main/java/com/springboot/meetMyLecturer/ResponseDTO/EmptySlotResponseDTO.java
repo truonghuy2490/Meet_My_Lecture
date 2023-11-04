@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Date;
 
 @Data
 public class EmptySlotResponseDTO {

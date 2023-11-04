@@ -8,6 +8,6 @@ public enum NotificationType {
     SlotAssign, // done
     SlotStart,  // when assigned and approved -> student
     SlotCreate, // done
-    SlotUpdate, // done
+    SlotReschedule, // done
     SlotDelete // done
 }

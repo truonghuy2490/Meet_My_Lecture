@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -210,7 +211,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     }
 
     @Override
-    public EmptySlotResponseDTO updateEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO) {
+    public EmptySlotResponseDTO rescheduleEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotResponseDTO emptySlotResponseDTO) {
 
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
@@ -218,42 +219,53 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         EmptySlot emptySlot = emptySlotRepository.findById(emptySlotId).orElseThrow(
                 () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
         );
+        int SlotTimeId = emptySlotResponseDTO.getSlotTimeId();
+        SlotTime slotTime = slotTimeRepository.findById(SlotTimeId).orElseThrow(
+                () -> new ResourceNotFoundException("Slot time", "id", String.valueOf(SlotTimeId))
+        );
+        String roomId = emptySlotResponseDTO.getRoomId();
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new ResourceNotFoundException("Room", "id", roomId)
+        );
+
+
         // if does not exist slot id
         if(!emptySlot.getLecturer().getUserId().equals(lecturer.getUserId())){
             throw new RuntimeException("Slot not belong to this lecturer");
         }
-
-        // if duplicate with other slot
-        if(!isSlotAvaiable(emptySlotDTO)){
-            throw new RuntimeException("There are Slot booked before!");
+        // if is avaiable
+        if(!emptySlot.getStatus().equalsIgnoreCase(Constant.OPEN)){
+            throw new RuntimeException("This slot is not avaiable");
         }
 
-        // updating
-        emptySlot.setDateStart(emptySlotDTO.getDateStart()); // update date start -> update weekly
-        emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
-        emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
-
-
         // [DONE] - get Weekly [if not have in db, create new week]
-        WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
+        WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotResponseDTO.getDateStart());
+        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
 
-        WeeklyEmptySlot weeklyEmptySlot = new WeeklyEmptySlot();
-        Date dateStart = new Date(weeklyDTO.getFirstDayOfWeek().getTime());
-        Date dateEnd = new Date(weeklyDTO.getLastDayOfWeek().getTime());
-
-        weeklyEmptySlot.setFirstDayOfWeek(dateStart);
-        weeklyEmptySlot.setLastDayOfWeek(dateEnd);
-
+        // set entity
+        emptySlot.setSlotTime(slotTime);
+        emptySlot.setRoom(room);
         emptySlot.setWeeklySlot(weeklyEmptySlot);
+
+        // update attribute
+        emptySlot.setDateStart(emptySlotResponseDTO.getDateStart());
+        emptySlot.setDuration(Time.valueOf(emptySlotResponseDTO.getDuration().toLocalTime()));
+        emptySlot.setTimeStart(Time.valueOf(emptySlotResponseDTO.getTimeStart().toLocalTime()));
+
+
+        // if duplicate with other slot
+        if(!isSlotAvaiable(mapper.map(emptySlot, EmptySlotDTO.class))){
+            throw new RuntimeException("There are Slot booked before!");
+        }
 
         // save to DB
         emptySlotRepository.save(emptySlot);
 
         // Update and save a notification to LECTURER
-        String notificationMessage = "Slot update in room " + emptySlot.getRoom().getRoomId() +
+        String notificationMessage = "Slot reschedule in room " + emptySlot.getRoom().getRoomId() +
                 " at " + emptySlot.getDateStart() + " " + emptySlot.getTimeStart().toLocalTime() +
                 " for slot duration " + emptySlot.getDuration();
-        NotificationType notificationType = NotificationType.SlotUpdate;
+        NotificationType notificationType = NotificationType.SlotReschedule;
         notificationService.slotNotification(notificationMessage, notificationType, emptySlot);
 
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
@@ -329,7 +341,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                     // check Room
                     if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
                         // Check if newStartTime is within the existing time slot
-                        if (!newStartTime.isBefore(startTime) && !newStartTime.isAfter(endTimeExist)) {
+                        if (newStartTime.isAfter(startTime) && newStartTime.isBefore(endTimeExist)) {
                             throw new RuntimeException("Slot have been booked already !");
                         }
                     }

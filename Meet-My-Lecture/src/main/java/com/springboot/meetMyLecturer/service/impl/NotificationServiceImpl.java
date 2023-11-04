@@ -24,6 +24,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +52,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationResponse getAllNotificationByUserId(int pageNo, int pageSize, String sortBy, String sortDir, Long userId) {
+    public NotificationResponse getAllNotificationByUserId(
+            int pageNo,
+            int pageSize,
+            String sortBy,
+            String sortDir,
+            Long userId)
+    {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
@@ -89,7 +96,7 @@ public class NotificationServiceImpl implements NotificationService {
         // set entity
         Notification notification = new Notification();
         notification.setNotificationMessage(message);
-        notification.setTimestamp(LocalDate.now() );
+        notification.setTimestamp(LocalDateTime.now() );
         notification.setUser(emptySlot.getLecturer());
         notification.setEmptySlot(emptySlot);
         notification.setNotificationType(type.toString());
@@ -109,7 +116,7 @@ public class NotificationServiceImpl implements NotificationService {
         // set entity
         Notification notification = new Notification();
         notification.setNotificationMessage(message);
-        notification.setTimestamp(LocalDate.now());
+        notification.setTimestamp(LocalDateTime.now());
         notification.setUser(meetingRequest.getLecturer());
         notification.setMeetingRequest(meetingRequest);
         notification.setNotificationType(type.toString());
@@ -129,7 +136,7 @@ public class NotificationServiceImpl implements NotificationService {
         // set entity
         Notification notification = new Notification();
         notification.setNotificationMessage(message);
-        notification.setTimestamp(LocalDate.now());
+        notification.setTimestamp(LocalDateTime.now());
         notification.setUser(emptySlot.getLecturer());
         notification.setEmptySlot(emptySlot);
         notification.setNotificationType(type.toString());

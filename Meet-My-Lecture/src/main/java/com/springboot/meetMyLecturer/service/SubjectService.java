@@ -24,6 +24,7 @@ public interface SubjectService {
 
     SubjectResponseDTO getSubjectBySubjectId(String subjectId);
 
+
     List<LecturerSubjectResponseDTO> getSubjectsByMajorId(Long majorId);
 
 }

@@ -15,12 +15,11 @@ public interface EmptySlotService {
 
     EmptySlotResponseDTO assignRequestToSlot(Long meetingRequestId, Long emptySlotId);
     // lecturer
-    EmptySlotResponseDTO updateEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO);
+    EmptySlotResponseDTO rescheduleEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotResponseDTO emptySlotResponseDTO);
 
     // lecturer
     EmptySlotResponseDTO deleteSlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO);
 
     List<SubjectResponseDTO> getSubjectsOfLecturer(Long lecturerId);
-
 
 }
