@@ -32,7 +32,7 @@ public class TeachingSchedule {
     private String roomId;
 
     @ManyToOne
-    @JoinColumn(name = "slot_id", nullable = false)
+    @JoinColumn(name = "slot_time_id", nullable = false)
     private SlotTime slot;
 
 }
