@@ -4,25 +4,19 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.NotificationResponse;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
-import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.UserService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Calendar;
 import java.util.List;
 
 @RestController
+@CrossOrigin()
 @RequestMapping("api/v1/user")
 public class UserController {
 
@@ -38,12 +32,22 @@ public class UserController {
     @Autowired
     NotificationService notificationService;
 
+    /*private Bucket bucket;
+
+    @GetMapping("/token-generate")
+    public ResponseEntity<String> generateToken(){
+        Refill refill = Refill.of(5, Duration.ofMinutes(1));
+        bucket =Bucket4j.builder()
+                .addLimit(Bandwidth.classic(5, refill))
+                .build();
+        return new ResponseEntity<>("ok",HttpStatus.OK);
+    }*/
 
     //DONE-DONE
     @GetMapping("/profile/{userId}")
     public ResponseEntity<UserProfileDTO> viewProfileUser(@PathVariable long userId){
-        UserProfileDTO userDTO = userService.viewProfileUser(userId);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+            UserProfileDTO userDTO = userService.viewProfileUser(userId);
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     //DONE-DONE
