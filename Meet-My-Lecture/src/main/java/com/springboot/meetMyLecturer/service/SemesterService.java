@@ -8,6 +8,7 @@ import com.springboot.meetMyLecturer.modelDTO.SubjectSemesterDTO;
 import java.util.List;
 
 public interface SemesterService {
+    // paging semester
     List<SemesterResponseDTO> getAllSemesters();
 
     List<SemesterResponseDTO> getAllSemestersForAdmin();

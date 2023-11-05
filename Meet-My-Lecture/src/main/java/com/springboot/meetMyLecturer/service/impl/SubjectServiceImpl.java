@@ -4,12 +4,18 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.SubjectService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -87,53 +93,53 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     //get all subjects for amin DONE - DONE
-    @Override
-    public List<SubjectMajorResponseDTO> getAllSubjects() {
-        List<Subject> subjectList = subjectRepository.findAll();
-        if (subjectList.isEmpty()) {
-            throw new RuntimeException("There are no subjects");
-        }
-
-        return subjectList.stream()
-                .map(subject -> {
-                    List<Long> lecturerList = userRepository.findLecturerIdBySubjectId(subject.getSubjectId());
-                    List<Long> majorList = majorRepository.findMajorIdBySubjectId(subject.getSubjectId());
-
-                    Set<MajorResponseDTO> majorSet = majorList.stream()
-                            .map(majorId -> majorRepository.findById(majorId)
-                                    .orElseThrow(() -> new ResourceNotFoundException("Major", "id", String.valueOf(majorId)))
-                            )
-                            .map(major -> modelMapper.map(major, MajorResponseDTO.class))
-                            .collect(Collectors.toSet());
-
-                    if (lecturerList.isEmpty()) {
-                        SubjectMajorResponseDTO subjectMajorResponseDTO = new SubjectMajorResponseDTO();
-                        subjectMajorResponseDTO.setSubjectId(subject.getSubjectId());
-                        subjectMajorResponseDTO.setMajor(majorSet);
-                        subjectMajorResponseDTO.setSubjectName(subject.getSubjectName());
-                        subjectMajorResponseDTO.setStatus(subject.getStatus());
-                        return Collections.singletonList(subjectMajorResponseDTO);
-                    } else {
-                        return lecturerList.stream()
-                                .map(lecturer -> {
-                                    String lecturerName = userRepository.findUserNameByUserId(lecturer);
-                                    String unique = userRepository.findUniqueByUserId(lecturer);
-                                    SubjectMajorResponseDTO dto = new SubjectMajorResponseDTO();
-                                    dto.setLecturerId(lecturer);
-                                    dto.setSubjectId(subject.getSubjectId());
-                                    dto.setSubjectName(subject.getSubjectName());
-                                    dto.setLecturerName(lecturerName);
-                                    dto.setUnique(unique);
-                                    dto.setStatus(subject.getStatus());
-                                    dto.setMajor(majorSet);
-                                    return dto;
-                                })
-                                .collect(Collectors.toList());
-                    }
-                })
-                .flatMap(List::stream) // Flatten the inner lists
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<SubjectMajorResponseDTO> getAllSubjects() {
+//        List<Subject> subjectList = subjectRepository.findAll();
+//        if (subjectList.isEmpty()) {
+//            throw new RuntimeException("There are no subjects");
+//        }
+//
+//        return subjectList.stream()
+//                .map(subject -> {
+//                    List<Long> lecturerList = userRepository.findLecturerIdBySubjectId(subject.getSubjectId());
+//                    List<Long> majorList = majorRepository.findMajorIdBySubjectId(subject.getSubjectId());
+//
+//                    Set<MajorResponseDTO> majorSet = majorList.stream()
+//                            .map(majorId -> majorRepository.findById(majorId)
+//                                    .orElseThrow(() -> new ResourceNotFoundException("Major", "id", String.valueOf(majorId)))
+//                            )
+//                            .map(major -> modelMapper.map(major, MajorResponseDTO.class))
+//                            .collect(Collectors.toSet());
+//
+//                    if (lecturerList.isEmpty()) {
+//                        SubjectMajorResponseDTO subjectMajorResponseDTO = new SubjectMajorResponseDTO();
+//                        subjectMajorResponseDTO.setSubjectId(subject.getSubjectId());
+//                        subjectMajorResponseDTO.setMajor(majorSet);
+//                        subjectMajorResponseDTO.setSubjectName(subject.getSubjectName());
+//                        subjectMajorResponseDTO.setStatus(subject.getStatus());
+//                        return Collections.singletonList(subjectMajorResponseDTO);
+//                    } else {
+//                        return lecturerList.stream()
+//                                .map(lecturer -> {
+//                                    String lecturerName = userRepository.findUserNameByUserId(lecturer);
+//                                    String unique = userRepository.findUniqueByUserId(lecturer);
+//                                    SubjectMajorResponseDTO dto = new SubjectMajorResponseDTO();
+//                                    dto.setLecturerId(lecturer);
+//                                    dto.setSubjectId(subject.getSubjectId());
+//                                    dto.setSubjectName(subject.getSubjectName());
+//                                    dto.setLecturerName(lecturerName);
+//                                    dto.setUnique(unique);
+//                                    dto.setStatus(subject.getStatus());
+//                                    dto.setMajor(majorSet);
+//                                    return dto;
+//                                })
+//                                .collect(Collectors.toList());
+//                    }
+//                })
+//                .flatMap(List::stream) // Flatten the inner lists
+//                .collect(Collectors.toList());
+//    }
 
     //create subject for admin DONE - DONE
     @Override
@@ -250,4 +256,68 @@ public class SubjectServiceImpl implements SubjectService {
                 subject -> modelMapper.map(subject, LecturerSubjectResponseDTO.class)
         ).collect(Collectors.toList());
     }
+
+    @Override
+    public SubjectResponse getAllSubjects(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+
+        // SAVE TO REPO
+        Page<Subject> subjects = subjectRepository.findAll(pageable);
+        // get content for page object
+        List<Subject> listOfSubjects = subjects.getContent();
+
+        List<SubjectResponseDTO> content = listOfSubjects.stream().map(
+                subject -> modelMapper.map(subject, SubjectResponseDTO.class)
+        ).collect(Collectors.toList());
+
+        SubjectResponse subjectResponse = new SubjectResponse();
+        subjectResponse.setContent(content);
+        subjectResponse.setTotalPage(subjects.getTotalPages());
+        subjectResponse.setTotalElement(subjects.getTotalElements());
+        subjectResponse.setPageNo(subjects.getNumber());
+        subjectResponse.setPageSize(subjects.getSize());
+        subjectResponse.setLast(subjects.isLast());
+
+        return subjectResponse;
+    }
+
+
+
+    @Override
+    public SubjectResponse getAllSubjectsByMajorId(int pageNo, int pageSize, String sortBy, String sortDir, Long majorId) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+
+        // SAVE TO REPO
+        Page<Subject> subjects = subjectRepository.findSubjectsByMajorId(pageable, majorId);
+        // get content for page object
+        List<Subject> listOfSubjects = subjects.getContent();
+
+        List<SubjectResponseDTO> content = listOfSubjects.stream().map(
+                subject -> modelMapper.map(subject, SubjectResponseDTO.class)
+        ).collect(Collectors.toList());
+
+        SubjectResponse subjectResponse = new SubjectResponse();
+        subjectResponse.setContent(content);
+        subjectResponse.setTotalPage(subjects.getTotalPages());
+        subjectResponse.setTotalElement(subjects.getTotalElements());
+        subjectResponse.setPageNo(subjects.getNumber());
+        subjectResponse.setPageSize(subjects.getSize());
+        subjectResponse.setLast(subjects.isLast());
+
+        return subjectResponse;
+    }
+
+
 }

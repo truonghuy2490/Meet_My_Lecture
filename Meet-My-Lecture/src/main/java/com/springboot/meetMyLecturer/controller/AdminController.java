@@ -2,7 +2,10 @@ package com.springboot.meetMyLecturer.controller;
 
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
+import com.springboot.meetMyLecturer.constant.PageConstant;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
+import com.springboot.meetMyLecturer.service.SubjectService;
 import com.springboot.meetMyLecturer.service.UserService;
 import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class AdminController {
 
     @Autowired
     WeeklyEmptySlotService weeklyEmptySlotService;
+
+    @Autowired
+    SubjectService  subjectService;
 
 
     //DONE-DONE
@@ -78,5 +84,26 @@ public class AdminController {
         List<EmptySlotResponseDTO> emptySlotResponseDTOList = userService.viewEmptySlotForAdmin(lecturerId);
         return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);
     }
+
+    @GetMapping("subjects")
+    public SubjectResponse getAllSubjects(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "subjectName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir
+    ){
+        return subjectService.getAllSubjects(pageNo, pageSize, sortBy, sortDir);
+    }
+
+//    @GetMapping("subjects/major/{majorId}")
+//    public SubjectResponse getAllSubjectsByMajorId(
+//            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+//            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+//            @RequestParam(value = "sortBy", defaultValue = "subjectName", required = false) String sortBy,
+//            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir,
+//            @PathVariable Long majorId
+//    ){
+//        return subjectService.getAllSubjectsByMajorId(pageNo, pageSize, sortBy, sortDir, majorId);
+//    }
 
 }

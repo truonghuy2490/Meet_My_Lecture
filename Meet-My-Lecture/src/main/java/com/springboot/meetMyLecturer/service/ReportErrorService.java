@@ -11,6 +11,7 @@ public interface ReportErrorService {
 
     List<ReportErrorResponseForAdminDTO> getAllReportForAdmin();
 
+
     ReportErrorResponseForAdminDTO updateStatusReportForAdmin(Long reportErrorId, String status);
 
     List<ReportErrorResponseDTO> getReports(Long userId);

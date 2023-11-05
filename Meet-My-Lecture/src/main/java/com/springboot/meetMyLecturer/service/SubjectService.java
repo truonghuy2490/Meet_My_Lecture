@@ -4,6 +4,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseForAdminDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 
@@ -16,7 +17,7 @@ public interface SubjectService {
 
     List<LecturerSubjectResponseDTO> getSubjectByMajorId(Long majorId);
 
-    List<SubjectMajorResponseDTO> getAllSubjects();
+//    List<SubjectMajorResponseDTO> getAllSubjects();
 
     SubjectMajorResponseForAdminDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO);
 
@@ -24,7 +25,11 @@ public interface SubjectService {
 
     SubjectResponseDTO getSubjectBySubjectId(String subjectId);
 
-
     List<LecturerSubjectResponseDTO> getSubjectsByMajorId(Long majorId);
+
+    SubjectResponse getAllSubjects(int pageNo, int pageSize, String sortBy, String sortDir);
+
+    SubjectResponse getAllSubjectsByMajorId(int pageNo, int pageSize, String sortBy, String sortDir, Long majorId);
+
 
 }
