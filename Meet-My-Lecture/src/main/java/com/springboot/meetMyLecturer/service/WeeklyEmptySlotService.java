@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.service;
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.WeeklyEmptySlotResponseForAdminDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 
 import java.util.Date;

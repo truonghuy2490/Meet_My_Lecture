@@ -4,15 +4,22 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.UserResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -68,14 +75,14 @@ public class UserServiceImpl implements UserService {
     }
 
     //get all users DONE-DONE
-    @Override
-    public List<UserProfileForAdminDTO> getAllUsers(){
-        List<User> userList = userRepository.findUserNotAdmin();
-        if(userList.isEmpty()){
-            throw new RuntimeException("There are no users");
-        }
-        return  userList.stream().map(user -> modelMapper.map(user, UserProfileForAdminDTO.class)).toList();
-    }
+//    @Override
+//    public List<UserProfileForAdminDTO> getAllUsers(){
+//        List<User> userList = userRepository.findUserNotAdmin();
+//        if(userList.isEmpty()){
+//            throw new RuntimeException("There are no users");
+//        }
+//        return  userList.stream().map(user -> modelMapper.map(user, UserProfileForAdminDTO.class)).toList();
+//    }
 
     //view profile by userId for admin DONE-DONE
     @Override
@@ -251,6 +258,36 @@ public class UserServiceImpl implements UserService {
     public UserRoleResponseDTO getUserId(String email) {
         User user = userRepository.findUserByEmail(email);
         return modelMapper.map(user, UserRoleResponseDTO.class);
+    }
+
+    @Override
+    public UserResponse getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+
+        // SAVE TO REPO
+        Page<User> users = userRepository.findAll(pageable);
+        // get content for page object
+        List<User> listOfUsers = users.getContent();
+
+        List<UserProfileForAdminDTO> content = listOfUsers.stream().map(
+                user -> modelMapper.map(user, UserProfileForAdminDTO.class)
+        ).collect(Collectors.toList());
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setContent(content);
+        userResponse.setTotalPage(users.getTotalPages());
+        userResponse.setTotalElement(users.getTotalElements());
+        userResponse.setPageNo(users.getNumber());
+        userResponse.setPageSize(users.getSize());
+        userResponse.setLast(users.isLast());
+
+        return userResponse;
     }
 
 
