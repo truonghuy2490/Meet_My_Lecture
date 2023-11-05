@@ -3,6 +3,8 @@ package com.springboot.meetMyLecturer.repository;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,5 +33,7 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
     @Query("select s from Subject s join SubjectMajor sm on sm.subject.subjectId = s.subjectId and sm.major.majorId = :majorId where s.status =:status")
     List<Subject> findSubjectsByMajorId(Long majorId, String status);
 
+    @Query("SELECT s FROM Subject s JOIN SubjectMajor sm WHERE sm.major.majorId = :majorId")
+    Page<Subject> findSubjectsByMajorId(Pageable pageable, Long majorId);
 
 }

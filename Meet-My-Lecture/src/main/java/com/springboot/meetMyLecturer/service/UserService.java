@@ -2,6 +2,8 @@ package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.UserResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import org.springframework.security.core.Authentication;
@@ -15,7 +17,7 @@ public interface UserService {
 
     UserProfileDTO updateProfile(Long userId, UserRegister userRegister);
 
-    List<UserProfileForAdminDTO> getAllUsers();
+//    List<UserProfileForAdminDTO> getAllUsers();
 
     List<EmptySlotResponseDTO> viewEmptySlot(Long lecturerId);
 
@@ -31,9 +33,12 @@ public interface UserService {
 
     String deleteSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
 
+    // paging
     List<MajorResponseDTO> getAllMajors();
 
     List<EmptySlotResponseForSemesterDTO> getEmptySlotsInSemester(Long userId, Long semesterId);
 
     UserRoleResponseDTO getUserId(String email);
+
+    UserResponse getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir);
 }

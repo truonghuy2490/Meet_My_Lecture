@@ -2,9 +2,9 @@ package com.springboot.meetMyLecturer.controller;
 
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
-import com.springboot.meetMyLecturer.service.MeetingRequestService;
-import com.springboot.meetMyLecturer.service.UserService;
-import com.springboot.meetMyLecturer.service.WeeklyEmptySlotService;
+import com.springboot.meetMyLecturer.constant.PageConstant;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.*;
+import com.springboot.meetMyLecturer.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +21,36 @@ public class AdminController {
     UserService userService;
 
     @Autowired
+    EmptySlotService slotService;
+
+    @Autowired
     MeetingRequestService meetingRequestService;
 
     @Autowired
     WeeklyEmptySlotService weeklyEmptySlotService;
 
+    @Autowired
+    SubjectService  subjectService;
+
+    @Autowired
+    SemesterService semesterService;
+
+    @Autowired
+    MajorService majorService;
+
+    @Autowired
+    ReportErrorService reportErrorService;
+
 
     //DONE-DONE
-    @GetMapping("/users")
-    public ResponseEntity<List<UserProfileForAdminDTO>> getAllUsers(){
-        List<UserProfileForAdminDTO> userDTOList = userService.getAllUsers();
-        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
+    @GetMapping("user")
+    public UserResponse getAllUsers(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "userName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return userService.getAllUsers(pageNo, pageSize, sortBy, sortDir);
     }
 
     //DONE-DONE
@@ -50,12 +69,15 @@ public class AdminController {
     }
 
     //DONE-DONE
-    @GetMapping("/weeklyEmptySlot")
-    public ResponseEntity<List<WeeklyEmptySlotResponseForAdminDTO> >viewWeeklyEmptySlot(){
-        List<WeeklyEmptySlotResponseForAdminDTO> weeklyEmptySlotResponseDTO = weeklyEmptySlotService.viewAllWeeks();
-        return new ResponseEntity<>(weeklyEmptySlotResponseDTO, HttpStatus.OK);
+    @GetMapping("weeklyEmptySlot")
+    public SlotResponse getAllSlots(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "timeStart", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir
+    ){
+        return slotService.getAllSlot(pageNo, pageSize,sortBy,sortDir);
     }
-
     //DONE-DONE
     @GetMapping("/emptySlots/weeklyEmptySlot")
     public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlotInWeek(@RequestParam Long lecturerId, @RequestParam Long weeklyEmptySlotId){
@@ -79,4 +101,42 @@ public class AdminController {
         return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);
     }
 
+    @GetMapping("subjects")
+    public SubjectResponse getAllSubjects(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "subjectName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return subjectService.getAllSubjects(pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @GetMapping("semesters")
+    public SemesterResponse getAllSemester(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "semesterName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return semesterService.getAllSemesters(pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @GetMapping("reports-error")
+    public ReportErrorResponse getAllReportsError(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "createAt", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir
+    ){
+        return reportErrorService.getAllReportError(pageNo, pageSize, sortBy, sortDir);
+    }
+    @GetMapping("majors")
+    public MajorResponse getAllMajors(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "majorName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return majorService.getAllMajors(pageNo, pageSize, sortBy, sortDir);
+    }
 }

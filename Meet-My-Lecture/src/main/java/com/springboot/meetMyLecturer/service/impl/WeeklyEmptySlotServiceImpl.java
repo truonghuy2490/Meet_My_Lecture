@@ -8,6 +8,7 @@ import com.springboot.meetMyLecturer.entity.Semester;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.entity.WeeklyEmptySlot;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.EmptySlotRepository;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
@@ -168,4 +169,6 @@ public class WeeklyEmptySlotServiceImpl implements WeeklyEmptySlotService {
         return mapper.map(weeklyEmptySlot, WeeklyDTO.class);
 
     }
+
+
 }

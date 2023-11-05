@@ -26,11 +26,11 @@ public class SubjectController {
     SubjectService subjectService;
 
     //DONE-DONE
-    @GetMapping
-    public ResponseEntity<List<SubjectMajorResponseDTO>> getAllSubjects() {
-        List<SubjectMajorResponseDTO> subjectList = subjectService.getAllSubjects();
-        return new ResponseEntity<>(subjectList, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<SubjectMajorResponseDTO>> getAllSubjects() {
+//        List<SubjectMajorResponseDTO> subjectList = subjectService.getAllSubjects();
+//        return new ResponseEntity<>(subjectList, HttpStatus.OK);
+//    }
 
     //DONE-DONE
     @PostMapping("/{adminId}")
@@ -49,4 +49,6 @@ public class SubjectController {
 
         return new ResponseEntity<>(subject, HttpStatus.OK);
     }
+
+
 }
