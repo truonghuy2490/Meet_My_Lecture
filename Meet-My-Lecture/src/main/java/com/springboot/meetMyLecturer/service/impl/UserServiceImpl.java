@@ -4,7 +4,6 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.UserResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -179,35 +179,42 @@ public class UserServiceImpl implements UserService {
 
     //insert subject for student DONE-DONE
     @Override
-    public LecturerSubjectResponseDTO insertSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId) {
-        Subject subject = getSubjectOrThrowException(subjectLecturerStudentId.getSubjectId());
-        User lecturer = getUserOrThrowException(subjectLecturerStudentId.getLecturerId());
-        User student = getUserOrThrowException(subjectLecturerStudentId.getStudentId());
+    public  List <LecturerSubjectResponseDTO> insertSubjectsForStudent(Set<SubjectLecturerStudentId> subjectLecturerStudentId) {
+        List <LecturerSubjectResponseDTO> list = subjectLecturerStudentId.stream().map(
+                sls -> {
+                    Subject subject = getSubjectOrThrowException(sls.getSubjectId());
+                    User lecturer = getUserOrThrowException(sls.getLecturerId());
+                    User student = getUserOrThrowException(sls.getStudentId());
 
-        if (subjectLecturerStudentRepository.searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(subjectLecturerStudentId, Constant.OPEN) != null) {
-            throw new RuntimeException("You already have this subject with this lecturer");
-        }
+                    if (subjectLecturerStudentRepository
+                            .searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(sls, Constant.OPEN) != null) {
+                        throw new RuntimeException("You already have this subject with this lecturer");
+                    }
 
-        LecturerSubjectId lecturerSubjectId = new LecturerSubjectId();
-        lecturerSubjectId.setSubjectId(subject.getSubjectId());
-        lecturerSubjectId.setLecturerId(lecturer.getUserId());
+                    LecturerSubjectId lecturerSubjectId = new LecturerSubjectId();
+                    lecturerSubjectId.setSubjectId(subject.getSubjectId());
+                    lecturerSubjectId.setLecturerId(lecturer.getUserId());
 
-        LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
-        if(lecturerSubject == null) throw new RuntimeException("This lecturer does not teach this subject.");
+                    LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+                    if(lecturerSubject == null) throw new RuntimeException("This lecturer does not teach this subject.");
+
+                    SubjectLecturerStudent subjectLecturerStudentDB = subjectLecturerStudentRepository
+                            .searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(sls, Constant.CLOSED);
+
+                    if(subjectLecturerStudentDB != null){
+                        subjectLecturerStudentDB.setStatus(Constant.OPEN);
+                        subjectLecturerStudentRepository.save(subjectLecturerStudentDB);
+                    }
 
 
-        SubjectLecturerStudent subjectLecturerStudentDB = subjectLecturerStudentRepository.searchSubjectLecturerStudentBySubjectLecturerStudentIdAndStatus(subjectLecturerStudentId, Constant.CLOSED);
+                    SubjectLecturerStudent subjectLecturerStudent = new SubjectLecturerStudent();
+                    subjectLecturerStudent.setStatus(Constant.OPEN);
 
-        if(subjectLecturerStudentDB != null){
-            subjectLecturerStudentDB.setStatus(Constant.OPEN);
-            subjectLecturerStudentRepository.save(subjectLecturerStudentDB);
-        }
+                    return getLecturerSubjectResponseDTO(sls, subject, lecturer, student, subjectLecturerStudent);
+                }
+        ).collect(Collectors.toList());
 
-
-        SubjectLecturerStudent subjectLecturerStudent = new SubjectLecturerStudent();
-        subjectLecturerStudent.setStatus(Constant.OPEN);
-
-        return getLecturerSubjectResponseDTO(subjectLecturerStudentId, subject, lecturer, student, subjectLecturerStudent);
+        return list;
     }
 
     //delete subject for student DONE-DONE

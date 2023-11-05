@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/students")
@@ -67,8 +68,8 @@ public class StudentController {
 
     //DONE-DONE
     @PostMapping("/profile/subject")
-    public ResponseEntity<LecturerSubjectResponseDTO> insertSubjectsForStudent(@RequestBody SubjectLecturerStudentId subjectLecturerStudentId) {
-        LecturerSubjectResponseDTO result = userService.insertSubjectsForStudent(subjectLecturerStudentId);
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> insertSubjectsForStudent(@RequestBody Set<SubjectLecturerStudentId> subjectLecturerStudentId) {
+        List<LecturerSubjectResponseDTO> result = userService.insertSubjectsForStudent(subjectLecturerStudentId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 

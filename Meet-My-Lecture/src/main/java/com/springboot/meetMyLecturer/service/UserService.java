@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
@@ -29,7 +30,7 @@ public interface UserService {
 
     LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentDTO subjectLecturerStudent);
 
-    LecturerSubjectResponseDTO insertSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
+    List <LecturerSubjectResponseDTO> insertSubjectsForStudent(Set<SubjectLecturerStudentId> subjectLecturerStudentId);
 
     String deleteSubjectsForStudent(SubjectLecturerStudentId subjectLecturerStudentId);
 
