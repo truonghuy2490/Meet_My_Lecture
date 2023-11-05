@@ -1,20 +1,29 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.Major;
+import com.springboot.meetMyLecturer.entity.ReportError;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MajorDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.MajorResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.ReportErrorResponse;
 import com.springboot.meetMyLecturer.repository.MajorRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MajorService;
 import com.sun.source.tree.ModuleTree;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,5 +97,38 @@ public class MajorServiceImpl implements MajorService {
 
         return modelMapper.map(major, MajorResponseDTO.class);
 
+    }
+
+    @Override
+    public MajorResponse getAllMajors(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
+        // SAVE TO REPO
+        Page<Major> majors = majorRepository.findAll(pageable); // findAllByStudentId()
+        if(majors.isEmpty()){
+            throw new RuntimeException("There are no semesters.");
+        }
+
+        // get content for page object
+        List<Major> listOfMajors = majors.getContent();
+
+        List<MajorResponseDTO> content = listOfMajors.stream().map(
+                major -> modelMapper.map(major, MajorResponseDTO.class)
+        ).collect(Collectors.toList());
+
+
+        MajorResponse majorResponse = new MajorResponse();
+        majorResponse.setContent(content);
+        majorResponse.setTotalPage(majors.getTotalPages());
+        majorResponse.setTotalElement(majors.getTotalElements());
+        majorResponse.setPageNo(majors.getNumber());
+        majorResponse.setPageSize(majors.getSize());
+        majorResponse.setLast(majors.isLast());
+
+        return majorResponse;
     }
 }

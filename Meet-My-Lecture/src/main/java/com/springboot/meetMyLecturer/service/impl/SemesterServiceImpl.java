@@ -1,10 +1,13 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SemesterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectSemesterResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SemesterResponse;
 import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectSemesterDTO;
 import com.springboot.meetMyLecturer.repository.SemesterRepository;
@@ -14,6 +17,10 @@ import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -172,6 +179,39 @@ public class SemesterServiceImpl implements SemesterService {
         subjectSemesterResponseDTO.setSemesterName(semester.getSemesterName());
 
         return subjectSemesterResponseDTO;
+    }
+
+    @Override
+    public SemesterResponse getAllSemesters(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
+        // SAVE TO REPO
+        Page<Semester> semesters = semesterRepository.findAll(pageable); // findAllByStudentId()
+        if(semesters.isEmpty()){
+            throw new RuntimeException("There are no semesters.");
+        }
+
+        // get content for page object
+        List<Semester> listOfSemesters = semesters.getContent();
+
+        List<SemesterResponseDTO> content = listOfSemesters.stream().map(
+                semester -> modelMapper.map(semester, SemesterResponseDTO.class)
+        ).collect(Collectors.toList());
+
+
+        SemesterResponse semesterResponse = new SemesterResponse();
+        semesterResponse.setContent(content);
+        semesterResponse.setTotalPage(semesters.getTotalPages());
+        semesterResponse.setTotalElement(semesters.getTotalElements());
+        semesterResponse.setPageNo(semesters.getNumber());
+        semesterResponse.setPageSize(semesters.getSize());
+        semesterResponse.setLast(semesters.isLast());
+
+        return semesterResponse;
     }
 
 

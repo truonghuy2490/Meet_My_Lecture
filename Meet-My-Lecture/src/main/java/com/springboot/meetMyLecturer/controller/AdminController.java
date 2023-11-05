@@ -3,9 +3,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.PageConstant;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.UserResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.*;
 import com.springboot.meetMyLecturer.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,15 @@ public class AdminController {
 
     @Autowired
     SubjectService  subjectService;
+
+    @Autowired
+    SemesterService semesterService;
+
+    @Autowired
+    MajorService majorService;
+
+    @Autowired
+    ReportErrorService reportErrorService;
 
 
     //DONE-DONE
@@ -104,15 +111,32 @@ public class AdminController {
         return subjectService.getAllSubjects(pageNo, pageSize, sortBy, sortDir);
     }
 
-//    @GetMapping("subjects/major/{majorId}")
-//    public SubjectResponse getAllSubjectsByMajorId(
-//            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
-//            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
-//            @RequestParam(value = "sortBy", defaultValue = "subjectName", required = false) String sortBy,
-//            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir,
-//            @PathVariable Long majorId
-//    ){
-//        return subjectService.getAllSubjectsByMajorId(pageNo, pageSize, sortBy, sortDir, majorId);
-//    }
+    @GetMapping("semesters")
+    public SemesterResponse getAllSemester(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "semesterName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return semesterService.getAllSemesters(pageNo, pageSize, sortBy, sortDir);
+    }
 
+    @GetMapping("reports-error")
+    public ReportErrorResponse getAllReportsError(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "createAt", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir
+    ){
+        return reportErrorService.getAllReportError(pageNo, pageSize, sortBy, sortDir);
+    }
+    @GetMapping("majors")
+    public MajorResponse getAllMajors(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "majorName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return majorService.getAllMajors(pageNo, pageSize, sortBy, sortDir);
+    }
 }
