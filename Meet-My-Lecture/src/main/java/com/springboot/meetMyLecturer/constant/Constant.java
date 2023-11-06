@@ -20,4 +20,6 @@ public class Constant {
     public static final String BOOK = "BOOK";
     public static final String EXPIRED = "EXPIRED";
 
+    public static final String REJECTED = "REJECTED";
+
 }

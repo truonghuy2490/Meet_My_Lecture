@@ -118,7 +118,9 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         if(!meetingRequest.getLecturer().getUserId().equals(lecturer.getUserId())){
             throw new RuntimeException("This request not belong to this lecturer");
         }
-//        if(!meetingRequestDTO.getRequestStatus().equalsIgnoreCase(Constant.APPROVED))
+       if(meetingRequestDTO.getRequestStatus().equalsIgnoreCase(Constant.REJECTED)){
+           meetingRequest.setRequestStatus(Constant.REJECTED);
+       }
         meetingRequest.setRequestStatus(Constant.APPROVED);
 
         meetingRequestRepository.save(meetingRequest);
