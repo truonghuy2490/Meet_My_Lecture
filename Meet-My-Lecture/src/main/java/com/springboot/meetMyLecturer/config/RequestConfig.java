@@ -28,7 +28,7 @@ public class RequestConfig implements Filter {
                 expireAfterWrite(10, TimeUnit.MINUTES).build(new CacheLoader<String, Bucket>() {
                     public Bucket load(String key) {
                         return Bucket.builder()
-                                .addLimit(Bandwidth.classic(2, Refill.intervally(1, Duration.ofMinutes(5))))
+                                .addLimit(Bandwidth.classic(5, Refill.intervally(1, Duration.ofMinutes(2))))
                                 .build();
                     }
                 });
