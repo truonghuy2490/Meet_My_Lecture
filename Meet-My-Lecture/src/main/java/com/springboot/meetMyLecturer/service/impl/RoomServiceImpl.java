@@ -1,17 +1,26 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
+import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.Room;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RoomResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.RoomDTO;
 import com.springboot.meetMyLecturer.repository.RoomRepository;
 import com.springboot.meetMyLecturer.service.RoomService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -72,6 +81,37 @@ public class RoomServiceImpl implements RoomService {
         Room roomDB = modelMapper.map(roomDTO, Room.class);
         roomRepository.save(roomDB);
         return roomDB;
+    }
+
+    @Override
+    public RoomResponse getAllRoom(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+
+        // SAVE TO REPO
+        Page<Room> rooms = roomRepository.findAll(pageable);
+
+        // get content for page object
+        List<Room> roomList = rooms.getContent();
+
+        List<RoomDTO> content = roomList.stream().map(
+                slot -> modelMapper.map(slot, RoomDTO.class)
+        ).collect(Collectors.toList());
+
+        RoomResponse roomResponse = new RoomResponse();
+        roomResponse.setContent(content);
+        roomResponse.setTotalPage(rooms.getTotalPages());
+        roomResponse.setTotalElement(rooms.getTotalElements());
+        roomResponse.setPageNo(rooms.getNumber());
+        roomResponse.setPageSize(rooms.getSize());
+        roomResponse.setLast(rooms.isLast());
+
+        return roomResponse;
     }
 
     public void validateRoom(RoomDTO roomDTO) {

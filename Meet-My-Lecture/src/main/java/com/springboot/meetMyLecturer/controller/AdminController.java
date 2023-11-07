@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.PageConstant;
+import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.*;
 import com.springboot.meetMyLecturer.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class AdminController {
 
     @Autowired
     ReportErrorService reportErrorService;
+
+    @Autowired
+    RoomService roomService;
 
 
     //DONE-DONE
@@ -138,5 +142,15 @@ public class AdminController {
             @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ){
         return majorService.getAllMajors(pageNo, pageSize, sortBy, sortDir);
+    }
+
+    @GetMapping("rooms")
+    public RoomResponse getAllRooms(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "roomId", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
+        return roomService.getAllRoom(pageNo, pageSize, sortBy, sortDir);
     }
 }
