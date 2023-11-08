@@ -22,7 +22,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 public class MeetMyLectureApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(MeetMyLectureApplication.class, args);
 	}

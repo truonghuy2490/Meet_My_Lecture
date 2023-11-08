@@ -121,6 +121,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
        if(meetingRequestDTO.getRequestStatus().equalsIgnoreCase(Constant.REJECTED)){
            meetingRequest.setRequestStatus(Constant.REJECTED);
        }
+
         meetingRequest.setRequestStatus(Constant.APPROVED);
 
         meetingRequestRepository.save(meetingRequest);

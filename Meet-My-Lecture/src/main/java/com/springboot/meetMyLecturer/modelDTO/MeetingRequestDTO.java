@@ -9,5 +9,4 @@ import java.util.Date;
 @Data
 public class MeetingRequestDTO {
     private String requestStatus;
-    private String requestContent;
 }

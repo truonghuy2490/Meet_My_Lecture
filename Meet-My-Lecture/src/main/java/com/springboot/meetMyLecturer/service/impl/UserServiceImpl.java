@@ -156,25 +156,31 @@ public class UserServiceImpl implements UserService {
 
     //update subject for student DONE-DONE
     @Override
-    public LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentDTO subjectLecturerStudentDTO){
-        SubjectLecturerStudent subjectLecturerStudent = getSubjectLecturerStudentOrThrowException(subjectLecturerStudentDTO.getSubjectLecturerStudentId());
+    public List<LecturerSubjectResponseDTO> updateSubjectsForStudent(Set<SubjectLecturerStudentDTO> subjectLecturerStudentDTO){
+        List<LecturerSubjectResponseDTO> list = subjectLecturerStudentDTO.stream().map(
+                sls -> {
+                    SubjectLecturerStudent subjectLecturerStudent = getSubjectLecturerStudentOrThrowException(sls.getSubjectLecturerStudentId());
 
-        SubjectLecturerStudentId subjectLecturerStudentIdNew = getSubjectLecturerStudentId(subjectLecturerStudentDTO);
+                    SubjectLecturerStudentId subjectLecturerStudentIdNew = getSubjectLecturerStudentId(sls);
 
-        Subject subject = getSubjectOrThrowException(subjectLecturerStudentIdNew.getSubjectId());
-        User lecturer = getUserOrThrowException(subjectLecturerStudentIdNew.getLecturerId());
-        User student = getUserOrThrowException(subjectLecturerStudentDTO.getSubjectLecturerStudentId().getStudentId());
+                    Subject subject = getSubjectOrThrowException(subjectLecturerStudentIdNew.getSubjectId());
+                    User lecturer = getUserOrThrowException(subjectLecturerStudentIdNew.getLecturerId());
+                    User student = getUserOrThrowException(sls.getSubjectLecturerStudentId().getStudentId());
 
-        LecturerSubjectId lecturerSubjectId = new LecturerSubjectId();
-        lecturerSubjectId.setSubjectId(subject.getSubjectId());
-        lecturerSubjectId.setLecturerId(lecturer.getUserId());
+                    LecturerSubjectId lecturerSubjectId = new LecturerSubjectId();
+                    lecturerSubjectId.setSubjectId(subject.getSubjectId());
+                    lecturerSubjectId.setLecturerId(lecturer.getUserId());
 
-        LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
-        if(lecturerSubject == null) throw new RuntimeException("This lecturer does not teach this subject.");
+                    LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+                    if(lecturerSubject == null) throw new RuntimeException("This lecturer does not teach this subject.");
 
-        subjectLecturerStudentRepository.delete(subjectLecturerStudent);
+                    subjectLecturerStudentRepository.delete(subjectLecturerStudent);
+                    return getLecturerSubjectResponseDTO(subjectLecturerStudentIdNew, subject, lecturer, student, subjectLecturerStudent);
 
-        return getLecturerSubjectResponseDTO(subjectLecturerStudentIdNew, subject, lecturer, student, subjectLecturerStudent);
+                }
+        ).collect(Collectors.toList());
+
+        return list;
     }
 
     //insert subject for student DONE-DONE

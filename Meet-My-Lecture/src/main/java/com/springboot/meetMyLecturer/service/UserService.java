@@ -28,7 +28,7 @@ public interface UserService {
 
     UserProfileForAdminDTO updateUserStatus(Long userId, String status);
 
-    LecturerSubjectResponseDTO updateSubjectsForStudent(SubjectLecturerStudentDTO subjectLecturerStudent);
+    List<LecturerSubjectResponseDTO> updateSubjectsForStudent(Set<SubjectLecturerStudentDTO> subjectLecturerStudent);
 
     List <LecturerSubjectResponseDTO> insertSubjectsForStudent(Set<SubjectLecturerStudentId> subjectLecturerStudentId);
 

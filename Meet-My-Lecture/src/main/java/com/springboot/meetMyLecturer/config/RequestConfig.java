@@ -47,9 +47,13 @@ public class RequestConfig implements Filter {
 
         String clientIpAddress = getClientIP(httpServletRequest);
 
-        if(!IsRequestValid(clientIpAddress)){
-            httpServletResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-            return;
+        String requestURI = httpServletRequest.getRequestURI();
+
+        if (shouldApplyFilter(requestURI)) {
+            if (!IsRequestValid(clientIpAddress)) {
+                httpServletResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+                return;
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -77,4 +81,9 @@ public class RequestConfig implements Filter {
                         .addLimit(Bandwidth.classic(2, Refill.intervally(1, Duration.ofMinutes(5)))) // set your request rate limit
                         .build());
     }*/
+
+    private boolean shouldApplyFilter(String requestURI) {
+
+        return requestURI.startsWith("/api/v1/user/profile/**");
+    }
 }

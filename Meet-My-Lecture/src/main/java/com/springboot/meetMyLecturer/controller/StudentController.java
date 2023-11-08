@@ -61,8 +61,8 @@ public class StudentController {
 
     //DONE - DONE
     @PutMapping("/profile")
-    public ResponseEntity<LecturerSubjectResponseDTO> updateSubjectsForStudent(@RequestBody SubjectLecturerStudentDTO subjectLecturerStudent) {
-        LecturerSubjectResponseDTO result = userService.updateSubjectsForStudent(subjectLecturerStudent);
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> updateSubjectsForStudent(@RequestBody Set<SubjectLecturerStudentDTO> subjectLecturerStudent) {
+        List<LecturerSubjectResponseDTO> result = userService.updateSubjectsForStudent(subjectLecturerStudent);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
