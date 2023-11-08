@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/v1/admin")
 public class AdminController {
 
-
     @Autowired
     UserService userService;
 
@@ -94,7 +93,7 @@ public class AdminController {
     public ResponseEntity<String> updateWeeklyEmptySlotStatus(@PathVariable Long weeklyEmptySlotId,
                                                               @RequestParam String status){
         String result = weeklyEmptySlotService.updateWeeklyEmptySlotStatus(weeklyEmptySlotId, status);
-        return  new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
