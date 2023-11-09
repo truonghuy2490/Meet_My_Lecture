@@ -16,7 +16,7 @@ public interface MajorService {
 
     MajorResponseDTO editMajor(Long adminId, MajorDTO majorDTO);
 
-    MajorResponse getAllMajors(int pageNo, int pageSize, String sortBy, String sortDir);
+    MajorResponse getAllMajors(int pageNo, int pageSize, String sortBy, String sortDir, String status);
 
     MajorResponseDTO getMajorByMajorId(Long MajorId);
 

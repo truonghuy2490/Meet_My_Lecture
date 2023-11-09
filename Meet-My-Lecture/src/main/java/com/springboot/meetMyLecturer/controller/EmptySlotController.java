@@ -20,8 +20,10 @@ public class EmptySlotController {
 
     @Autowired
     UserService userService;
+
     @Autowired
     EmptySlotService slotService;
+
     @Autowired
     RoomService roomService;
 

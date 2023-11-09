@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/v1/admin")
 public class AdminController {
 
-
     @Autowired
     UserService userService;
 
@@ -94,7 +93,7 @@ public class AdminController {
     public ResponseEntity<String> updateWeeklyEmptySlotStatus(@PathVariable Long weeklyEmptySlotId,
                                                               @RequestParam String status){
         String result = weeklyEmptySlotService.updateWeeklyEmptySlotStatus(weeklyEmptySlotId, status);
-        return  new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
@@ -139,9 +138,10 @@ public class AdminController {
             @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "majorName", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @RequestParam String status
     ){
-        return majorService.getAllMajors(pageNo, pageSize, sortBy, sortDir);
+        return majorService.getAllMajors(pageNo, pageSize, sortBy, sortDir, status);
     }
 
     @GetMapping("rooms")

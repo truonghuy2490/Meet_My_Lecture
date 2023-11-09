@@ -14,6 +14,7 @@ import java.util.List;
 
 public class MajorResponse {
     private List<MajorResponseDTO> content;
+    private int count;
     private int pageNo;
     private int pageSize;
     private Long totalElement;

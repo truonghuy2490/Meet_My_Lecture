@@ -32,16 +32,6 @@ public class UserController {
     @Autowired
     NotificationService notificationService;
 
-    /*private Bucket bucket;
-
-    @GetMapping("/token-generate")
-    public ResponseEntity<String> generateToken(){
-        Refill refill = Refill.of(5, Duration.ofMinutes(1));
-        bucket =Bucket4j.builder()
-                .addLimit(Bandwidth.classic(5, refill))
-                .build();
-        return new ResponseEntity<>("ok",HttpStatus.OK);
-    }*/
 
     //DONE-DONE
     @GetMapping("/profile/{userId}")
