@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,7 +101,7 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    public MajorResponse getAllMajors(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public MajorResponse getAllMajors(int pageNo, int pageSize, String sortBy, String sortDir, String status) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
@@ -117,12 +118,22 @@ public class MajorServiceImpl implements MajorService {
         List<Major> listOfMajors = majors.getContent();
 
         List<MajorResponseDTO> content = listOfMajors.stream().map(
-                major -> modelMapper.map(major, MajorResponseDTO.class)
-        ).collect(Collectors.toList());
+                major -> {
+                    MajorResponseDTO majorResponseDTO = new MajorResponseDTO();
+
+                    if(major.getStatus().equalsIgnoreCase(status) && status.equalsIgnoreCase(Constant.OPEN)){
+                        majorResponseDTO = modelMapper.map(major, MajorResponseDTO.class);
+                    }else if(major.getStatus().equalsIgnoreCase(status) && status.equalsIgnoreCase(Constant.CLOSED)){
+                        majorResponseDTO = modelMapper.map(major, MajorResponseDTO.class);
+                    }
+
+                    return majorResponseDTO;
+                }).filter(response -> response != null && response.getMajorId() != 0).collect(Collectors.toList());
 
 
         MajorResponse majorResponse = new MajorResponse();
         majorResponse.setContent(content);
+        majorResponse.setCount(content.size());
         majorResponse.setTotalPage(majors.getTotalPages());
         majorResponse.setTotalElement(majors.getTotalElements());
         majorResponse.setPageNo(majors.getNumber());
