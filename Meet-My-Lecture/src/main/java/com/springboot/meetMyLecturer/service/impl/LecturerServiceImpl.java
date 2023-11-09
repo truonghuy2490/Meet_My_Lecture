@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +38,7 @@ public class LecturerServiceImpl implements LecturerService {
     @Override
     public String deleteSubjectsForLecturer(LecturerSubjectId lecturerSubjectId) {
 
-        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerSubjectId.getLecturerId(), Constant.OPEN);
-        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+        User lecturer = checkUser(lecturerSubjectId.getLecturerId());
 
         Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(lecturerSubjectId.getSubjectId(), Constant.OPEN);
         if(subject == null) throw new RuntimeException("This subject is not existed.");
@@ -59,40 +59,43 @@ public class LecturerServiceImpl implements LecturerService {
 
     // insert subjects for lecturer DONE-DONE
     @Override
-    public LecturerSubjectResponseDTO insertTaughtSubjects(LecturerSubjectId lecturerSubjectId) {
-        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerSubjectId.getLecturerId(), Constant.OPEN);
-        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+    public  List<LecturerSubjectResponseDTO> insertTaughtSubjects(Set<LecturerSubjectId> lecturerSubjectId) {
 
-        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(lecturerSubjectId.getSubjectId(), Constant.OPEN);
-        if(subject == null) throw new RuntimeException("This subject is not existed.");
+        return lecturerSubjectId.stream().map(
+                ls -> {
+                    User lecturer = checkUser(ls.getLecturerId());
+
+                    Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(ls.getSubjectId(), Constant.OPEN);
+                    if(subject == null) throw new RuntimeException("This subject is not existed.");
 
 
-        LecturerSubject lecturerSubjectDB = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+                    LecturerSubject lecturerSubjectDB = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(ls);
 
 
-        if(lecturerSubjectDB.getStatus().equals(Constant.CLOSED) ){
-            lecturerSubjectDB.setStatus(Constant.OPEN);
-            lecturerSubjectRepository.save(lecturerSubjectDB);
+                    if(lecturerSubjectDB.getStatus().equals(Constant.CLOSED) ){
+                        lecturerSubjectDB.setStatus(Constant.OPEN);
+                        lecturerSubjectRepository.save(lecturerSubjectDB);
 
-            LecturerSubjectResponseDTO lecturerSubjectResponseDTO = modelMapper.map(lecturerSubjectDB, LecturerSubjectResponseDTO.class);
-            lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
+                        LecturerSubjectResponseDTO lecturerSubjectDTO = modelMapper.map(lecturerSubjectDB, LecturerSubjectResponseDTO.class);
+                        lecturerSubjectDTO.setUnique(lecturer.getUnique());
 
-            return lecturerSubjectResponseDTO;
+                        return lecturerSubjectDTO;
 
-        }else if(lecturerSubjectDB.getStatus().equals(Constant.OPEN)){
-            throw new RuntimeException("You already teach this subject.");
-        }
+                    }else if(lecturerSubjectDB.getStatus().equals(Constant.OPEN)){
+                        throw new RuntimeException("You already teach this subject.");
+                    }
 
-        LecturerSubject lecturerSubject = new LecturerSubject();
-        lecturerSubject.setLecturerSubjectId(lecturerSubjectId);
-        lecturerSubject.setLecturer(lecturer);
-        lecturerSubject.setSubject(subject);
-        lecturerSubjectRepository.save(lecturerSubject);
+                    LecturerSubject lecturerSubject = new LecturerSubject();
+                    lecturerSubject.setLecturerSubjectId(ls);
+                    lecturerSubject.setLecturer(lecturer);
+                    lecturerSubject.setSubject(subject);
+                    lecturerSubjectRepository.save(lecturerSubject);
 
-        LecturerSubjectResponseDTO lecturerSubjectResponseDTO = modelMapper.map(lecturerSubject, LecturerSubjectResponseDTO.class);
-        lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
-
-        return lecturerSubjectResponseDTO;
+                    LecturerSubjectResponseDTO lecturerSubjectResponse = modelMapper.map(lecturerSubject, LecturerSubjectResponseDTO.class);
+                    lecturerSubjectResponse.setUnique(lecturer.getUnique());
+                    return  lecturerSubjectResponse;
+                }
+        ).collect(Collectors.toList());
     }
 
     @Override
@@ -114,4 +117,11 @@ public class LecturerServiceImpl implements LecturerService {
                 }
         ).collect(Collectors.toList());
     }
+
+    public  User checkUser(Long userId){
+        User lecturer = userRepository.findUserByUserIdAndStatus(userId, Constant.OPEN);
+        if(lecturer == null) throw new RuntimeException("This lecturer is not existed.");
+        return lecturer;
+    }
+
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/lecturer")
@@ -31,8 +32,8 @@ public class LecturerController {
 
     //DONE-DONE
     @PostMapping("/subject")
-    public ResponseEntity<LecturerSubjectResponseDTO> insertTaughtSubjects(@RequestBody LecturerSubjectId lecturerSubjectId){
-        LecturerSubjectResponseDTO lecturerSubjectResponseDTO = lecturerService.insertTaughtSubjects(lecturerSubjectId);
+    public ResponseEntity<List<LecturerSubjectResponseDTO>> insertTaughtSubjects(@RequestBody Set<LecturerSubjectId> lecturerSubjectId){
+        List<LecturerSubjectResponseDTO> lecturerSubjectResponseDTO = lecturerService.insertTaughtSubjects(lecturerSubjectId);
 
         return  new ResponseEntity<>(lecturerSubjectResponseDTO, HttpStatus.CREATED);
     }
