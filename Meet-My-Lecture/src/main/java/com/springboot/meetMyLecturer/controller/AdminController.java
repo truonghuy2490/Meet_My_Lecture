@@ -153,4 +153,12 @@ public class AdminController {
     ){
         return roomService.getAllRoom(pageNo, pageSize, sortBy, sortDir);
     }
+
+    @GetMapping("major/{majorId}")
+    public ResponseEntity<MajorResponseDTO> getMajorByMajorId(
+            @PathVariable Long majorId
+    ){
+        MajorResponseDTO major = majorService.getMajorByMajorId(majorId);
+        return new ResponseEntity<>(major, HttpStatus.OK);
+    }
 }

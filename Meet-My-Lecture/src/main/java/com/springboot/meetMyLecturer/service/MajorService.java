@@ -18,4 +18,6 @@ public interface MajorService {
 
     MajorResponse getAllMajors(int pageNo, int pageSize, String sortBy, String sortDir);
 
+    MajorResponseDTO getMajorByMajorId(Long MajorId);
+
 }
