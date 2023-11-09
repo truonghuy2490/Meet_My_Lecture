@@ -1,19 +1,15 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.Major;
-import com.springboot.meetMyLecturer.entity.ReportError;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MajorDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.MajorResponse;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.ReportErrorResponse;
 import com.springboot.meetMyLecturer.repository.MajorRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MajorService;
-import com.sun.source.tree.ModuleTree;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -109,7 +105,7 @@ public class MajorServiceImpl implements MajorService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
         // SAVE TO REPO
-        Page<Major> majors = majorRepository.findAll(pageable); // findAllByStudentId()
+        Page<Major> majors = majorRepository.findByStatus(status,pageable);
         if(majors.isEmpty()){
             throw new RuntimeException("There are no semesters.");
         }
@@ -118,17 +114,8 @@ public class MajorServiceImpl implements MajorService {
         List<Major> listOfMajors = majors.getContent();
 
         List<MajorResponseDTO> content = listOfMajors.stream().map(
-                major -> {
-                    MajorResponseDTO majorResponseDTO = new MajorResponseDTO();
-
-                    if(major.getStatus().equalsIgnoreCase(status) && status.equalsIgnoreCase(Constant.OPEN)){
-                        majorResponseDTO = modelMapper.map(major, MajorResponseDTO.class);
-                    }else if(major.getStatus().equalsIgnoreCase(status) && status.equalsIgnoreCase(Constant.CLOSED)){
-                        majorResponseDTO = modelMapper.map(major, MajorResponseDTO.class);
-                    }
-
-                    return majorResponseDTO;
-                }).filter(response -> response != null && response.getMajorId() != 0).collect(Collectors.toList());
+                major -> modelMapper.map(major, MajorResponseDTO.class)
+                ).collect(Collectors.toList());
 
 
         MajorResponse majorResponse = new MajorResponse();
