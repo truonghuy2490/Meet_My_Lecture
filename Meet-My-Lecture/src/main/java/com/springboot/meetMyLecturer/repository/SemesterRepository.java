@@ -1,6 +1,8 @@
 package com.springboot.meetMyLecturer.repository;
 
 import com.springboot.meetMyLecturer.entity.Semester;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,5 +18,7 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
     Semester findSemesterBySemesterIdAndStatus(Long semesterId, String status);
 
     List<Semester> findSemestersByStatus(String status);
+
+    Page<Semester> findByStatus(String status, Pageable pageable);
 
 }

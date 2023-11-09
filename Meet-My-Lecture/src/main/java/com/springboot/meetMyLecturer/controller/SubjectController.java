@@ -1,8 +1,10 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
+import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
@@ -31,6 +33,17 @@ public class SubjectController {
 //        List<SubjectMajorResponseDTO> subjectList = subjectService.getAllSubjects();
 //        return new ResponseEntity<>(subjectList, HttpStatus.OK);
 //    }
+
+    @GetMapping("subjects")
+    public SubjectResponse getAllSubjects(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "subjectName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @RequestParam String status
+    ){
+        return subjectService.getAllSubjects(pageNo, pageSize, sortBy, sortDir, status);
+    }
 
     //DONE-DONE
     @PostMapping("/{adminId}")

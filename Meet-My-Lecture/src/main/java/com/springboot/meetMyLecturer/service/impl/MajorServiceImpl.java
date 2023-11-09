@@ -12,16 +12,12 @@ import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MajorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,20 +30,6 @@ public class MajorServiceImpl implements MajorService {
     @Autowired
     ModelMapper modelMapper;
 
-    //get all majors for admin DONE-DONE
-    @Override
-    public List<MajorResponseDTO> getAllMajors() {
-        List<Major> majorList = majorRepository.findAll();
-        if(majorList.isEmpty()){
-            throw  new RuntimeException("There are no majors");
-        }
-        return majorList.stream().map(major -> modelMapper.map(major, MajorResponseDTO.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<MajorResponseDTO> getAllMajorsForAdmin() {
-        return null;
-    }
 
     //create major for admin DONE-DONE
     @Override
@@ -97,6 +79,7 @@ public class MajorServiceImpl implements MajorService {
 
     }
 
+    //get all majors for admin DONE-DONE
     @Override
     public MajorResponse getAllMajors(int pageNo, int pageSize, String sortBy, String sortDir, String status) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
@@ -106,11 +89,13 @@ public class MajorServiceImpl implements MajorService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
         // SAVE TO REPO
+        if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
+            throw new RuntimeException("Invalid status.");
+        }
         Page<Major> majors = majorRepository.findByStatus(status,pageable);
         if(majors.isEmpty()){
-            throw new RuntimeException("There are no semesters.");
+            throw new RuntimeException("There are no majors.");
         }
-
         // get content for page object
         List<Major> listOfMajors = majors.getContent();
 
@@ -131,6 +116,7 @@ public class MajorServiceImpl implements MajorService {
         return majorResponse;
     }
 
+    //get major by majorId for admin DONE-DONE
     @Override
     public MajorResponseDTO getMajorByMajorId(Long MajorId) {
         Major major = majorRepository.findById(MajorId).orElseThrow(

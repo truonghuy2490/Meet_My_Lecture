@@ -2,6 +2,8 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseForAdminDTO;
+import com.springboot.meetMyLecturer.constant.PageConstant;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.ReportErrorResponse;
 import com.springboot.meetMyLecturer.service.ReportErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,10 +34,15 @@ public class ReportErrorController {
     }
 
     //DONE-DONE
-    @GetMapping("/admin")
-    public ResponseEntity<List<ReportErrorResponseForAdminDTO>> getAllReports(){
-        List<ReportErrorResponseForAdminDTO> responseDTO = reportErrorService.getAllReportForAdmin();
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    @GetMapping("reports-error")
+    public ReportErrorResponse getAllReportsError(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "createAt", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir,
+            @RequestParam String status
+    ) {
+        return reportErrorService.getAllReportError(pageNo, pageSize, sortBy, sortDir, status);
     }
 
     //DONE-DONE

@@ -49,7 +49,11 @@ public class RequestConfig implements Filter {
 
         String requestURI = httpServletRequest.getRequestURI();
 
-        if (shouldApplyFilter(requestURI)) {
+        String httpMethod = httpServletRequest.getMethod();
+
+        if (shouldApplyFilter(requestURI, httpMethod)) {
+            insertIntoCache(clientIpAddress);
+
             if (!IsRequestValid(clientIpAddress)) {
                 httpServletResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
                 return;
@@ -75,15 +79,17 @@ public class RequestConfig implements Filter {
         return requestCountsPerIpAddress.get(ipAddress).tryConsume(1);
     }
 
-    /*private void insertIntoCache(String ipAddress) {
-        requestCountsPerIpAddress.put(ipAddress,
-                Bucket.builder()
-                        .addLimit(Bandwidth.classic(2, Refill.intervally(1, Duration.ofMinutes(5)))) // set your request rate limit
-                        .build());
-    }*/
+    private void insertIntoCache(String ipAddress) {
+        if (!requestCountsPerIpAddress.asMap().containsKey(ipAddress)) {
+            requestCountsPerIpAddress.put(ipAddress,
+                    Bucket.builder()
+                            .addLimit(Bandwidth.classic(2, Refill.intervally(1, Duration.ofMinutes(1))))
+                            .build());
+        }
+    }
 
-    private boolean shouldApplyFilter(String requestURI) {
+    private boolean shouldApplyFilter(String requestURI, String httpMethod) {
 
-        return requestURI.startsWith("/api/v1/user/profile/**");
+        return requestURI.startsWith("/api/v1/requests/student/") && httpMethod.equalsIgnoreCase("POST");
     }
 }

@@ -17,7 +17,7 @@ public interface SubjectService {
 
     List<LecturerSubjectResponseDTO> getSubjectByMajorId(Long majorId);
 
-//    List<SubjectMajorResponseDTO> getAllSubjects();
+    List<SubjectMajorResponseDTO> getAllSubjects();
 
     SubjectMajorResponseForAdminDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO);
 
@@ -27,7 +27,7 @@ public interface SubjectService {
 
     List<LecturerSubjectResponseDTO> getSubjectsByMajorId(Long majorId);
 
-    SubjectResponse getAllSubjects(int pageNo, int pageSize, String sortBy, String sortDir);
+    SubjectResponse getAllSubjects(int pageNo, int pageSize, String sortBy, String sortDir, String status);
 
     SubjectResponse getAllSubjectsByMajorId(int pageNo, int pageSize, String sortBy, String sortDir, Long majorId);
 

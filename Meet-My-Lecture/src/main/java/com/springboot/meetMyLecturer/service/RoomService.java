@@ -10,12 +10,10 @@ public interface RoomService {
 
     List<Room> getAllRooms();
 
-    List<Room> getAllRoomsForAdmin();
-
     Room createRoomForAmin(RoomDTO roomDTO);
 
     Room editRoomForAdmin(Room roomDTO);
 
-    RoomResponse getAllRoom(int pageNo, int pageSize, String sortBy, String sortDir);
+    RoomResponse getAllRoom(int pageNo, int pageSize, String sortBy, String sortDir, String status);
 
 }

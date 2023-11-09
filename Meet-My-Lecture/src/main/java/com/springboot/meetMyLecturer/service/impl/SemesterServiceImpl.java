@@ -40,20 +40,10 @@ public class SemesterServiceImpl implements SemesterService {
     @Autowired
     ModelMapper modelMapper;
 
-    //get all semesters DONE-DONE
+    //get all semesters for user not admin DONE-DONE
     @Override
     public List<SemesterResponseDTO> getAllSemesters() {
         List<Semester> semesterList = semesterRepository.findSemestersByStatus(Constant.OPEN);
-        if(semesterList.isEmpty()){
-            throw new RuntimeException("There are no semesters.");
-        }
-        return semesterList.stream().map(semester -> modelMapper.map(semester, SemesterResponseDTO.class)).collect(Collectors.toList());
-    }
-
-    //get all semesters for admin DONE-DONE
-    @Override
-    public List<SemesterResponseDTO> getAllSemestersForAdmin() {
-        List<Semester> semesterList = semesterRepository.findAll();
         if(semesterList.isEmpty()){
             throw new RuntimeException("There are no semesters.");
         }
@@ -182,7 +172,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     @Override
-    public SemesterResponse getAllSemesters(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public SemesterResponse getAllSemesters(int pageNo, int pageSize, String sortBy, String sortDir, String status) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
@@ -190,7 +180,10 @@ public class SemesterServiceImpl implements SemesterService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
         // SAVE TO REPO
-        Page<Semester> semesters = semesterRepository.findAll(pageable); // findAllByStudentId()
+        if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
+            throw new RuntimeException("Invalid status.");
+        }
+        Page<Semester> semesters = semesterRepository.findByStatus(status, pageable); // findAllByStudentId()
         if(semesters.isEmpty()){
             throw new RuntimeException("There are no semesters.");
         }

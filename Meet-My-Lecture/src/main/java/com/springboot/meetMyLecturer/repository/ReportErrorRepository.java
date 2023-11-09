@@ -1,6 +1,8 @@
 package com.springboot.meetMyLecturer.repository;
 
 import com.springboot.meetMyLecturer.entity.ReportError;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,5 +30,7 @@ public interface ReportErrorRepository extends JpaRepository<ReportError, Long> 
 
     @Query("select r.user.userId from ReportError r where r.reportErrorId =:reportErrorId")
     Long getUserId(Long reportErrorId);
+
+    Page<ReportError> findByStatus(String status, Pageable pageable);
 
 }

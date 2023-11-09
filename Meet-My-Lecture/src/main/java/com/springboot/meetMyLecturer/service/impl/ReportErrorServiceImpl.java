@@ -2,14 +2,11 @@ package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.ReportErrorResponseForAdminDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SemesterResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.ReportError;
-import com.springboot.meetMyLecturer.entity.Semester;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.ReportErrorResponse;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SemesterResponse;
 import com.springboot.meetMyLecturer.repository.ReportErrorRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.ReportErrorService;
@@ -124,8 +121,9 @@ public class ReportErrorServiceImpl implements ReportErrorService {
                 .collect(Collectors.toList());
     }
 
+    //get all report for admin DONE-DONE
     @Override
-    public ReportErrorResponse getAllReportError(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public ReportErrorResponse getAllReportError(int pageNo, int pageSize, String sortBy, String sortDir, String status) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
@@ -133,9 +131,12 @@ public class ReportErrorServiceImpl implements ReportErrorService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
         // SAVE TO REPO
-        Page<ReportError> reportErrors = reportErrorRepository.findAll(pageable); // findAllByStudentId()
+        if(!status.equalsIgnoreCase(Constant.PENDING) && !status.equalsIgnoreCase("DONE")){
+            throw new RuntimeException("Invalid status.");
+        }
+        Page<ReportError> reportErrors = reportErrorRepository.findByStatus(status, pageable); // findAllByStudentId()
         if(reportErrors.isEmpty()){
-            throw new RuntimeException("There are no semesters.");
+            throw new RuntimeException("There are no report errors.");
         }
 
         // get content for page object

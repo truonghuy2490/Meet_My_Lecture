@@ -17,5 +17,5 @@ public interface ReportErrorService {
 
     List<ReportErrorResponseDTO> getReports(Long userId);
 
-    ReportErrorResponse getAllReportError(int pageNo, int pageSize, String sortBy, String sortDir);
+    ReportErrorResponse getAllReportError(int pageNo, int pageSize, String sortBy, String sortDir, String status);
 }

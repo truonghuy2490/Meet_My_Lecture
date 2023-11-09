@@ -1,6 +1,8 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.SemesterResponseDTO;
+import com.springboot.meetMyLecturer.constant.PageConstant;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SemesterResponse;
 import com.springboot.meetMyLecturer.modelDTO.SemesterDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectSemesterResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectSemesterDTO;
@@ -20,11 +22,17 @@ public class SemesterController {
     SemesterService semesterService;
 
     //DONE-DONE
-    @GetMapping
-    public ResponseEntity<List<SemesterResponseDTO>> getAllMajorsForAdmin(){
-        List<SemesterResponseDTO> majorList = semesterService.getAllSemestersForAdmin();
-        return new ResponseEntity<>(majorList, HttpStatus.OK);
+    @GetMapping("semesters")
+    public SemesterResponse getAllSemester(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "semesterName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @RequestParam String status
+    ){
+        return semesterService.getAllSemesters(pageNo, pageSize, sortBy, sortDir, status);
     }
+
 
     //DONE-DONE
     @PostMapping("/admin/{adminId}")

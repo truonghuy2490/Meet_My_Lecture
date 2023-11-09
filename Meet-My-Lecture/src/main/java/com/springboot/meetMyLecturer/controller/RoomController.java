@@ -1,6 +1,8 @@
 package com.springboot.meetMyLecturer.controller;
 
+import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.entity.Room;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RoomResponse;
 import com.springboot.meetMyLecturer.modelDTO.RoomDTO;
 import com.springboot.meetMyLecturer.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,16 @@ public class RoomController {
     RoomService roomService;
 
     //DONE-DONE
-    @GetMapping
-    public ResponseEntity<List<Room>> getAllRooms(){
-            List<Room> roomList = roomService.getAllRoomsForAdmin();
-            return new ResponseEntity<>(roomList, HttpStatus.OK);
+    @GetMapping("rooms")
+    public RoomResponse getAllRooms(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "roomId", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @RequestParam String status
+    ){
+        return roomService.getAllRoom(pageNo, pageSize, sortBy, sortDir, status);
     }
-
     //DONE-DONE
     @PostMapping
     public ResponseEntity<Room> createRoomForAmin(@RequestBody RoomDTO roomDTO){

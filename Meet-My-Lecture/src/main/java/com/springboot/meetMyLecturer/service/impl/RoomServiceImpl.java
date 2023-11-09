@@ -1,11 +1,8 @@
 package com.springboot.meetMyLecturer.service.impl;
 
-import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
-import com.springboot.meetMyLecturer.entity.EmptySlot;
 import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RoomResponse;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.RoomDTO;
 import com.springboot.meetMyLecturer.repository.RoomRepository;
 import com.springboot.meetMyLecturer.service.RoomService;
@@ -16,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,16 +34,6 @@ public class RoomServiceImpl implements RoomService {
         return roomList;
     }
 
-    //get all rooms for admin DONE-DONE
-    @Override
-    public List<Room> getAllRoomsForAdmin() {
-        List<Room> roomList = roomRepository.findAll();
-
-        if (roomList.isEmpty()){
-            throw new RuntimeException("There are no rooms.");
-        }
-        return roomList;
-    }
 
     //create room for admin DONE-DONE
     @Override
@@ -83,8 +69,9 @@ public class RoomServiceImpl implements RoomService {
         return roomDB;
     }
 
+    //get all rooms for admin DONE-DONE
     @Override
-    public RoomResponse getAllRoom(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public RoomResponse getAllRoom(int pageNo, int pageSize, String sortBy, String sortDir, String status) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
@@ -94,7 +81,13 @@ public class RoomServiceImpl implements RoomService {
 
 
         // SAVE TO REPO
-        Page<Room> rooms = roomRepository.findAll(pageable);
+        if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
+            throw new RuntimeException("Invalid status.");
+        }
+        Page<Room> rooms = roomRepository.findRoomByStatus(status, pageable);
+        if(rooms.isEmpty()){
+            throw new RuntimeException("There are no rooms.");
+        }
 
         // get content for page object
         List<Room> roomList = rooms.getContent();

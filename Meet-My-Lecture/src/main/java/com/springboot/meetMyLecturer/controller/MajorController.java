@@ -1,7 +1,9 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.modelDTO.MajorDTO;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.MajorResponse;
 import com.springboot.meetMyLecturer.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,12 +20,23 @@ public class MajorController {
     MajorService majorService;
 
     //DONE-DONE
-    @GetMapping
-    public ResponseEntity<List<MajorResponseDTO>> getAllMajorsForAdmin(){
-        List<MajorResponseDTO> majorResponseDTOList = majorService.getAllMajors();
-        return new ResponseEntity<>(majorResponseDTOList, HttpStatus.OK);
+    @GetMapping("majors")
+    public MajorResponse getAllMajors(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "majorName", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @RequestParam String status
+    ){
+        return majorService.getAllMajors(pageNo, pageSize, sortBy, sortDir, status);
     }
 
+    @GetMapping("major/{majorId}")
+    public ResponseEntity<MajorResponseDTO> getMajorByMajorId(
+            @PathVariable Long majorId){
+        MajorResponseDTO major = majorService.getMajorByMajorId(majorId);
+        return new ResponseEntity<>(major, HttpStatus.OK);
+    }
 
     //DONE-DONE
     @PostMapping("/{adminId}")
