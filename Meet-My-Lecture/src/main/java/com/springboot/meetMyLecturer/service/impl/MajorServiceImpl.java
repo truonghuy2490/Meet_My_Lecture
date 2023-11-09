@@ -12,6 +12,7 @@ import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MajorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -128,5 +129,14 @@ public class MajorServiceImpl implements MajorService {
         majorResponse.setLast(majors.isLast());
 
         return majorResponse;
+    }
+
+    @Override
+    public MajorResponseDTO getMajorByMajorId(Long MajorId) {
+        Major major = majorRepository.findById(MajorId).orElseThrow(
+                () -> new ResourceNotFoundException("Major", "id", String.valueOf(MajorId))
+        );
+
+        return modelMapper.map(major, MajorResponseDTO.class);
     }
 }
