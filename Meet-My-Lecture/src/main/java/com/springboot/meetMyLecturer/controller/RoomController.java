@@ -26,7 +26,7 @@ public class RoomController {
             @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "roomId", required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
-            @RequestParam String status
+            @RequestParam(value = "status", defaultValue = "", required = false) String status
     ){
         return roomService.getAllRoom(pageNo, pageSize, sortBy, sortDir, status);
     }

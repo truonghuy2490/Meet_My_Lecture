@@ -79,12 +79,16 @@ public class RoomServiceImpl implements RoomService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-
+        Page<Room> rooms;
         // SAVE TO REPO
-        if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
-            throw new RuntimeException("Invalid status.");
+        if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
+            rooms = roomRepository.findRoomByStatus(status, pageable);
+        } else if (status.isEmpty()) {
+            rooms = roomRepository.findAll(pageable);
+        } else {
+            throw new RuntimeException("Status is not valid!");
         }
-        Page<Room> rooms = roomRepository.findRoomByStatus(status, pageable);
+
         if(rooms.isEmpty()){
             throw new RuntimeException("There are no rooms.");
         }
