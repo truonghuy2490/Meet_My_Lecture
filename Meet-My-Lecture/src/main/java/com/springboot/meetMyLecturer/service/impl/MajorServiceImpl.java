@@ -89,6 +89,7 @@ public class MajorServiceImpl implements MajorService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
         // tui moi sua lai status.isEmpty = getAll
+        List<Major> majorOPEN = majorRepository.findMajorsByStatus(Constant.OPEN);
         // SAVE TO REPO
         if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
             majors = majorRepository.findByStatus(status,pageable);
@@ -111,7 +112,7 @@ public class MajorServiceImpl implements MajorService {
 
         MajorResponse majorResponse = new MajorResponse();
         majorResponse.setContent(content);
-        majorResponse.setCount(content.size());
+        majorResponse.setCount(majorOPEN.size());
         majorResponse.setTotalPage(majors.getTotalPages());
         majorResponse.setTotalElement(majors.getTotalElements());
         majorResponse.setPageNo(majors.getNumber());
