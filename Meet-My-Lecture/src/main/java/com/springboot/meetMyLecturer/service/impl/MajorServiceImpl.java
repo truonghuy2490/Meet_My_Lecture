@@ -85,14 +85,19 @@ public class MajorServiceImpl implements MajorService {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
-
+        Page<Major> majors;
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
+        // tui moi sua lai status.isEmpty = getAll
         // SAVE TO REPO
-        if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
-            throw new RuntimeException("Invalid status.");
+        if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
+            majors = majorRepository.findByStatus(status,pageable);
+        } else if (status.isEmpty()) {
+            majors = majorRepository.findAll(pageable);
+        } else {
+            throw new RuntimeException("Status is not avaiable!");
         }
-        Page<Major> majors = majorRepository.findByStatus(status,pageable);
+
         if(majors.isEmpty()){
             throw new RuntimeException("There are no majors.");
         }
