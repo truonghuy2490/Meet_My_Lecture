@@ -265,13 +265,18 @@ public class SubjectServiceImpl implements SubjectService {
 
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-
+        Page<Subject> subjects;
 
         // SAVE TO REPO
+        // fix status is empty = get All
         if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
+            subjects = subjectRepository.findSubjectByStatus(status,pageable);
+        } else if (status.isEmpty()) {
+            subjects = subjectRepository.findAll(pageable);
+        }else {
             throw new RuntimeException("Invalid status.");
         }
-        Page<Subject> subjects = subjectRepository.findSubjectByStatus(status, pageable);
+
         if(subjects.isEmpty()){
             throw new RuntimeException("There are no subjects.");
         }
