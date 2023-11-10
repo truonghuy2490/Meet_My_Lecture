@@ -9,4 +9,5 @@ public class UserRoleResponseDTO {
     private String userName;
     private String email;
     private Long majorId;
+    private String status;
 }
