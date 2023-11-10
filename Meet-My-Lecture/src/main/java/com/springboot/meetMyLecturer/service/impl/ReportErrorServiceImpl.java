@@ -127,14 +127,20 @@ public class ReportErrorServiceImpl implements ReportErrorService {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
-
+        Page<ReportError> reportErrors;
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
         // SAVE TO REPO
-        if(!status.equalsIgnoreCase(Constant.PENDING) && !status.equalsIgnoreCase("DONE")){
+
+        // fix status is empty => get All
+        if(status.equalsIgnoreCase(Constant.PENDING) || status.equalsIgnoreCase("DONE")){
+            reportErrors = reportErrorRepository.findByStatus(status, pageable); // findAllByStudentId()
+        } else if (status.isEmpty()) {
+            reportErrors = reportErrorRepository.findAll(pageable);
+        }else{
             throw new RuntimeException("Invalid status.");
         }
-        Page<ReportError> reportErrors = reportErrorRepository.findByStatus(status, pageable); // findAllByStudentId()
+
         if(reportErrors.isEmpty()){
             throw new RuntimeException("There are no report errors.");
         }

@@ -40,7 +40,7 @@ public class ReportErrorController {
             @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "createAt", required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir,
-            @RequestParam String status
+            @RequestParam(value = "status", defaultValue = "", required = false) String status
     ) {
         return reportErrorService.getAllReportError(pageNo, pageSize, sortBy, sortDir, status);
     }
