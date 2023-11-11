@@ -103,7 +103,7 @@ public class RoomServiceImpl implements RoomService {
         RoomResponse roomResponse = new RoomResponse();
         roomResponse.setContent(content);
         roomResponse.setTotalPage(rooms.getTotalPages());
-        roomResponse.setRoomOpen(roomOpen.size());
+        roomResponse.setTotalOpen(roomOpen.size());
         roomResponse.setTotalElement(rooms.getTotalElements());
         roomResponse.setPageNo(rooms.getNumber());
         roomResponse.setPageSize(rooms.getSize());

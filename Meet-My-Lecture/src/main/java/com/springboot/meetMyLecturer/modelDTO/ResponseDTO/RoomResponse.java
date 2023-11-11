@@ -15,7 +15,7 @@ public class RoomResponse {
     private List<RoomDTO> content;
     private int pageNo;
     private int pageSize;
-    private int roomOpen;
+    private int totalOpen;
     private Long totalElement;
     private int totalPage;
     private boolean last;

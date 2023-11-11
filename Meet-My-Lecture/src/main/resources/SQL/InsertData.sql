@@ -36,25 +36,29 @@
                                                            (22, 'Traditional Instrument', 1),
                                                            (23, 'Vietnamese', 1);
 
+    INSERT INTO subject_major (subject_id, major_id, status)
+    SELECT s.subject_id, m.major_id, 'OPEN'
+    FROM subject s
+             CROSS JOIN major m;
+    DELETE FROM subject_major;
 
-
-    INSERT INTO subject_major (subject_id, major_id) VALUES
-                                                         ('MMA301', 2),      -- Computer Science
-                                                         ('PMG201c', 15),    -- Management
-                                                         ('PMG202c', 15),    -- Management
-                                                         ('PRN211', 2),      -- Computer Science
-                                                         ('PRN221', 2),      -- Computer Science
-                                                         ('PRU211m', 2),     -- Computer Science
-                                                         ('SAP331', 2),      -- Computer Science
-                                                         ('SAP341', 2),      -- Computer Science
-                                                         ('SDN301m', 2),     -- Computer Science
-                                                         ('SWD392', 2),      -- Computer Science
-                                                         ('SWE201c', 2),     -- Computer Science
-                                                         ('SWP391', 2),      -- Computer Science
-                                                         ('SWR302', 2),      -- Computer Science
-                                                         ('SWT301', 2),      -- Computer Science
-                                                         ('SYB302c', 21),    -- Start Your Business
-                                                         ('WDU203c', 8);     -- Graphic Design
+    INSERT INTO subject_major (subject_id, major_id, status) VALUES
+                                                                 ('MMA301', 1, 'OPEN'),
+                                                                 ('PMG201c', 2, 'OPEN'),
+                                                                 ('PMG202c', 2, 'OPEN'),
+                                                                 ('PRN211', 3, 'OPEN'),
+                                                                 ('PRN221', 3, 'OPEN'),
+                                                                 ('PRU211m', 2, 'OPEN'),
+                                                                 ('SAP331', 6, 'OPEN'),
+                                                                 ('SAP341', 6, 'OPEN'),
+                                                                 ('SDN301m', 2, 'OPEN'),
+                                                                 ('SWD392', 8, 'OPEN'),
+                                                                 ('SWE201c', 2, 'OPEN'),
+                                                                 ('SWP391', 2, 'OPEN'),
+                                                                 ('SWR302', 2, 'OPEN'),
+                                                                 ('SWT301', 2, 'OPEN'),
+                                                                 ('SYB302c', 7, 'OPEN'),
+                                                                 ('WDU203c', 8, 'OPEN');
 
 
     -- Insert data into the subject table
