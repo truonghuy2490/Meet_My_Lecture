@@ -14,6 +14,7 @@ public class SubjectResponse {
     private List<SubjectResponseDTO> content;
     private int pageNo;
     private int pageSize;
+    private int totalOpen;
     private Long totalElement;
     private int totalPage;
     private boolean last;

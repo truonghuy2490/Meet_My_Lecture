@@ -38,4 +38,6 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
 
     Page<Subject> findSubjectByStatus(String status, Pageable pageable);
 
+    List<Subject> findSubjectsByStatus(String status);
+
 }

@@ -266,10 +266,10 @@ public class SubjectServiceImpl implements SubjectService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Subject> subjects;
-
+        List<Subject> subjectListOpen = subjectRepository.findSubjectsByStatus(Constant.OPEN);
         // SAVE TO REPO
         // fix status is empty = get All
-        if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
+        if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
             subjects = subjectRepository.findSubjectByStatus(status,pageable);
         } else if (status.isEmpty()) {
             subjects = subjectRepository.findAll(pageable);
@@ -291,6 +291,7 @@ public class SubjectServiceImpl implements SubjectService {
         subjectResponse.setContent(content);
         subjectResponse.setTotalPage(subjects.getTotalPages());
         subjectResponse.setTotalElement(subjects.getTotalElements());
+        subjectResponse.setTotalOpen(subjectListOpen.size());
         subjectResponse.setPageNo(subjects.getNumber());
         subjectResponse.setPageSize(subjects.getSize());
         subjectResponse.setLast(subjects.isLast());
