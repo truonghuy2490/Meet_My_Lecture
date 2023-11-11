@@ -66,8 +66,9 @@ public class AdminController {
 
     //DONE-DONE
     @PutMapping("/{userId}")
-    public ResponseEntity<UserProfileForAdminDTO> updateUserStatus(@PathVariable Long userId,
-                                                   @RequestParam String status){
+    public ResponseEntity<UserProfileForAdminDTO> updateUserStatus(
+            @PathVariable Long userId,
+            @RequestParam String status){
         UserProfileForAdminDTO result = userService.updateUserStatus(userId,status);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }

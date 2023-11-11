@@ -134,22 +134,14 @@ public class UserServiceImpl implements UserService {
                 ()-> new ResourceNotFoundException("User","id",String.valueOf(userId))
         );
 
-        String statusDB = status.toUpperCase();
-
-        if(statusDB.equals(Constant.CLOSED)){
-            user.setStatus(Constant.CLOSED);
-        }else if(statusDB.equals(Constant.OPEN)){
-            user.setStatus(Constant.OPEN);
-        }else if(user.getStatus().equals(Constant.BANNED)){
-            user.setAbsentCount(0);
-            user.setStatus(Constant.OPEN);
+        if(status.equalsIgnoreCase(Constant.OPEN) ||
+        status.equalsIgnoreCase(Constant.CLOSED) ||
+        status.equalsIgnoreCase(Constant.BANNED)){
+            user.setStatus(status.toUpperCase());
+        }else{
+            throw new RuntimeException("Status is not valid!");
         }
-
-
-        if (!statusDB.equals(user.getStatus())) {
-            userRepository.save(user);
-        }
-
+        userRepository.save(user);
         return modelMapper.map(user, UserProfileForAdminDTO.class);
     }
 
