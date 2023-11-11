@@ -63,10 +63,10 @@ public class AdminController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<UserProfileForAdminDTO>> searchUser(@RequestParam String userName,
-                                                                   @RequestParam String unique,
-                                                                   @RequestParam String email){
+    @GetMapping("searching/user")
+    public ResponseEntity<List<UserProfileForAdminDTO>> searchUser(@RequestParam(defaultValue = "", required = false) String userName,
+                                                                   @RequestParam(defaultValue = "", required = false) String unique,
+                                                                   @RequestParam(defaultValue = "", required = false) String email){
         List<UserProfileForAdminDTO> response = userService.searchUser(userName, unique, email);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
