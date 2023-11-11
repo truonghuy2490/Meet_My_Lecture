@@ -88,7 +88,7 @@ public class StudentController {
     }
 
     //DONE-DONE
-    @GetMapping("/{studentId}/major/{majorId}")
+    @PutMapping("/{studentId}/major/{majorId}")
     public ResponseEntity<Long> chooseMajor(@PathVariable Long studentId, @PathVariable Long majorId){
         Long response = studentService.chooseMajor(studentId, majorId);
         return new ResponseEntity<>(response, HttpStatus.OK);
