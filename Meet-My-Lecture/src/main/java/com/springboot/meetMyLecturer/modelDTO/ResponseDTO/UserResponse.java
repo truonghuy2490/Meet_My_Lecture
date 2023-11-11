@@ -15,6 +15,8 @@ public class UserResponse {
     private List<UserProfileForAdminDTO> content;
     private int pageNo;
     private int pageSize;
+    private int totalOPEN;
+    private int totalCLOSE;
     private Long totalElement;
     private int totalPage;
     private boolean last;

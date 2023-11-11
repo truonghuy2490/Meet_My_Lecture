@@ -274,7 +274,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir) {
+    public UserResponse getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir, String status) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
                 Sort.by(sortBy).ascending() :
                 Sort.by(sortBy).descending();
@@ -282,11 +282,22 @@ public class UserServiceImpl implements UserService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
+        List<User> listUserClosed = userRepository.findUserByStatus(Constant.CLOSED);
+        List<User> listUserOpen = userRepository.findUserByStatus(Constant.OPEN);
 
-        // SAVE TO REPO
-        Page<User> users = userRepository.findAll(pageable);
+        Page<User> listUser;
+        if(status.equalsIgnoreCase(Constant.OPEN) ||
+                status.equalsIgnoreCase(Constant.CLOSED) ||
+                status.equalsIgnoreCase(Constant.BANNED)){
+            listUser = userRepository.findUserByStatus(status, pageable);
+        }else if(status.isEmpty()){
+            listUser = userRepository.findAll(pageable);
+        }else{
+            throw new RuntimeException("Status is not valid!");
+        }
+
         // get content for page object
-        List<User> listOfUsers = users.getContent();
+        List<User> listOfUsers = listUser.getContent();
 
         List<UserProfileForAdminDTO> content = listOfUsers.stream().map(
                 user -> modelMapper.map(user, UserProfileForAdminDTO.class)
@@ -294,11 +305,13 @@ public class UserServiceImpl implements UserService {
 
         UserResponse userResponse = new UserResponse();
         userResponse.setContent(content);
-        userResponse.setTotalPage(users.getTotalPages());
-        userResponse.setTotalElement(users.getTotalElements());
-        userResponse.setPageNo(users.getNumber());
-        userResponse.setPageSize(users.getSize());
-        userResponse.setLast(users.isLast());
+        userResponse.setTotalPage(listUser.getTotalPages());
+        userResponse.setTotalElement(listUser.getTotalElements());
+        userResponse.setTotalCLOSE(listUserClosed.size());
+        userResponse.setTotalOPEN(listUserOpen.size());
+        userResponse.setPageNo(listUser.getNumber());
+        userResponse.setPageSize(listUser.getSize());
+        userResponse.setLast(listUser.isLast());
 
         return userResponse;
     }

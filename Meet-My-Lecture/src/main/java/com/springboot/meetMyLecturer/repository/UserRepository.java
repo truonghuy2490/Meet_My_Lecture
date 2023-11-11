@@ -1,6 +1,8 @@
 package com.springboot.meetMyLecturer.repository;
 
 import com.springboot.meetMyLecturer.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,5 +41,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.unique from User u where u.userId =:userId and u.status =:status")
     String findNickNameByUserId(Long userId, String status);
 
-
+    Page<User> findUserByStatus(String status, Pageable pageable);
+    List<User> findUserByStatus(String status);
 }

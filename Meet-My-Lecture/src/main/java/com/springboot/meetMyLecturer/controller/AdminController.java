@@ -51,9 +51,10 @@ public class AdminController {
             @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "userName", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir
-    ){
-        return userService.getAllUsers(pageNo, pageSize, sortBy, sortDir);
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
+            @RequestParam(value = "status", defaultValue = "", required = false) String status
+            ){
+        return userService.getAllUsers(pageNo, pageSize, sortBy, sortDir, status);
     }
 
     //DONE-DONE
