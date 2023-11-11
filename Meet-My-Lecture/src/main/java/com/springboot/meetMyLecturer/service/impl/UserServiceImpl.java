@@ -354,9 +354,11 @@ public class UserServiceImpl implements UserService {
             list = userRepository.findUsersByUserNameContains(userName);
         }else if(!unique.isEmpty() && email.isEmpty() && userName.isEmpty()){
             user = userRepository.findUserByUnique(unique);
+            if(user == null) throw new ResourceNotFoundException("User","unique", unique);
             list.add(user);
         }else if(unique.isEmpty() && !email.isEmpty() && userName.isEmpty()){
             user = userRepository.findUserByEmail(email);
+            if(user == null) throw new ResourceNotFoundException("User","email", email);
             list.add(user);
         }else{
             return null;
