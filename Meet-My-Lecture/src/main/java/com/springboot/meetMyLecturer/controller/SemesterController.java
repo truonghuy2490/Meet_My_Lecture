@@ -28,7 +28,7 @@ public class SemesterController {
             @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
             @RequestParam(value = "sortBy", defaultValue = "semesterName", required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION, required = false) String sortDir,
-            @RequestParam String status
+            @RequestParam(required = false) String status
     ){
         return semesterService.getAllSemesters(pageNo, pageSize, sortBy, sortDir, status);
     }

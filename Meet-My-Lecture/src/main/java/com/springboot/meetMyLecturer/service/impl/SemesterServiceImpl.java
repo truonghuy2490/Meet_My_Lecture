@@ -189,10 +189,15 @@ public class SemesterServiceImpl implements SemesterService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
         // SAVE TO REPO
-        if(!status.equalsIgnoreCase(Constant.OPEN) && !status.equalsIgnoreCase(Constant.CLOSED)){
-            throw new RuntimeException("Invalid status.");
+        Page<Semester> semesters;
+        if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
+            semesters = semesterRepository.findByStatus(status, pageable); // findAllByStudentId()
+        }else if(status.isEmpty()){
+            semesters = semesterRepository.findAll(pageable);
+        }else{
+            throw new RuntimeException("Invalid status");
         }
-        Page<Semester> semesters = semesterRepository.findByStatus(status, pageable); // findAllByStudentId()
+
         if(semesters.isEmpty()){
             throw new RuntimeException("There are no semesters.");
         }
@@ -214,6 +219,12 @@ public class SemesterServiceImpl implements SemesterService {
         semesterResponse.setLast(semesters.isLast());
 
         return semesterResponse;
+    }
+
+    public void automatedCreateSemester(){
+
+
+
     }
 
 

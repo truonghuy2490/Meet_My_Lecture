@@ -190,8 +190,13 @@ public class SubjectServiceImpl implements SubjectService {
         // get content for page object
         List<Subject> listOfSubjects = subjects.getContent();
 
-        List<SubjectResponseDTO> content = listOfSubjects.stream().map(
-                subject -> modelMapper.map(subject, SubjectResponseDTO.class)
+        List<SubjectResponseForAdminDTO> content = listOfSubjects.stream().map(
+                subject -> {
+                    SubjectResponseForAdminDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseForAdminDTO.class);
+                    Set<String> majorName = subjectRepository.getMajorNamesForSubject(subject.getSubjectId());
+                    subjectResponseDTO.setMajorName(majorName);
+                    return subjectResponseDTO;
+                }
         ).collect(Collectors.toList());
 
         SubjectResponse subjectResponse = new SubjectResponse();
@@ -217,15 +222,27 @@ public class SubjectServiceImpl implements SubjectService {
 
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Subject> subjects;
+        if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
+            subjects = subjectRepository.findSubjectsByMajorIdAndStatus(pageable, majorId, status);
+        } else if (status.isEmpty()) {
+            subjects = subjectRepository.findSubjectsByMajorIdAndStatus(pageable, majorId);
+        }else {
+            throw new RuntimeException("Invalid status.");
+        }
 
 
         // SAVE TO REPO
-        Page<Subject> subjects = subjectRepository.findSubjectsByMajorIdAndStatus(pageable, majorId, status);
         // get content for page object
         List<Subject> listOfSubjects = subjects.getContent();
 
-        List<SubjectResponseDTO> content = listOfSubjects.stream().map(
-                subject -> modelMapper.map(subject, SubjectResponseDTO.class)
+        List<SubjectResponseForAdminDTO> content = listOfSubjects.stream().map(
+                subject -> {
+                    SubjectResponseForAdminDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseForAdminDTO.class);
+                    Set<String> majorName = subjectRepository.getMajorNamesForSubject(subject.getSubjectId());
+                    subjectResponseDTO.setMajorName(majorName);
+                    return subjectResponseDTO;
+                }
         ).collect(Collectors.toList());
 
         SubjectResponse subjectResponse = new SubjectResponse();

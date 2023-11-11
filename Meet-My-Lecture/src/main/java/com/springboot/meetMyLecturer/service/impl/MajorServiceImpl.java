@@ -130,10 +130,4 @@ public class MajorServiceImpl implements MajorService {
         );
         return modelMapper.map(major, MajorResponseDTO.class);
     }
-
-    public void automatedCreateSemester(){
-
-
-
-    }
 }
