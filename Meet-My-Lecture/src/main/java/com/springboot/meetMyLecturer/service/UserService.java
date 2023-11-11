@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.UserResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
@@ -22,7 +23,9 @@ public interface UserService {
 
     List<EmptySlotResponseDTO> viewEmptySlot(Long lecturerId);
 
-    List<EmptySlotResponseDTO> viewEmptySlotForAdmin(Long lecturerId);
+    SlotResponse viewEmptySlotForAdmin(int pageNo, int pageSize, String sortBy, String sortDir,
+                                       Long lecturerId,
+                                       String filter);
 
     UserProfileForAdminDTO viewProfileByUserId(Long userId);
 

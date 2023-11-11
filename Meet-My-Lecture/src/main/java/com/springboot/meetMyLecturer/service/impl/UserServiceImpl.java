@@ -4,7 +4,10 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RoomResponse;
+import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.UserResponse;
+import com.springboot.meetMyLecturer.modelDTO.RoomDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
@@ -115,15 +118,55 @@ public class UserServiceImpl implements UserService {
 
     //view empty slots for admin DONE-DONE
     @Override
-    public List<EmptySlotResponseDTO> viewEmptySlotForAdmin(Long lecturerId) {
+    public SlotResponse viewEmptySlotForAdmin(int pageNo, int pageSize, String sortBy, String sortDir,
+                                              Long lecturerId,
+                                              String status
+    )
+    {
         User user = userRepository.findById(lecturerId).orElseThrow(
                 ()-> new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId))
         );
 
-        List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
 
-        return emptySlotList.stream().map(
-                emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)).toList();
+        // CREATE PAGEABLE INSTANCE
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<EmptySlot> slots = null;
+        // SAVE TO REPO
+        if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.BOOKED)){
+            // get by user id n status
+            slots = emptySlotRepository.findEmptySlotByLecturer_UserIdAndStatus(lecturerId, status, pageable);
+
+        } else if (status.isEmpty()) {
+            // get by user id
+            slots = emptySlotRepository.findEmptySlotByLecturer_UserId(pageable, lecturerId);
+        }else{
+            throw new RuntimeException("Status not valid!");
+        }
+
+        if(slots.isEmpty()){
+            throw new RuntimeException("There are no slot.");
+        }
+
+        // get content for page object
+        List<EmptySlot> slotList = slots.getContent();
+
+        List<EmptySlotResponseDTO> content = slotList.stream().map(
+                slot -> modelMapper.map(slot, EmptySlotResponseDTO.class)
+        ).collect(Collectors.toList());
+
+        SlotResponse slotResponse = new SlotResponse();
+        slotResponse.setContent(content);
+        slotResponse.setTotalPage(slots.getTotalPages());
+        slotResponse.setTotalElement(slots.getTotalElements());
+        slotResponse.setPageNo(slots.getNumber());
+        slotResponse.setPageSize(slots.getSize());
+        slotResponse.setLast(slots.isLast());
+
+        return slotResponse;
     }
 
 

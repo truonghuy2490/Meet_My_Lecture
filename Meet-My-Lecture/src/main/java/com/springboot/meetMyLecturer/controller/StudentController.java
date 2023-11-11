@@ -87,4 +87,5 @@ public class StudentController {
         return new ResponseEntity<>(lecturerSubjectResponseDTOList, HttpStatus.OK);
     }
 
+
 }

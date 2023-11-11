@@ -1,6 +1,8 @@
 package com.springboot.meetMyLecturer.repository;
 
 import com.springboot.meetMyLecturer.entity.EmptySlot;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -30,5 +32,10 @@ public interface EmptySlotRepository extends JpaRepository<EmptySlot, Long> {
             "join Semester s on s.semesterId = w.semester.semesterId and s.semesterId =:semesterId")
     List<EmptySlot> findEmptySlotsBySemester(Long semesterId, Long userId);
 
+    Page<EmptySlot> findEmptySlotByStatus(String status, Pageable pageable);
+    @Query("select em from EmptySlot em where em.lecturer.userId =:userId and em.status=:status")
+    Page<EmptySlot> findEmptySlotByLecturer_UserIdAndStatus(Long userId, String status, Pageable pageable);
+    @Query("select em from EmptySlot em where em.lecturer.userId =:userId")
+    Page<EmptySlot> findEmptySlotByLecturer_UserId(Pageable pageable, Long userId);
 }
 

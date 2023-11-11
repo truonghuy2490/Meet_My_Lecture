@@ -101,9 +101,15 @@ public class AdminController {
 
     //DONE-DONE
     @GetMapping("emptySlots/lecturer/{lecturerId}")
-    public ResponseEntity<List<EmptySlotResponseDTO>> viewEmptySlots(@PathVariable Long lecturerId){
-        List<EmptySlotResponseDTO> emptySlotResponseDTOList = userService.viewEmptySlotForAdmin(lecturerId);
-        return new ResponseEntity<>(emptySlotResponseDTOList, HttpStatus.OK);
+    public SlotResponse viewEmptySlots(
+            @RequestParam(value = "pageNo", defaultValue = PageConstant.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PageConstant.DEFAULT_PAGE_SIZE, required = false)int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "timeStart", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PageConstant.DEFAULT_SORT_DIRECTION_DECS, required = false) String sortDir,
+            @PathVariable Long lecturerId,
+            @RequestParam(value = "filter", defaultValue = "", required = false) String filter
+    ){
+        return userService.viewEmptySlotForAdmin(pageNo, pageSize, sortBy, sortDir, lecturerId, filter);
     }
 
 }

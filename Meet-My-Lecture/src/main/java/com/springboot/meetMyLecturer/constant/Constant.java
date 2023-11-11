@@ -21,5 +21,6 @@ public class Constant {
     public static final String EXPIRED = "EXPIRED";
 
     public static final String REJECTED = "REJECTED";
+    public static final String BOOKED = "BOOKED";
 
 }
