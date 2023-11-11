@@ -301,5 +301,25 @@ public class SubjectServiceImpl implements SubjectService {
         return lecturersMajorsResponseDTO;
     }
 
+    // search subject for admin DONE-DONE
+    @Override
+    public List<SubjectResponseDTO> searchSubjectForAdmin(String subjectId, String subjectName) {
+
+        List<Subject> subjectList;
+
+        if(subjectId.isEmpty()){
+            subjectList = subjectRepository.findSubjectByName(subjectName);
+        }else if(subjectName.isEmpty()){
+            subjectList = subjectRepository.findSubjectById(subjectId);
+        }else{
+            subjectList = null;
+        }
+
+        if (subjectList == null) throw new RuntimeException("There are no subjects");
+        return subjectList.stream().map(
+                subject -> modelMapper.map(subject, SubjectResponseDTO.class)
+        ).collect(Collectors.toList());
+    }
+
 
 }

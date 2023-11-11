@@ -45,4 +45,6 @@ public interface UserService {
     UserRoleResponseDTO getUserId(String email);
 
     UserResponse getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir, String status);
+
+    List<UserProfileForAdminDTO> searchUser(String userName, String unique, String email);
 }

@@ -43,4 +43,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findUserByStatus(String status, Pageable pageable);
     List<User> findUserByStatus(String status);
+
+    User findUserByUnique(String unique);
+
+    List<User> findUsersByUserNameContains(String userName);
 }

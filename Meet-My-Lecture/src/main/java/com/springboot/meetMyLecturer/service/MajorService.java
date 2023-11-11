@@ -16,4 +16,6 @@ public interface MajorService {
 
     MajorResponseDTO getMajorByMajorId(Long MajorId);
 
+    List<MajorResponseDTO> searchMajor(String majorName);
+
 }

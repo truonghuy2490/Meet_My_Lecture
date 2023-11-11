@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -46,6 +47,13 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
 
     @Query("select m.majorName from Major m join SubjectMajor sm on sm.major.majorId = m.majorId and sm.subject.subjectId =:subjectId")
     Set<String> getMajorNamesForSubject(String subjectId);
+
+    @Query("SELECT s FROM Subject s WHERE  s.subjectName LIKE %:subjectName%")
+    List<Subject> findSubjectByName(@Param("subjectName") String subjectName);
+
+    @Query("SELECT s FROM Subject s WHERE s.subjectId LIKE %:subjectId%")
+    List<Subject> findSubjectById(@Param("subjectId") String subjectId);
+
 
 
 

@@ -53,5 +53,11 @@ public class MajorController {
         return new ResponseEntity<>(majorResponseDTO, HttpStatus.CREATED);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<MajorResponseDTO>> searchMajor(@RequestParam(defaultValue = "", required = false) String majorName){
+        List<MajorResponseDTO> majorResponseDTO = majorService.searchMajor(majorName);
+        return new ResponseEntity<>(majorResponseDTO, HttpStatus.OK);
+    }
+
 
 }

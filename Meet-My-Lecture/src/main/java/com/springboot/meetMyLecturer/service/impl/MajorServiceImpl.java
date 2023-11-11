@@ -130,4 +130,18 @@ public class MajorServiceImpl implements MajorService {
         );
         return modelMapper.map(major, MajorResponseDTO.class);
     }
+
+    //search major by majorName for admin
+    @Override
+    public List<MajorResponseDTO> searchMajor(String majorName) {
+        if (majorName.isEmpty()){
+            return null;
+        }
+        List<Major> majorList = majorRepository.findMajorsByMajorName(majorName);
+        if(majorList.isEmpty()) throw new RuntimeException("There are no majors.");
+
+        return majorList.stream().map(
+                major -> modelMapper.map(major, MajorResponseDTO.class)
+        ).collect(Collectors.toList());
+    }
 }

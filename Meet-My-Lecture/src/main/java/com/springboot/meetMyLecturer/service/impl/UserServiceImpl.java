@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -77,23 +79,15 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user,UserProfileDTO.class);
     }
 
-    //get all users DONE-DONE
-//    @Override
-//    public List<UserProfileForAdminDTO> getAllUsers(){
-//        List<User> userList = userRepository.findUserNotAdmin();
-//        if(userList.isEmpty()){
-//            throw new RuntimeException("There are no users");
-//        }
-//        return  userList.stream().map(user -> modelMapper.map(user, UserProfileForAdminDTO.class)).toList();
-//    }
-
     //view profile by userId for admin DONE-DONE
     @Override
     public UserProfileForAdminDTO viewProfileByUserId(Long userId) {
-        Optional<User> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
-        ));
-        return modelMapper.map(user, UserProfileForAdminDTO.class);
+        );
+        UserProfileForAdminDTO userProfileForAdminDTO = modelMapper.map(user, UserProfileForAdminDTO.class);
+        userProfileForAdminDTO.setMajorName(user.getMajor().getMajorName());
+        return userProfileForAdminDTO;
     }
 
     //view empty slot by lecturerId for student and lecturer DONE-DONE
@@ -349,6 +343,32 @@ public class UserServiceImpl implements UserService {
         userResponse.setLast(listUser.isLast());
 
         return userResponse;
+    }
+
+    //search user by name, unique, email for admin
+    @Override
+    public List<UserProfileForAdminDTO> searchUser(String userName, String unique, String email) {
+        List<User> list = new ArrayList<>();
+        User user;
+        if(unique.isEmpty() && email.isEmpty() && !userName.isEmpty()){
+            list = userRepository.findUsersByUserNameContains(userName);
+        }else if(!unique.isEmpty() && email.isEmpty() && userName.isEmpty()){
+            user = userRepository.findUserByUnique(unique);
+            list.add(user);
+        }else if(unique.isEmpty() && !email.isEmpty() && userName.isEmpty()){
+            user = userRepository.findUserByEmail(email);
+            list.add(user);
+        }else{
+            return null;
+        }
+
+        return list.stream().map(
+                u -> {
+                    UserProfileForAdminDTO userProfileForAdminDTO = modelMapper.map(u, UserProfileForAdminDTO.class);
+                    userProfileForAdminDTO.setMajorName(u.getMajor().getMajorName());
+                    return userProfileForAdminDTO;
+                }
+        ).collect(Collectors.toList());
     }
 
 

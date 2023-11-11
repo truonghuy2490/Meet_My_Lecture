@@ -63,6 +63,14 @@ public class AdminController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<UserProfileForAdminDTO>> searchUser(@RequestParam String userName,
+                                                                   @RequestParam String unique,
+                                                                   @RequestParam String email){
+        List<UserProfileForAdminDTO> response = userService.searchUser(userName, unique, email);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     //DONE-DONE
     @PutMapping("/{userId}")
     public ResponseEntity<UserProfileForAdminDTO> updateUserStatus(

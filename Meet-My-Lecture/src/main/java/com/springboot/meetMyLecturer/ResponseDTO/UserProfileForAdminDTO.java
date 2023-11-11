@@ -11,4 +11,5 @@ public class UserProfileForAdminDTO {
     private int roleId;
     private int absentCount;
     private String status;
+    private String majorName;
 }
