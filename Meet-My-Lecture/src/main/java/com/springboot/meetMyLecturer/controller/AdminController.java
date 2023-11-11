@@ -3,7 +3,6 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.PageConstant;
-import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.*;
 import com.springboot.meetMyLecturer.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
