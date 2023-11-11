@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface MajorRepository extends JpaRepository<Major, Long> {
@@ -20,7 +21,7 @@ public interface MajorRepository extends JpaRepository<Major, Long> {
 
     Page<Major> findByStatus(String status, Pageable pageable);
 
-    @Query("select sm.major.majorId from SubjectMajor sm where sm.subject.subjectId =:subjectId")
-    List<Long> findMajorIdBySubjectId(String subjectId);
+    @Query("select sm.major.majorName from SubjectMajor sm where sm.subject.subjectId =:subjectId")
+    Set<String> findMajorNameBySubjectId(String subjectId);
 
 }

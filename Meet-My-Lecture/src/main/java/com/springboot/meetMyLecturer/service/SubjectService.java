@@ -1,9 +1,7 @@
 package com.springboot.meetMyLecturer.service;
 
-import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectMajorResponseForAdminDTO;
-import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.*;
+import com.springboot.meetMyLecturer.entity.SubjectMajorId;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
@@ -15,21 +13,18 @@ public interface SubjectService {
 
     List<LecturerSubjectResponseDTO> searchSubject (String keyword);
 
-    List<LecturerSubjectResponseDTO> getSubjectByMajorId(Long majorId);
-
-    List<SubjectMajorResponseDTO> getAllSubjects();
+    List<LecturerSubjectResponseDTO> getSubjectsByMajorId(Long majorId);
 
     SubjectMajorResponseForAdminDTO createSubject(Long adminId, SubjectForAminDTO subjectDTO);
 
-    SubjectResponseDTO editSubjectsInMajor(Long adminId, String subjectId, Long majorId);
-
     SubjectResponseDTO getSubjectBySubjectId(String subjectId);
-
-    List<LecturerSubjectResponseDTO> getSubjectsByMajorId(Long majorId);
 
     SubjectResponse getAllSubjects(int pageNo, int pageSize, String sortBy, String sortDir, String status);
 
-    SubjectResponse getAllSubjectsByMajorId(int pageNo, int pageSize, String sortBy, String sortDir, Long majorId);
+    SubjectResponse getAllSubjectsByMajorId(int pageNo, int pageSize, String sortBy, String sortDir, Long majorId, String status);
 
+    String deleteSubjectInMajor(Long adminId, SubjectMajorId subjectMajorId);
+
+    LecturersMajorsResponseDTO getLecturersAndMajorsBySubjectId(String subjectId);
 
 }

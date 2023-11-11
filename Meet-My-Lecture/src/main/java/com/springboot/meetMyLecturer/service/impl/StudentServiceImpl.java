@@ -178,6 +178,7 @@ public class StudentServiceImpl implements StudentService {
                 }).collect(Collectors.toList());
     }
 
+    //choose major for student DONE-DONE
     @Override
     public Long chooseMajor(Long studentId, Long majorId) {
 
@@ -187,9 +188,14 @@ public class StudentServiceImpl implements StudentService {
         Major major = majorRepository.findMajorByMajorIdAndStatus(majorId, Constant.OPEN);
         if(major == null) throw new ResourceNotFoundException("Major","id",String.valueOf(majorId));
 
+        if(student.getMajor().equals(major)){
+            throw new RuntimeException("You already have this major.");
+        }
+        student.setMajor(major);
 
+        userRepository.save(student);
 
-        return null;
+        return majorId;
     }
 }
 

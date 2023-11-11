@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject,String> {
@@ -33,11 +34,13 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
     @Query("select s from Subject s join SubjectMajor sm on sm.subject.subjectId = s.subjectId and sm.major.majorId = :majorId where s.status =:status")
     List<Subject> findSubjectsByMajorId(Long majorId, String status);
 
-    @Query("SELECT s FROM Subject s JOIN SubjectMajor sm WHERE sm.major.majorId = :majorId")
-    Page<Subject> findSubjectsByMajorId(Pageable pageable, Long majorId);
+    @Query("SELECT s FROM Subject s JOIN SubjectMajor sm WHERE sm.major.majorId = :majorId AND sm.status =:status")
+    Page<Subject> findSubjectsByMajorIdAndStatus(Pageable pageable, Long majorId, String status);
 
     Page<Subject> findSubjectByStatus(String status, Pageable pageable);
 
     List<Subject> findSubjectsByStatus(String status);
+
+
 
 }
