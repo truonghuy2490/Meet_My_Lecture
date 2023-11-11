@@ -80,6 +80,9 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectList.stream()
                 .flatMap(subject -> {
                     List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subject.getSubjectId());
+                    if(lecturerList.isEmpty()){
+
+                    }
                     return lecturerList.stream()
                             .map(lecturer -> {
                                 LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();

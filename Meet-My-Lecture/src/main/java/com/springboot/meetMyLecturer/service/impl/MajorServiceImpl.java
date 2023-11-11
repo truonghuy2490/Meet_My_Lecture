@@ -133,5 +133,7 @@ public class MajorServiceImpl implements MajorService {
 
     public void automatedCreateSemester(){
 
+
+
     }
 }
