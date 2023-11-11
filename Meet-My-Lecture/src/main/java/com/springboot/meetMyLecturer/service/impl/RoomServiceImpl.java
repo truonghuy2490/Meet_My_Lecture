@@ -78,7 +78,7 @@ public class RoomServiceImpl implements RoomService {
 
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-
+        List<Room> roomOpen = roomRepository.findRoomsByStatus(Constant.OPEN);
         Page<Room> rooms;
         // SAVE TO REPO
         if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
@@ -103,6 +103,7 @@ public class RoomServiceImpl implements RoomService {
         RoomResponse roomResponse = new RoomResponse();
         roomResponse.setContent(content);
         roomResponse.setTotalPage(rooms.getTotalPages());
+        roomResponse.setRoomOpen(roomOpen.size());
         roomResponse.setTotalElement(rooms.getTotalElements());
         roomResponse.setPageNo(rooms.getNumber());
         roomResponse.setPageSize(rooms.getSize());
