@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
@@ -81,7 +82,9 @@ public class SubjectServiceImpl implements SubjectService {
                 .flatMap(subject -> {
                     List<User> lecturerList = subjectRepository.findLecturerBySubjectId(subject.getSubjectId());
                     if(lecturerList.isEmpty()){
-
+                        LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
+                        lecturerSubjectResponseDTO.setSubjectId(subject.getSubjectId());
+                        return Stream.of(lecturerSubjectResponseDTO);
                     }
                     return lecturerList.stream()
                             .map(lecturer -> {
