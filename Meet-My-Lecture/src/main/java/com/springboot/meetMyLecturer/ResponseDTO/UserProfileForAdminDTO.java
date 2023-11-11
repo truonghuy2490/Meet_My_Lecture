@@ -8,6 +8,7 @@ public class UserProfileForAdminDTO {
     private String userName;
     private String email;
     private String unique;
+    private int roleId;
     private int absentCount;
     private String status;
 }
