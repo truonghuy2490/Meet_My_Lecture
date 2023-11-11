@@ -9,6 +9,7 @@ import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.StudentService;
+import org.checkerframework.checker.units.qual.A;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     SlotTimeRepository slotTimeRepository;
+
+    @Autowired
+    MajorRepository majorRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -172,6 +176,20 @@ public class StudentServiceImpl implements StudentService {
                     lecturerSubjectResponseDTO.setUnique(subjectLecturerStudent.getLecturer().getUnique());
                     return lecturerSubjectResponseDTO;
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Long chooseMajor(Long studentId, Long majorId) {
+
+        User student = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
+        if(student == null) throw new ResourceNotFoundException("Student","id", String.valueOf(studentId));
+
+        Major major = majorRepository.findMajorByMajorIdAndStatus(majorId, Constant.OPEN);
+        if(major == null) throw new ResourceNotFoundException("Major","id",String.valueOf(majorId));
+
+
+
+        return null;
     }
 }
 

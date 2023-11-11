@@ -21,4 +21,6 @@ public interface StudentService {
 
     List<LecturerSubjectResponseDTO> recommendRelatedCourses(Long studentId);
 
+    Long chooseMajor(Long studentId, Long majorId);
+
 }
