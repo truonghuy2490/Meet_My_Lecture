@@ -192,7 +192,7 @@ public class SemesterServiceImpl implements SemesterService {
         Page<Semester> semesters;
         if(status.equalsIgnoreCase(Constant.OPEN) || status.equalsIgnoreCase(Constant.CLOSED)){
             semesters = semesterRepository.findByStatus(status, pageable); // findAllByStudentId()
-        }else if(status.isEmpty()){
+        }else if(status.equalsIgnoreCase("")){
             semesters = semesterRepository.findAll(pageable);
         }else{
             throw new RuntimeException("Invalid status");
