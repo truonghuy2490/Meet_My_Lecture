@@ -33,6 +33,13 @@ public class SemesterController {
         return semesterService.getAllSemesters(pageNo, pageSize, sortBy, sortDir, status);
     }
 
+    //DONE-DONE
+    @GetMapping("{semesterId}")
+    public ResponseEntity<SemesterResponseDTO> getSemesterInfo(@PathVariable Long semesterId){
+        SemesterResponseDTO semesterResponseDTO = semesterService.getSemesterInfo(semesterId);
+        return new ResponseEntity<>(semesterResponseDTO, HttpStatus.OK);
+    }
+
 
     //DONE-DONE
     @PostMapping("/admin/{adminId}")

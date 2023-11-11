@@ -12,6 +12,8 @@ import java.util.List;
 public interface SemesterService {
     List<SemesterResponseDTO> getAllSemesters();
 
+    SemesterResponseDTO getSemesterInfo(Long majorId);
+
     SemesterResponseDTO createSemester(Long adminId, SemesterDTO semesterDTO);
 
     SemesterResponseDTO editSemester(Long adminId, Long semesterId, SemesterDTO semesterDTO);

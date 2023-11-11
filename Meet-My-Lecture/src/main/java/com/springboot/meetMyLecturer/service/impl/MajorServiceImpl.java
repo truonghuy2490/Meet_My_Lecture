@@ -128,7 +128,10 @@ public class MajorServiceImpl implements MajorService {
         Major major = majorRepository.findById(MajorId).orElseThrow(
                 () -> new ResourceNotFoundException("Major", "id", String.valueOf(MajorId))
         );
-
         return modelMapper.map(major, MajorResponseDTO.class);
+    }
+
+    public void automatedCreateSemester(){
+
     }
 }

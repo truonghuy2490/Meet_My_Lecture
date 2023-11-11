@@ -50,6 +50,15 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterList.stream().map(semester -> modelMapper.map(semester, SemesterResponseDTO.class)).collect(Collectors.toList());
     }
 
+    //get semester info for admin DONE-DONE
+    @Override
+    public SemesterResponseDTO getSemesterInfo(Long majorId) {
+        Semester semester = semesterRepository.findById(majorId).orElseThrow(
+                ()-> new ResourceNotFoundException("Major","id", String.valueOf(majorId))
+        );
+        return modelMapper.map(semester, SemesterResponseDTO.class);
+    }
+
     //create semester for admin DONE-DONE
     @Override
     public SemesterResponseDTO createSemester(Long adminId, SemesterDTO semesterDTO) {

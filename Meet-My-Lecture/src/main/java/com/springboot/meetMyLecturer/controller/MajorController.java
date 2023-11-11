@@ -31,9 +31,9 @@ public class MajorController {
         return majorService.getAllMajors(pageNo, pageSize, sortBy, sortDir, status);
     }
 
+    //DONE-DONE
     @GetMapping("major/{majorId}")
-    public ResponseEntity<MajorResponseDTO> getMajorByMajorId(
-            @PathVariable Long majorId){
+    public ResponseEntity<MajorResponseDTO> getMajorByMajorId(@PathVariable Long majorId){
         MajorResponseDTO major = majorService.getMajorByMajorId(majorId);
         return new ResponseEntity<>(major, HttpStatus.OK);
     }
