@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.repository;
 
+import com.springboot.meetMyLecturer.entity.Major;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import jakarta.transaction.Transactional;
@@ -45,8 +46,8 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
 
     List<Subject> findSubjectsByStatus(String status);
 
-    @Query("select m.majorName from Major m join SubjectMajor sm on sm.major.majorId = m.majorId and sm.subject.subjectId =:subjectId")
-    Set<String> getMajorNamesForSubject(String subjectId);
+    @Query("select m from Major m join SubjectMajor sm on sm.major.majorId = m.majorId and sm.subject.subjectId =:subjectId")
+    Set<Major> getMajorNamesForSubject(String subjectId);
 
     @Query("SELECT s FROM Subject s WHERE  s.subjectName LIKE %:subjectName%")
     List<Subject> findSubjectByName(@Param("subjectName") String subjectName);

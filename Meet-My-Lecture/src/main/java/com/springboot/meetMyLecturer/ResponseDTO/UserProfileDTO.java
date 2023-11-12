@@ -10,4 +10,5 @@ public class UserProfileDTO {
     private String userName;
     private String email;
     private String unique;
+    private String status;
 }

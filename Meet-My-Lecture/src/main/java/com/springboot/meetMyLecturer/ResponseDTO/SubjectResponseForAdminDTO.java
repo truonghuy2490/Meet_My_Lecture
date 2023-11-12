@@ -8,6 +8,6 @@ import java.util.Set;
 public class SubjectResponseForAdminDTO {
     private String subjectId;
     private String subjectName;
-    private Set<String> majorName ;
+    private Set<MajorResponseDTO> major;
     private String status;
 }

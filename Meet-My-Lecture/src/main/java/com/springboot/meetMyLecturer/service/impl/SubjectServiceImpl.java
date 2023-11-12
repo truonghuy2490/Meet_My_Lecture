@@ -193,8 +193,11 @@ public class SubjectServiceImpl implements SubjectService {
         List<SubjectResponseForAdminDTO> content = listOfSubjects.stream().map(
                 subject -> {
                     SubjectResponseForAdminDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseForAdminDTO.class);
-                    Set<String> majorName = subjectRepository.getMajorNamesForSubject(subject.getSubjectId());
-                    subjectResponseDTO.setMajorName(majorName);
+                    Set<Major> major = subjectRepository.getMajorNamesForSubject(subject.getSubjectId());
+                    Set<MajorResponseDTO> majorResponseDTOSet = major.stream().map(
+                            m -> modelMapper.map(m, MajorResponseDTO.class)
+                    ).collect(Collectors.toSet());
+                    subjectResponseDTO.setMajor(majorResponseDTOSet);
                     return subjectResponseDTO;
                 }
         ).collect(Collectors.toList());
@@ -239,8 +242,11 @@ public class SubjectServiceImpl implements SubjectService {
         List<SubjectResponseForAdminDTO> content = listOfSubjects.stream().map(
                 subject -> {
                     SubjectResponseForAdminDTO subjectResponseDTO = modelMapper.map(subject, SubjectResponseForAdminDTO.class);
-                    Set<String> majorName = subjectRepository.getMajorNamesForSubject(subject.getSubjectId());
-                    subjectResponseDTO.setMajorName(majorName);
+                    Set<Major> major = subjectRepository.getMajorNamesForSubject(subject.getSubjectId());
+                    Set<MajorResponseDTO> majorResponseDTOSet = major.stream().map(
+                            m -> modelMapper.map(m, MajorResponseDTO.class)
+                    ).collect(Collectors.toSet());
+                    subjectResponseDTO.setMajor(majorResponseDTOSet);
                     return subjectResponseDTO;
                 }
         ).collect(Collectors.toList());
