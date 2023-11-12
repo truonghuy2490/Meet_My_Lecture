@@ -23,4 +23,6 @@ public interface StudentService {
 
     Long chooseMajor(Long studentId, Long majorId);
 
+    EmptySlotResponseDTO updateBookedSlot(Long studentId, Long bookedSlotId, String subjectId, String description);
+
 }

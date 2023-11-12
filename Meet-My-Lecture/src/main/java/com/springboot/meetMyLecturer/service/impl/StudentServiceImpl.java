@@ -190,6 +190,31 @@ public class StudentServiceImpl implements StudentService {
 
         return majorId;
     }
+
+    //update booked slot for student
+    @Override
+    public EmptySlotResponseDTO updateBookedSlot(Long studentId, Long bookedSlotId, String subjectId, String description) {
+        User student = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
+        if(student == null) throw new ResourceNotFoundException("Student","id",String.valueOf(studentId));
+
+        EmptySlot emptySlot = emptySlotRepository.findById(bookedSlotId).orElseThrow(
+                ()-> new ResourceNotFoundException("Slot","id",String.valueOf(bookedSlotId))
+        );
+
+        if(!emptySlot.getStudent().getUserId().equals(studentId)){
+            throw new RuntimeException("The student does not have this booked slot.");
+        }
+
+        Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectId, Constant.OPEN);
+        if(subject == null) throw new ResourceNotFoundException("Subject","id", subjectId);
+
+        emptySlot.setSubject(subject);
+        emptySlot.setDescription(description);
+
+        emptySlotRepository.save(emptySlot);
+
+        return modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+    }
 }
 
 
