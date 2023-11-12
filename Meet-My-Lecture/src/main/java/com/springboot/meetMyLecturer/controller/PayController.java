@@ -6,10 +6,6 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import com.springboot.meetMyLecturer.config.PaypalPaymentIntent;
 import com.springboot.meetMyLecturer.config.PaypalPaymentMethod;
-import com.springboot.meetMyLecturer.constant.Constant;
-import com.springboot.meetMyLecturer.entity.Order;
-import com.springboot.meetMyLecturer.entity.User;
-import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.PaymentRequestDTO;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.impl.PaypalService;
@@ -21,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
