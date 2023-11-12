@@ -338,13 +338,19 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                     LocalTime duration = emptySlots.get(i).getDuration().toLocalTime();
                     LocalTime endTimeExist = addTimes(startTime, duration);
                     LocalTime newStartTime = emptySlotDTO.getTimeStart().toLocalTime();
-                    // check Room
-                    if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
+
+
                         // Check if newStartTime is within the existing time slot
-                        if (newStartTime.isAfter(startTime) && newStartTime.isBefore(endTimeExist)) {
-                            throw new RuntimeException("Slot have been booked already !");
+                        if ((newStartTime.isAfter(startTime) || newStartTime.equals(startTime)) && newStartTime.isBefore(endTimeExist)) {
+
+                            if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
+                                // Check if newStartTime is within the existing time slot
+
+                                    throw new RuntimeException("Slot have been booked already !");
+
+                            }
                         }
-                    }
+
                 }
             }
         }
