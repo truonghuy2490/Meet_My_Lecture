@@ -7,7 +7,7 @@ import java.util.Set;
 @Data
 public class LecturersMajorsResponseDTO {
     Set<UserProfileDTO> lecturerSet;
-    Set<String> majorSet;
+    Set<MajorResponseDTO> majorSet;
     String subjectName;
     String subjectId;
 }

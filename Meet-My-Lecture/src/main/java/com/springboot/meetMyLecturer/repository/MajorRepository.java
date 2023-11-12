@@ -21,8 +21,8 @@ public interface MajorRepository extends JpaRepository<Major, Long> {
 
     Page<Major> findByStatus(String status, Pageable pageable);
 
-    @Query("select sm.major.majorName from SubjectMajor sm where sm.subject.subjectId =:subjectId")
-    Set<String> findMajorNameBySubjectId(String subjectId);
+    @Query("select sm from SubjectMajor sm where sm.subject.subjectId =:subjectId")
+    Set<Major> findMajorNameBySubjectId(String subjectId);
 
     @Query("select m from Major m where m.majorName like %:majorName%")
     List<Major> findMajorsByMajorName(String majorName);

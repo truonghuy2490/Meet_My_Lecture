@@ -295,11 +295,12 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
 
-        Set<String> majorName = majorRepository.findMajorNameBySubjectId(subjectId);
+        Set<Major> majorName = majorRepository.findMajorNameBySubjectId(subjectId);
+        Set<MajorResponseDTO> majorResponseDTO = majorName.stream().map(major -> modelMapper.map(major, MajorResponseDTO.class)).collect(Collectors.toSet());
 
         LecturersMajorsResponseDTO lecturersMajorsResponseDTO = new LecturersMajorsResponseDTO();
         lecturersMajorsResponseDTO.setLecturerSet(lecturerProfile);
-        lecturersMajorsResponseDTO.setMajorSet(majorName);
+        lecturersMajorsResponseDTO.setMajorSet(majorResponseDTO);
         lecturersMajorsResponseDTO.setSubjectId(subjectId);
         lecturersMajorsResponseDTO.setSubjectName(subject.getSubjectName());
 
