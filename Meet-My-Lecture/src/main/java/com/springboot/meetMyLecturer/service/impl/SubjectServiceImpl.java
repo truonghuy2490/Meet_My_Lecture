@@ -55,12 +55,14 @@ public class SubjectServiceImpl implements SubjectService {
                     if(lecturerList.isEmpty()){
                         LecturerSubjectResponseDTO dto = new LecturerSubjectResponseDTO();
                         dto.setSubjectId(subject.getSubjectId());
+                        dto.setSubjectName(subject.getSubjectName());
                         return Stream.of(dto);
                     }
                     return lecturerList.stream().map(lecturer -> {
                         LecturerSubjectResponseDTO dto = new LecturerSubjectResponseDTO();
                         dto.setLecturerId(lecturer.getUserId());
                         dto.setSubjectId(subject.getSubjectId());
+                        dto.setSubjectName(subject.getSubjectName());
                         dto.setLecturerName(lecturer.getUserName());
                         dto.setUnique(lecturer.getUnique());
                         return dto;
@@ -89,6 +91,7 @@ public class SubjectServiceImpl implements SubjectService {
                     if(lecturerList.isEmpty()){
                         LecturerSubjectResponseDTO lecturerSubjectResponseDTO = new LecturerSubjectResponseDTO();
                         lecturerSubjectResponseDTO.setSubjectId(subject.getSubjectId());
+                        lecturerSubjectResponseDTO.setSubjectName(subject.getSubjectName());
                         return Stream.of(lecturerSubjectResponseDTO);
                     }
                     return lecturerList.stream()
@@ -97,6 +100,7 @@ public class SubjectServiceImpl implements SubjectService {
                                 lecturerSubjectResponseDTO.setUnique(lecturer.getUnique());
                                 lecturerSubjectResponseDTO.setLecturerName(lecturer.getUserName());
                                 lecturerSubjectResponseDTO.setSubjectId(subject.getSubjectId());
+                                lecturerSubjectResponseDTO.setSubjectName(subject.getSubjectName());
                                 lecturerSubjectResponseDTO.setLecturerId(lecturer.getUserId());
                                 return lecturerSubjectResponseDTO;
                             });

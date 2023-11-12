@@ -66,6 +66,7 @@ public class StudentServiceImpl implements StudentService {
                             dto.setUnique(lecturer.getUnique());
                             dto.setLecturerName(lecturer.getUserName());
                             dto.setSubjectId(subject.getSubjectId());
+                            dto.setSubjectName(subject.getSubjectName());
                             return dto;
                         }))
                 .collect(Collectors.toList());

@@ -8,4 +8,5 @@ public class LecturerSubjectResponseDTO {
     private String lecturerName;
     private String unique;
     private String subjectId;
+    private String subjectName;
 }
