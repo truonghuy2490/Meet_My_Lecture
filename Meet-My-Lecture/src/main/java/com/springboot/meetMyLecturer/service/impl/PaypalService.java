@@ -8,6 +8,8 @@ import com.springboot.meetMyLecturer.config.PaypalPaymentMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,10 @@ public class PaypalService {
                 PaypalPaymentIntent intent,
                 String description,
                 String cancelUrl,
-                String successUrl) throws PayPalRESTException {
+                String successUrl
+        )
+                throws PayPalRESTException
+        {
             // Format the total as a double with two decimal places
             double formattedTotal = (double) total / 100.0; // Assuming total is in cents
             Amount amount = new Amount();
@@ -48,6 +53,7 @@ public class PaypalService {
             apiContext.setMaskRequestId(true);
             return payment.create(apiContext);
         }
+
 
         public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
             Payment payment = new Payment();

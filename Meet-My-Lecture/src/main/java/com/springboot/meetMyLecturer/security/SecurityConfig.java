@@ -68,7 +68,8 @@ public class SecurityConfig {
                                 ,"api/v1/room/admin/**"
                                 ,"api/v1/report-error/**"
                                 ,"api/v1/semester/**",
-                                "api/v1/student/searching/**")
+                                "api/v1/student/searching/**",
+                                "api/v1/payment/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
