@@ -1,9 +1,14 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseForAdminDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectsInMajorResponseDTO;
 import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.modelDTO.MajorDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.MajorResponse;
+import com.springboot.meetMyLecturer.modelDTO.SubjectMajorDTO;
+import com.springboot.meetMyLecturer.modelDTO.SubjectSemesterDTO;
 import com.springboot.meetMyLecturer.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +62,13 @@ public class MajorController {
     public ResponseEntity<List<MajorResponseDTO>> searchMajor(@RequestParam(defaultValue = "", required = false) String majorName){
         List<MajorResponseDTO> majorResponseDTO = majorService.searchMajor(majorName);
         return new ResponseEntity<>(majorResponseDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/{adminId}/subjects")
+    public ResponseEntity<SubjectsInMajorResponseDTO> insertSubjectsIntoMajor(@PathVariable Long adminId,
+                                                                              @RequestBody SubjectMajorDTO subjectMajorDTO){
+        SubjectsInMajorResponseDTO responseDTO = majorService.insertSubjectsIntoMajor(adminId, subjectMajorDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
 

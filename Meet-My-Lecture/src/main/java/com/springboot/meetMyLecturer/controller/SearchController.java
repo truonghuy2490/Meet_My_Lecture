@@ -40,7 +40,7 @@ public class SearchController {
 
     //DONE-DONE
     @GetMapping("/subject")
-    public ResponseEntity<List<LecturerSubjectResponseDTO> > searchSubjectBySubjectId(@RequestParam String keyword){
+    public ResponseEntity<List<LecturerSubjectResponseDTO> > searchSubject(@RequestParam String keyword){
         List<LecturerSubjectResponseDTO> subjectList = subjectService.searchSubject(keyword);
         return new ResponseEntity<>(subjectList, HttpStatus.OK);
     }

@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SubjectSemesterRepository extends JpaRepository<SubjectSemester, SubjectSemesterId> {
 
+    SubjectSemester findSubjectSemesterBySubjectSemesterId(SubjectSemesterId subjectSemesterId);
 
 }

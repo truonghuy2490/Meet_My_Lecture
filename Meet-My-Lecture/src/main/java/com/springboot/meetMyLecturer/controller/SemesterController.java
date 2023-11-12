@@ -63,13 +63,13 @@ public class SemesterController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
     @PostMapping("/{adminId}/subjects")
     public ResponseEntity<SubjectSemesterResponseDTO> insertSubjectIntoSemester(@PathVariable Long adminId,
                                                                                       @RequestBody SubjectSemesterDTO semesterDTO){
         SubjectSemesterResponseDTO responseList = semesterService.insertSubjectIntoSemester(adminId,semesterDTO);
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
+
 
     
 }

@@ -1,8 +1,10 @@
 package com.springboot.meetMyLecturer.service;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectsInMajorResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.MajorDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.MajorResponse;
+import com.springboot.meetMyLecturer.modelDTO.SubjectMajorDTO;
 
 import java.util.List;
 
@@ -17,5 +19,7 @@ public interface MajorService {
     MajorResponseDTO getMajorByMajorId(Long MajorId);
 
     List<MajorResponseDTO> searchMajor(String majorName);
+
+    SubjectsInMajorResponseDTO insertSubjectsIntoMajor(Long adminId, SubjectMajorDTO subjectMajorDTO);
 
 }

@@ -153,16 +153,18 @@ public class SemesterServiceImpl implements SemesterService {
                     subjectSemesterId.setSubjectId(subject.getSubjectId());
                     subjectSemesterId.setSemesterId(semester.getSemesterId());
 
-                    SubjectSemester subjectSemester = subjectSemesterRepository.findById(subjectSemesterId).orElseThrow(
-                            ()-> new ResourceNotFoundException(subject.getSubjectId(), String.valueOf(semester.getSemesterId()), "are not found.")
-                    );
+                    SubjectSemester subjectSemester = subjectSemesterRepository.findSubjectSemesterBySubjectSemesterId(subjectSemesterId);
 
-                    if(subjectSemester.getStatus().equals(Constant.CLOSED)){
+                    if(subjectSemester == null){
+                        subjectSemester = new SubjectSemester();
+                    }
+                    else if(subjectSemester.getStatus().equals(Constant.CLOSED)){
                         subjectSemester.setStatus(Constant.OPEN);
                     }else if(subjectSemester.getStatus().equals(Constant.OPEN)){
-                        throw new RuntimeException("This "+ subject.getSubjectId() + semester.getSemesterId() + "not found.");
+                        throw new RuntimeException("This "+ subject.getSubjectId() + semester.getSemesterId() + " is already existed.");
                     }
 
+                    subjectSemester.setSubjectSemesterId(subjectSemesterId);
                     subjectSemester.setSemester(semester);
                     subjectSemester.setSubject(subject);
                     subjectSemesterRepository.save(subjectSemester);

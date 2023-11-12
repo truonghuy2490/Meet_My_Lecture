@@ -52,6 +52,11 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectList.stream()
                 .flatMap(subject -> {
                     List<User> lecturerList = subjectRepository.findLecturerBySubjectIdAndStatus(subject.getSubjectId(), Constant.OPEN);
+                    if(lecturerList.isEmpty()){
+                        LecturerSubjectResponseDTO dto = new LecturerSubjectResponseDTO();
+                        dto.setSubjectId(subject.getSubjectId());
+                        return Stream.of(dto);
+                    }
                     return lecturerList.stream().map(lecturer -> {
                         LecturerSubjectResponseDTO dto = new LecturerSubjectResponseDTO();
                         dto.setLecturerId(lecturer.getUserId());
@@ -327,6 +332,5 @@ public class SubjectServiceImpl implements SubjectService {
                 subject -> modelMapper.map(subject, SubjectResponseDTO.class)
         ).collect(Collectors.toList());
     }
-
 
 }

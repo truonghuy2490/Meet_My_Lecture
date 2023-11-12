@@ -1,13 +1,17 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectSemesterResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectsInMajorResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
-import com.springboot.meetMyLecturer.entity.Major;
-import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MajorDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.MajorResponse;
+import com.springboot.meetMyLecturer.modelDTO.SubjectMajorDTO;
 import com.springboot.meetMyLecturer.repository.MajorRepository;
+import com.springboot.meetMyLecturer.repository.SubjectMajorRepository;
+import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MajorService;
 import org.modelmapper.ModelMapper;
@@ -17,7 +21,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +33,10 @@ public class MajorServiceImpl implements MajorService {
     MajorRepository majorRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    SubjectRepository subjectRepository;
+    @Autowired
+    SubjectMajorRepository subjectMajorRepository;
 
     @Autowired
     ModelMapper modelMapper;
@@ -143,5 +154,48 @@ public class MajorServiceImpl implements MajorService {
         return majorList.stream().map(
                 major -> modelMapper.map(major, MajorResponseDTO.class)
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public SubjectsInMajorResponseDTO insertSubjectsIntoMajor(Long adminId, SubjectMajorDTO subjectMajorDTO) {
+        Major major = majorRepository.findMajorByMajorIdAndStatus(subjectMajorDTO.getMajorId(), Constant.OPEN);
+        if(major == null) throw new ResourceNotFoundException("Major","id",String.valueOf(subjectMajorDTO.getMajorId()));
+
+        Map<String, String> subjectResponse = subjectMajorDTO.getSubjectSet().stream()
+                .map(s -> {
+                    Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(s, Constant.OPEN);
+                    if (subject == null) throw new ResourceNotFoundException("Subject", "id", s);
+
+                    SubjectMajorId subjectMajorId = new SubjectMajorId();
+                    subjectMajorId.setSubjectId(subject.getSubjectId());
+                    subjectMajorId.setMajorId(major.getMajorId());
+
+                    SubjectMajor subjectMajor = subjectMajorRepository.findSubjectMajorBySubjectMajorId(subjectMajorId);
+
+                    if(subjectMajor == null){
+                        subjectMajor = new SubjectMajor();
+                    }
+                    else if(subjectMajor.getStatus().equals(Constant.CLOSED)){
+                        subjectMajor.setStatus(Constant.OPEN);
+                    }else if(subjectMajor.getStatus().equals(Constant.OPEN)){
+                        throw new RuntimeException("This "+ subject.getSubjectId() + major.getMajorId() + " is already existed.");
+                    }
+
+                    subjectMajor.setSubjectMajorId(subjectMajorId);
+                    subjectMajor.setMajor(major);
+                    subjectMajor.setSubject(subject);
+                    subjectMajorRepository.save(subjectMajor);
+
+                    subjectRepository.save(subject);
+
+                    return new AbstractMap.SimpleEntry<>(s, subject.getSubjectName());
+                }).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+
+        SubjectsInMajorResponseDTO subjectMajorResponseDTO = new SubjectsInMajorResponseDTO();
+        subjectMajorResponseDTO.setSubjectList(subjectResponse);
+        subjectMajorResponseDTO.setMajorId(major.getMajorId());
+        subjectMajorResponseDTO.setMajorName(major.getMajorName());
+
+        return subjectMajorResponseDTO;
     }
 }
