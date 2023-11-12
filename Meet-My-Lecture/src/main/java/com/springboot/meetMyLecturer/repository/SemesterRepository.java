@@ -21,4 +21,6 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
 
     Page<Semester> findByStatus(String status, Pageable pageable);
 
+    
+
 }

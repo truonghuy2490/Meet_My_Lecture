@@ -21,8 +21,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -223,9 +228,100 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterResponse;
     }
 
+    @Scheduled(cron = "0 0 0 1 1,5,9 ?")
+    //@Scheduled(cron = "0 33 03 * * ?")
     public void automatedCreateSemester(){
 
+        User admin = userRepository.findById(1L).orElseThrow();
+        List<Semester> semesterList = semesterRepository.findAll();
+        Semester semesterDB = semesterList.get(0);
 
+        for(Semester semester: semesterList){
+            if(semester.getDateEnd().toLocalDate().isAfter(semesterDB.getDateEnd().toLocalDate())){
+                semesterDB = semester;
+            }
+        }
+
+        int size = semesterList.size();
+        //Semester semesterDB = semesterList.get(size - 1);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String result;
+
+        LocalDate currentDate = LocalDate.now();
+
+        if(!(currentDate.isAfter(semesterDB.getDateStart().toLocalDate()) && currentDate.isBefore(semesterDB.getDateEnd().toLocalDate())))
+        {
+            Month currentMonth = currentDate.getMonth();
+            int currentDay = currentDate.getDayOfMonth();
+            int year = currentDate.getYear();
+
+            String fall = "Fall";
+            String spring = "Spring";
+            String summer = "Summer";
+
+            LocalDate fallStartDate = LocalDate.parse("1000-09-01", formatter);
+            LocalDate springStartDate= LocalDate.parse("1000-01-01", formatter);
+            LocalDate summerStartDate = LocalDate.parse("1000-05-01", formatter);
+
+            LocalDate fallEndDate = LocalDate.parse("1000-12-31", formatter);
+            LocalDate springEndDate= LocalDate.parse("1000-04-30", formatter);
+            LocalDate summerEndDate = LocalDate.parse("1000-08-31", formatter);
+
+            String fallStart = year + "-09-01";
+            String fallEnd = year + "-12-31";
+
+            String springStart = year + "-01-01";
+            String springEnd = year + "-04-30";
+
+            String summerStart = year + "-05-01";
+            String summerEnd = year + "-08-01";
+
+            Semester semester = new Semester();
+
+            if (isBetween(currentMonth, currentDay, fallStartDate, fallEndDate)) {
+                result = fall+ " " +year;
+                semester.setDateStart(Date.valueOf(fallStart));
+                semester.setDateEnd(Date.valueOf(fallEnd));
+            } else if (isBetween(currentMonth, currentDay, springStartDate, springEndDate)) {
+                result = spring+ " " +year;
+                semester.setDateStart(Date.valueOf(springStart));
+                semester.setDateEnd(Date.valueOf(springEnd));
+            } else if (isBetween(currentMonth, currentDay, summerStartDate, summerEndDate)) {
+                result = summer+ " " +year;
+                semester.setDateStart(Date.valueOf(summerStart));
+                semester.setDateEnd(Date.valueOf(summerEnd));
+            }else{
+                result = null;
+            }
+
+
+            semester.setSemesterName(result);
+            semester.setStatus(Constant.OPEN);
+            semester.setYear(year);
+            semester.setAdmin(admin);
+            semesterRepository.save(semester);
+        }
+
+    }
+
+    private static boolean isBetween(Month currentMonth, int currentDay, LocalDate startDate, LocalDate endDate) {
+        Month startMonth = startDate.getMonth();
+        int startDay = startDate.getDayOfMonth();
+
+        Month endMonth = endDate.getMonth();
+        int endDay = endDate.getDayOfMonth();
+
+        if (currentMonth == startMonth && currentDay >= startDay) {
+            return true;
+        }
+
+        if (currentMonth == endMonth && currentDay <= endDay) {
+            return true;
+        }
+
+        return currentMonth.compareTo(startMonth) > 0 && currentMonth.compareTo(endMonth) < 0;
     }
 
 
