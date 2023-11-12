@@ -35,6 +35,9 @@ public class StudentServiceImpl implements StudentService {
     MajorRepository majorRepository;
 
     @Autowired
+    LecturerSubjectRepository lecturerSubjectRepository;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Autowired
@@ -204,6 +207,13 @@ public class StudentServiceImpl implements StudentService {
         if(!emptySlot.getStudent().getUserId().equals(studentId)){
             throw new RuntimeException("The student does not have this booked slot.");
         }
+
+        LecturerSubjectId lecturerSubjectId = new LecturerSubjectId();
+        lecturerSubjectId.setLecturerId(emptySlot.getLecturer().getUserId());
+        lecturerSubjectId.setSubjectId(subjectId);
+
+        LecturerSubject lecturerSubject = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(lecturerSubjectId);
+        if(lecturerSubject == null) throw new RuntimeException("This lecturer does not teach this subject.");
 
         Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectId, Constant.OPEN);
         if(subject == null) throw new ResourceNotFoundException("Subject","id", subjectId);
