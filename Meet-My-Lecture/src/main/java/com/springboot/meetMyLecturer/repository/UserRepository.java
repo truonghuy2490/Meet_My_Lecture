@@ -44,7 +44,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findUserByStatus(String status, Pageable pageable);
     List<User> findUserByStatus(String status);
 
-    User findUserByUnique(String unique);
-
-    List<User> findUsersByUserNameContains(String userName);
+    @Query("select u from User u where u.userName like %:keyword% or u.unique like %:keyword% or u.email =:keyword")
+    List<User> findUsersByNameOrUniqueOrEmail(String keyword);
 }

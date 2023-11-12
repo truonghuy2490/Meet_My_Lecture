@@ -46,5 +46,5 @@ public interface UserService {
 
     UserResponse getAllUsers(int pageNo, int pageSize, String sortBy, String sortDir, String status);
 
-    List<UserProfileForAdminDTO> searchUser(String userName, String unique, String email);
+    List<UserProfileForAdminDTO> searchUser(String keyword);
 }

@@ -226,7 +226,6 @@ public class SemesterServiceImpl implements SemesterService {
     public void automatedCreateSemester(){
 
 
-
     }
 
 

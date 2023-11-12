@@ -64,10 +64,8 @@ public class AdminController {
     }
 
     @GetMapping("searching/user")
-    public ResponseEntity<List<UserProfileForAdminDTO>> searchUser(@RequestParam(defaultValue = "", required = false) String userName,
-                                                                   @RequestParam(defaultValue = "", required = false) String unique,
-                                                                   @RequestParam(defaultValue = "", required = false) String email){
-        List<UserProfileForAdminDTO> response = userService.searchUser(userName, unique, email);
+    public ResponseEntity<List<UserProfileForAdminDTO>> searchUser(@RequestParam(defaultValue = "", required = false) String keyword){
+        List<UserProfileForAdminDTO> response = userService.searchUser(keyword);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
