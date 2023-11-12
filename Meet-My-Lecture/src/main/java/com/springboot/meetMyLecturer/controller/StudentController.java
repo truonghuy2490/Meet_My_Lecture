@@ -94,7 +94,7 @@ public class StudentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("{studentId}/bookedSlot/{bookedSlotId}")
+    @PutMapping("{studentId}/updating/bookedSlot/{bookedSlotId}")
     public ResponseEntity<EmptySlotResponseDTO> updateBookedSlot(@PathVariable Long studentId,
                                                                  @PathVariable Long bookedSlotId,
                                                                  @RequestParam String subjectId,
