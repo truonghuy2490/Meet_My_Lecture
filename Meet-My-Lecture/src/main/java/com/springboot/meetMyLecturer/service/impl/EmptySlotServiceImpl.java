@@ -321,6 +321,59 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         ).collect(Collectors.toList());
     }
 
+    @Override
+    public EmptySlotResponseDTO updateEmptySlot(Long lecturerId, EmptySlotDTO emptySlotDTO) {
+
+        EmptySlot emptySlot = emptySlotRepository.findById(emptySlotDTO.getEmptySlotId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Empty slot","id", String.valueOf(emptySlotDTO.getEmptySlotId()))
+        );
+
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
+                () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
+        );
+        String roomId = emptySlotDTO.getRoomId();
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new ResourceNotFoundException("Room", "id", roomId)
+        );
+
+        int SlotTimeId = emptySlotDTO.getSlotTimeId();
+        SlotTime slotTime = slotTimeRepository.findById(SlotTimeId).orElseThrow(
+                () -> new ResourceNotFoundException("Slot time", "id", String.valueOf(SlotTimeId))
+        );
+
+
+        // CHECK IF THERE ARE ANY BOOKED AT THIS SLOT TIME
+        if(!isSlotAvailable(emptySlotDTO)){
+            throw new RuntimeException("There are Slot booked before!");
+        }
+
+        // [DONE] - get Weekly [if not have in db, create new week]
+        WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
+        WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
+
+
+        // set entity
+        emptySlot.setSlotTime(slotTime);
+        emptySlot.setRoom(room);
+        emptySlot.setWeeklySlot(weeklyEmptySlot);
+
+        // set attribute
+        emptySlot.setDateStart(emptySlotDTO.getDateStart());
+        emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
+        emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
+
+        if(emptySlotDTO.getMode().equalsIgnoreCase(Constant.PRIVATE)){
+            emptySlot.setCode(generateRandomNumber());
+        } // check private slot and create code
+
+        emptySlot.setStatus(Constant.OPEN);
+
+        // save to DB
+        emptySlotRepository.save(emptySlot);
+
+        return mapper.map(emptySlot, EmptySlotResponseDTO.class);
+    }
+
     public boolean isSlotAvailable(EmptySlotDTO emptySlotDTO){
         boolean check = true;
         // check date

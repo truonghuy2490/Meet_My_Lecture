@@ -72,4 +72,14 @@ public class EmptySlotController {
         EmptySlotResponseDTO responseDTO = slotService.rescheduleEmptySlot(lectureId, slotId, emptySlotDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
+
+    @PutMapping("lecturer/{lecturerId}")
+    public ResponseEntity<EmptySlotResponseDTO> updateEmptySlot(
+            @PathVariable Long lecturerId,
+            @RequestBody EmptySlotDTO emptySlotDTO
+    ) {
+        EmptySlotResponseDTO responseSlot = slotService.updateEmptySlot(lecturerId, emptySlotDTO);
+
+        return ResponseEntity.ok(responseSlot);
+    }
 }

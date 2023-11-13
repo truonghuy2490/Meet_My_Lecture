@@ -7,7 +7,7 @@ import java.sql.Date;
 
 @Data
 public class EmptySlotDTO {
-    private int emptySlotId;
+    private Long emptySlotId;
 
     private Date dateStart;
 

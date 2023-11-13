@@ -4,10 +4,12 @@ import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
 import com.springboot.meetMyLecturer.entity.SlotTime;
 import lombok.Data;
 
+import java.sql.Date;
+
 @Data
 public class TeachingScheduleDTO {
 
-    private String dateOfWeek;
+    private Date date;
 
     private Long lecturerId;
 

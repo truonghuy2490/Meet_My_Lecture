@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.UserRegisterResponseDTO;
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
@@ -70,7 +71,9 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
                     teachingSchedule.setSlot(slot);
                     teachingSchedule.setLecturer(lecturer);
                     teachingSchedule.setRoomId(t.getRoomId());
-                    teachingSchedule.setDateOfWeek(t.getDateOfWeek());
+                    teachingSchedule.setDate(t.getDate());
+                    teachingSchedule.setStatus(Constant.OPEN);
+
 
                     teachingScheduleRepository.save(teachingSchedule);
 

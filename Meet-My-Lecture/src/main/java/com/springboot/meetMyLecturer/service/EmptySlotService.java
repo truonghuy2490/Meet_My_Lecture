@@ -25,4 +25,7 @@ public interface EmptySlotService {
 
     List<SubjectResponseDTO> getSubjectsOfLecturer(Long lecturerId);
 
+    EmptySlotResponseDTO updateEmptySlot(Long lecturerId, EmptySlotDTO emptySlotDTO);
+
+
 }

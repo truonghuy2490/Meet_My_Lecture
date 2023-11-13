@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -25,10 +27,12 @@ public class TeachingSchedule {
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
-    @Column(name = "date_of_week")
-    private String dateOfWeek;
+
+    private Date date;
 
     private String roomId;
+
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "slot_time_id", nullable = false)
