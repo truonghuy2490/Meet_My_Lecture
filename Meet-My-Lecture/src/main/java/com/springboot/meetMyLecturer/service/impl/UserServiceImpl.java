@@ -57,6 +57,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    RoomRepository roomRepository;
+
 
     // view profile user DONE - DONE
     @Override
@@ -106,6 +109,12 @@ public class UserServiceImpl implements UserService {
                     }else{
                         emptySlotResponseDTO.setMode("PUBLIC");
                     }
+                    String roomId = emptySlotResponseDTO.getRoomId();
+                    Room room = roomRepository.findById(roomId).orElseThrow(
+                            () -> new ResourceNotFoundException("Room", "id", roomId)
+                    );
+                    emptySlotResponseDTO.setAddress(room.getAddress());
+
                     return emptySlotResponseDTO;
                 }).toList();
     }

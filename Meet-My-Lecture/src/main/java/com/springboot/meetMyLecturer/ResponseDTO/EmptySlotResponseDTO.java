@@ -37,6 +37,8 @@ public class EmptySlotResponseDTO {
 
     private String roomId;
 
+    private String address;
+
     private Integer code;
 
     private String mode;
