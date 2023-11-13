@@ -15,9 +15,10 @@ import java.util.List;
 
 @Service
 public class PaypalService {
-
-        @Autowired
+    // requierdtedbashd bang dafse
+        @Autowired(required = false)
         private APIContext apiContext;
+
 
         public Payment createPayment(
                 int total,
