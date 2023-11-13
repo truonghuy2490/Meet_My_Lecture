@@ -4,6 +4,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.Room;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotRescheduleDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.RoomService;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -63,12 +64,12 @@ public class EmptySlotController {
     }
     @PutMapping("{slotId}/lecturer/{lectureId}")
     public ResponseEntity<EmptySlotResponseDTO> rescheduleEmptySlot(
-            @RequestBody EmptySlotResponseDTO emptySlotResponseDTO,
+            @RequestBody EmptySlotRescheduleDTO emptySlotDTO,
             @PathVariable Long lectureId,
             @PathVariable Long slotId
 
     ){
-        EmptySlotResponseDTO responseDTO = slotService.rescheduleEmptySlot(lectureId, slotId, emptySlotResponseDTO);
+        EmptySlotResponseDTO responseDTO = slotService.rescheduleEmptySlot(lectureId, slotId, emptySlotDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.service;
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotRescheduleDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public interface EmptySlotService {
 
     EmptySlotResponseDTO assignRequestToSlot(Long meetingRequestId, Long emptySlotId);
     // lecturer
-    EmptySlotResponseDTO rescheduleEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotResponseDTO emptySlotResponseDTO);
+    EmptySlotResponseDTO rescheduleEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotRescheduleDTO emptySlotDTO);
 
     // lecturer
     EmptySlotResponseDTO deleteSlot(Long lecturerId, Long emptySlotId, EmptySlotDTO emptySlotDTO);

@@ -6,6 +6,7 @@ import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.EmptySlotDTO;
+import com.springboot.meetMyLecturer.modelDTO.EmptySlotRescheduleDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.WeeklyDTO;
 import com.springboot.meetMyLecturer.repository.*;
@@ -25,7 +26,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -115,7 +115,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
 
         // CHECK IF THERE ARE ANY BOOKED AT THIS SLOT TIME
-        if(!isSlotAvaiable(emptySlotDTO)){
+        if(!isSlotAvailable(emptySlotDTO)){
             throw new RuntimeException("There are Slot booked before!");
         }
 
@@ -135,7 +135,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setDateStart(emptySlotDTO.getDateStart());
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
-
 
         if(emptySlotDTO.getMode().equalsIgnoreCase(Constant.PRIVATE)){
             emptySlot.setCode(generateRandomNumber());
@@ -182,6 +181,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setSubject(meetingRequest.getSubject());
         emptySlot.setStudent(meetingRequest.getStudent());
         emptySlot.setBookedDate(meetingRequest.getCreateAt());
+        emptySlot.setStatus(Constant.BOOKED);
         emptySlot.setMeetingRequest(meetingRequest);
         emptySlot.setDescription(meetingRequest.getRequestContent());
         emptySlot.setStatus(Constant.BOOKED);
@@ -214,7 +214,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
     }
 
     @Override
-    public EmptySlotResponseDTO rescheduleEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotResponseDTO emptySlotResponseDTO) {
+    public EmptySlotResponseDTO rescheduleEmptySlot(Long lecturerId, Long emptySlotId, EmptySlotRescheduleDTO emptySlotDTO) {
 
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
@@ -222,27 +222,24 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         EmptySlot emptySlot = emptySlotRepository.findById(emptySlotId).orElseThrow(
                 () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
         );
-        int SlotTimeId = emptySlotResponseDTO.getSlotTimeId();
+
+        int SlotTimeId = emptySlotDTO.getSlotTimeId();
         SlotTime slotTime = slotTimeRepository.findById(SlotTimeId).orElseThrow(
                 () -> new ResourceNotFoundException("Slot time", "id", String.valueOf(SlotTimeId))
         );
-        String roomId = emptySlotResponseDTO.getRoomId();
+        String roomId = emptySlotDTO.getRoomId();
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new ResourceNotFoundException("Room", "id", roomId)
         );
 
 
-        // if does not exist slot id
+        // If does not exist slot id
         if(!emptySlot.getLecturer().getUserId().equals(lecturer.getUserId())){
             throw new RuntimeException("Slot not belong to this lecturer");
         }
-        // if is avaiable
-        if(!emptySlot.getStatus().equalsIgnoreCase(Constant.OPEN)){
-            throw new RuntimeException("This slot is not avaiable");
-        }
 
         // [DONE] - get Weekly [if not have in db, create new week]
-        WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotResponseDTO.getDateStart());
+        WeeklyDTO weeklyDTO = weeklyEmptySlotService.insertIntoWeeklyByDateAt(emptySlotDTO.getDateStart());
         WeeklyEmptySlot weeklyEmptySlot = mapper.map(weeklyDTO,WeeklyEmptySlot.class);
 
         // set entity
@@ -251,13 +248,13 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setWeeklySlot(weeklyEmptySlot);
 
         // update attribute
-        emptySlot.setDateStart(emptySlotResponseDTO.getDateStart());
-        emptySlot.setDuration(Time.valueOf(emptySlotResponseDTO.getDuration().toLocalTime()));
-        emptySlot.setTimeStart(Time.valueOf(emptySlotResponseDTO.getTimeStart().toLocalTime()));
+        emptySlot.setDateStart(emptySlotDTO.getDateStart());
+        emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
+        emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
 
         // if duplicate with other slot
-        if(!isSlotAvaiable(mapper.map(emptySlot, EmptySlotDTO.class))){
+        if(!isSlotAvailable(mapper.map(emptySlot, EmptySlotDTO.class))){
             throw new RuntimeException("There are Slot booked before!");
         }
 
@@ -290,7 +287,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         }
 
         // if duplicate with other slot
-        if(!isSlotAvaiable(emptySlotDTO)){
+        if(!isSlotAvailable(emptySlotDTO)){
             throw new RuntimeException("There are Slot booked before!");
         }
 
@@ -324,7 +321,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         ).collect(Collectors.toList());
     }
 
-    public boolean isSlotAvaiable(EmptySlotDTO emptySlotDTO){
+    public boolean isSlotAvailable(EmptySlotDTO emptySlotDTO){
         boolean check = true;
         // check date
         List<EmptySlot> emptySlots = emptySlotRepository.findEmptySlotByDateStart(emptySlotDTO.getDateStart());
