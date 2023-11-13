@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface SubjectMajorRepository extends JpaRepository<SubjectMajor, SubjectMajorId> {
@@ -16,5 +17,7 @@ public interface SubjectMajorRepository extends JpaRepository<SubjectMajor, Subj
     List<String> findSubjectIdByMajorId(Long majorId);
 
     SubjectMajor findSubjectMajorBySubjectMajorId(SubjectMajorId subjectMajorId);
+
+    Set<SubjectMajor> findSubjectMajorsByMajor_MajorId(Long majorId);
 
 }

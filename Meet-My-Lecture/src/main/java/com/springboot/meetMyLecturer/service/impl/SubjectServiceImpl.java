@@ -337,4 +337,24 @@ public class SubjectServiceImpl implements SubjectService {
         ).collect(Collectors.toList());
     }
 
+    //get subjects by majorId for lecturer
+    @Override
+    public Map<String, String> getSubjectsByMajorIdForLec(Long majorId) {
+
+        Major major = majorRepository.findMajorByMajorIdAndStatus(majorId, Constant.OPEN);
+        if( major == null) throw new ResourceNotFoundException("Major","id", String.valueOf(majorId));
+
+        List<Subject> subjectList = subjectRepository.findSubjectsByMajorId(majorId, Constant.OPEN);
+
+        if(subjectList == null) throw new RuntimeException("There are no subjects in major : " + majorId);
+
+        Map<String, String> response = new HashMap<>();
+
+        for(Subject s: subjectList){
+            response.put(s.getSubjectId(), s.getSubjectName());
+        }
+
+        return response;
+    }
+
 }

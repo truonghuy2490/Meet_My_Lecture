@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/student/searching")
@@ -64,6 +65,12 @@ public class SearchController {
     public ResponseEntity<SubjectResponseDTO> getSubject(@PathVariable String subjectId) {
         SubjectResponseDTO subjectResponseDTO = subjectService.getSubjectBySubjectId(subjectId);
         return new ResponseEntity<>(subjectResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/subjects/major/{majorId}")
+    public ResponseEntity<Map<String, String>> getSubjectsByMajorIdForLec(@PathVariable Long majorId){
+        Map<String, String> response = subjectService.getSubjectsByMajorIdForLec(majorId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
