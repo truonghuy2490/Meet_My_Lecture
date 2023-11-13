@@ -25,7 +25,6 @@ public class TeachingSchedule {
     @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
-    // moi add ne
     @Column(name = "date_of_week")
     private String dateOfWeek;
 

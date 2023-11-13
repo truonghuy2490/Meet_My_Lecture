@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,54 +32,51 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
     SlotTimeRepository slotTimeRepository;
     @Override
     public List<TeachingScheduleDTO> getTeachingScheduleByLectureId(Long lecturerId) {
-        // retrieve user
-        User user = userRepository.findById(lecturerId).orElseThrow(
+
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecture","id",String.valueOf(lecturerId))
         );
-//        UserRegisterResponseDTO userRegisterResponseDTO = modelMapper.map(user, UserRegisterResponseDTO.class);
-        // retrieve schedule
+
         List<TeachingSchedule> teachingSchedules = teachingScheduleRepository.getTeachingScheduleListByLecturer_UserId(lecturerId);
 
         if(teachingSchedules.isEmpty()){
             throw new RuntimeException("There no schedule on this lecturer id");
         }
 
-        return  teachingSchedules.stream().map(
+        return teachingSchedules.stream().map(
                 teachingSchedule -> modelMapper.map(teachingSchedule, TeachingScheduleDTO.class)
         ).collect(Collectors.toList());
     }
 
     @Override
-    public TeachingScheduleDTO createTeachingSchedule(TeachingScheduleDTO teachingScheduleDTO, Long lecturerId) {
-        TeachingSchedule teachingSchedule = modelMapper.map(teachingScheduleDTO, TeachingSchedule.class);
-        User user = userRepository.findById(lecturerId).orElseThrow(
+    public Set<TeachingScheduleDTO> createTeachingSchedule(Set<TeachingScheduleDTO> teachingScheduleDTO, Long lecturerId) {
+        User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer","id",String.valueOf(lecturerId))
         );
-        teachingSchedule.setLecturer(user);
-        UserRegisterResponseDTO lecDto = modelMapper.map(user, UserRegisterResponseDTO.class);
 
-        String subjectId = teachingScheduleDTO.getSubject().getSubjectId();
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new ResourceNotFoundException("Subject", "id", subjectId)
-        );
-        teachingSchedule.setSubject(subject);
+        return teachingScheduleDTO.stream().map(
+                t -> {
 
-        int slotId = teachingScheduleDTO.getSlotTimeId();
+                    Subject subject = subjectRepository.findById(t.getSubjectId()).orElseThrow(
+                            () -> new ResourceNotFoundException("Subject", "id", t.getSubjectId())
+                    );
 
-        SlotTime slot = slotTimeRepository.findById(slotId).orElseThrow(
-                ()-> new ResourceNotFoundException("Slot", "id", String.valueOf(slotId))
-        );
-        teachingSchedule.setSlot(slot); // set entity
+                    SlotTime slot = slotTimeRepository.findById(t.getSlotTimeId()).orElseThrow(
+                            ()-> new ResourceNotFoundException("Slot", "id", String.valueOf(t.getSlotTimeId()))
+                    );
 
-        teachingScheduleRepository.save(teachingSchedule);
+                    TeachingSchedule teachingSchedule = new TeachingSchedule();
+                    teachingSchedule.setSubject(subject);
+                    teachingSchedule.setSlot(slot);
+                    teachingSchedule.setLecturer(lecturer);
+                    teachingSchedule.setRoomId(t.getRoomId());
+                    teachingSchedule.setDateOfWeek(t.getDateOfWeek());
 
-        TeachingScheduleDTO newSchedule = modelMapper.map(teachingSchedule, TeachingScheduleDTO.class);
-        newSchedule.setLecturer(lecDto);
-        newSchedule.setSubject(modelMapper.map(teachingSchedule.getSubject(), SubjectDTO.class));
-        newSchedule.setRoomId(teachingSchedule.getRoomId());
-        newSchedule.setSlotTimeId(teachingSchedule.getSlot().getSlotTimeId());
+                    teachingScheduleRepository.save(teachingSchedule);
 
-        return newSchedule;
+                    return modelMapper.map(teachingSchedule, TeachingScheduleDTO.class);
+                }
+        ).collect(Collectors.toSet());
     }
 
     @Override

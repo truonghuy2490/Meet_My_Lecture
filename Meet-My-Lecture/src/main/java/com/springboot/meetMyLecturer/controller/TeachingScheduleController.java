@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/schedule")
@@ -23,12 +24,12 @@ public class TeachingScheduleController {
     }
 
     @PostMapping("lecturer/{lecturerId}")
-    public ResponseEntity<TeachingScheduleDTO> createTeachingScheduleByLecId(
+    public ResponseEntity<Set<TeachingScheduleDTO>> createTeachingScheduleByLecId(
             @PathVariable Long lecturerId,
-            @RequestBody TeachingScheduleDTO teachingScheduleDTO
+            @RequestBody Set<TeachingScheduleDTO> teachingScheduleDTO
     )
     {
-        TeachingScheduleDTO responseSchedule = importTeachingScheduleService.createTeachingSchedule(
+        Set<TeachingScheduleDTO> responseSchedule = importTeachingScheduleService.createTeachingSchedule(
                 teachingScheduleDTO,
                 lecturerId
         );
