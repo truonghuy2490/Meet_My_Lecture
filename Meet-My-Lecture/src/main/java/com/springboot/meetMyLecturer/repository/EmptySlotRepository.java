@@ -37,5 +37,8 @@ public interface EmptySlotRepository extends JpaRepository<EmptySlot, Long> {
     Page<EmptySlot> findEmptySlotByLecturer_UserIdAndStatus(Long userId, String status, Pageable pageable);
     @Query("select em from EmptySlot em where em.lecturer.userId =:userId")
     Page<EmptySlot> findEmptySlotByLecturer_UserId(Pageable pageable, Long userId);
+
+    @Query("select em.emptySlotId from EmptySlot em join MeetingRequest rq on rq.requestId = em.meetingRequest.requestId and rq.requestId =:requestId")
+    Long findEmptySlotIdByRequestId(Long requestId);
 }
 

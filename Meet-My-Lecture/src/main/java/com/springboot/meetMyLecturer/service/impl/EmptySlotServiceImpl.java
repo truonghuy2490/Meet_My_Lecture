@@ -136,6 +136,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setDuration(Time.valueOf(emptySlotDTO.getDuration().toLocalTime()));
         emptySlot.setTimeStart(Time.valueOf(emptySlotDTO.getTimeStart().toLocalTime()));
 
+
         if(emptySlotDTO.getMode().equalsIgnoreCase(Constant.PRIVATE)){
             emptySlot.setCode(generateRandomNumber());
         } // check private slot and create code
@@ -181,7 +182,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setSubject(meetingRequest.getSubject());
         emptySlot.setStudent(meetingRequest.getStudent());
         emptySlot.setBookedDate(meetingRequest.getCreateAt());
-        emptySlot.setStatus(Constant.BOOK);
+        emptySlot.setMeetingRequest(meetingRequest);
+        emptySlot.setDescription(meetingRequest.getRequestContent());
+        emptySlot.setStatus(Constant.BOOKED);
         emptySlotRepository.save(emptySlot);
 
         // Send Notification assign to STUDENT

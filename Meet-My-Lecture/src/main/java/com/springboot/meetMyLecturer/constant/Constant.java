@@ -17,7 +17,7 @@ public class Constant {
     public static final String APPROVED = "APPROVED";
     public static final String PENDING = "PENDING";
     public static final String ACCEPTED = "ACCEPTED";
-    public static final String BOOK = "BOOK";
+
     public static final String EXPIRED = "EXPIRED";
 
     public static final String REJECTED = "REJECTED";

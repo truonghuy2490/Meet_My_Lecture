@@ -1,19 +1,14 @@
 package com.springboot.meetMyLecturer.service.impl;
 
+import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
-import com.springboot.meetMyLecturer.entity.MeetingRequest;
-import com.springboot.meetMyLecturer.entity.Notification;
-import com.springboot.meetMyLecturer.entity.Subject;
-import com.springboot.meetMyLecturer.entity.User;
+import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestForStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
-import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
-import com.springboot.meetMyLecturer.repository.NotificationRepository;
-import com.springboot.meetMyLecturer.repository.SubjectRepository;
-import com.springboot.meetMyLecturer.repository.UserRepository;
+import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.utils.NotificationType;
@@ -51,6 +46,9 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
     @Autowired
     NotificationRepository notificationRepository;
 
+    @Autowired
+    EmptySlotRepository emptySlotRepository;
+
     //student create request DONE-DONE
     @Override
     public MeetingRequestResponseDTO createRequest(Long studentId, MeetingRequestForStudentDTO meetingRequestDTO) {
@@ -69,6 +67,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         meetingRequest.setStudent(student);
         meetingRequest.setLecturer(lecturer);
         meetingRequest.setRequestStatus(Constant.PENDING);
+
         meetingRequest.setCreateAt(LocalDateTime.now());
         meetingRequest.setRequestContent(meetingRequestDTO.getRequestContent());
 
@@ -123,9 +122,11 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         }
        if(meetingRequestDTO.getRequestStatus().equalsIgnoreCase(Constant.REJECTED)){
            meetingRequest.setRequestStatus(Constant.REJECTED);
+       }else if(meetingRequestDTO.getRequestStatus().equalsIgnoreCase(Constant.APPROVED)){
+           meetingRequest.setRequestStatus(Constant.APPROVED);
+       }else{
+           throw new RuntimeException("Invalid Status!");
        }
-
-        meetingRequest.setRequestStatus(Constant.APPROVED);
 
         meetingRequestRepository.save(meetingRequest);
 
@@ -149,14 +150,20 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         if(user == null) throw new RuntimeException("This lecturer is not existed.");
 
         List<MeetingRequest> requestList = meetingRequestRepository.findMeetingRequestByLecturerUserId(lecturerId);
+        // emptylotID
+
         if(requestList.isEmpty()){
             throw new RuntimeException("There are no request");
         }
 
+
         return requestList.stream().map(
-                meetingRequest -> modelMapper.map(
-                        meetingRequest, MeetingRequestResponseDTO.class
-                )
+                meetingRequest -> {
+                    MeetingRequestResponseDTO meetingRequestResponseDTO = modelMapper.map(meetingRequest, MeetingRequestResponseDTO.class);
+                    Long emptySlotId = emptySlotRepository.findEmptySlotIdByRequestId(meetingRequest.getRequestId());
+                    meetingRequestResponseDTO.setEmptySlotId(emptySlotId);
+                    return meetingRequestResponseDTO;
+                }
         ).collect(Collectors.toList());
     }
     // SAU KHI ASSIGN - UPDATE EMPTY = updateStudentIdInSlot

@@ -16,6 +16,8 @@ public class MeetingRequestResponseDTO {
 
     private String subjectId;
 
+    private Long emptySlotId;
+
     private String requestContent;
 
     private String requestStatus;
