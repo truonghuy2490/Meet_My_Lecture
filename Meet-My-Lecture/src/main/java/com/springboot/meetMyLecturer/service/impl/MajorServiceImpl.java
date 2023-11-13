@@ -1,6 +1,7 @@
 package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseTwoFieldDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectSemesterResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectsInMajorResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -161,7 +163,7 @@ public class MajorServiceImpl implements MajorService {
         Major major = majorRepository.findMajorByMajorIdAndStatus(subjectMajorDTO.getMajorId(), Constant.OPEN);
         if(major == null) throw new ResourceNotFoundException("Major","id",String.valueOf(subjectMajorDTO.getMajorId()));
 
-        Map<String, String> subjectResponse = subjectMajorDTO.getSubjectSet().stream()
+        Set<SubjectResponseTwoFieldDTO> subjectResponse = subjectMajorDTO.getSubjectSet().stream()
                 .map(s -> {
                     Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(s, Constant.OPEN);
                     if (subject == null) throw new ResourceNotFoundException("Subject", "id", s);
@@ -188,8 +190,12 @@ public class MajorServiceImpl implements MajorService {
 
                     subjectRepository.save(subject);
 
-                    return new AbstractMap.SimpleEntry<>(s, subject.getSubjectName());
-                }).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+                    SubjectResponseTwoFieldDTO responseTwoFieldDTO = new SubjectResponseTwoFieldDTO();
+                    responseTwoFieldDTO.setSubjectName(subject.getSubjectName());
+                    responseTwoFieldDTO.setSubjectId(subject.getSubjectId());
+
+                    return responseTwoFieldDTO;
+                }).collect(Collectors.toSet());
 
         SubjectsInMajorResponseDTO subjectMajorResponseDTO = new SubjectsInMajorResponseDTO();
         subjectMajorResponseDTO.setSubjectList(subjectResponse);

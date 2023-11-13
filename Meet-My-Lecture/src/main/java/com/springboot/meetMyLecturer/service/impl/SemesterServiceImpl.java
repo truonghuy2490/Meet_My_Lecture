@@ -2,6 +2,7 @@ package com.springboot.meetMyLecturer.service.impl;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SemesterResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseTwoFieldDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectSemesterResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
@@ -149,7 +150,7 @@ public class SemesterServiceImpl implements SemesterService {
         Semester semester = semesterRepository.findSemesterBySemesterIdAndStatus(subjectSemesterDTO.getSemesterId(), Constant.OPEN);
         if(semester == null) throw new ResourceNotFoundException("Semester","id",String.valueOf(subjectSemesterDTO.getSemesterId()));
 
-        Map<String, String> subjectResponse = subjectSemesterDTO.getSubjectSet().stream()
+        Set<SubjectResponseTwoFieldDTO> subjectResponse = subjectSemesterDTO.getSubjectSet().stream()
                 .map(s -> {
                     Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(s, Constant.OPEN);
                     if (subject == null) throw new ResourceNotFoundException("Subject", "id", s);
@@ -176,8 +177,12 @@ public class SemesterServiceImpl implements SemesterService {
 
                     subjectRepository.save(subject);
 
-                    return new AbstractMap.SimpleEntry<>(s, subject.getSubjectName());
-                }).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+                    SubjectResponseTwoFieldDTO subjectResponseTwoFieldDTO = new SubjectResponseTwoFieldDTO();
+                    subjectResponseTwoFieldDTO.setSubjectName(subject.getSubjectName());
+                    subjectResponseTwoFieldDTO.setSubjectId(subject.getSubjectId());
+
+                    return subjectResponseTwoFieldDTO;
+                }).collect(Collectors.toSet());
 
         SubjectSemesterResponseDTO subjectSemesterResponseDTO = new SubjectSemesterResponseDTO();
         subjectSemesterResponseDTO.setSubjectList(subjectResponse);

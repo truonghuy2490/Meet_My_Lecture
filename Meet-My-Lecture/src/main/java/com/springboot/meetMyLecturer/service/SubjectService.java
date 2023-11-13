@@ -8,6 +8,7 @@ import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface SubjectService {
 
@@ -30,6 +31,6 @@ public interface SubjectService {
 
     List<SubjectResponseDTO> searchSubjectForAdmin(String subjectId, String subjectName);
 
-    Map<String, String> getSubjectsByMajorIdForLec(Long majorId);
+    Set<SubjectResponseTwoFieldDTO> getSubjectsByMajorIdForLec(Long majorId);
 
 }

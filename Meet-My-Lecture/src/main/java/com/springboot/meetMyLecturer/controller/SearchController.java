@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.controller;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.MajorResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseTwoFieldDTO;
 import com.springboot.meetMyLecturer.service.MajorService;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/student/searching")
@@ -68,8 +70,8 @@ public class SearchController {
     }
 
     @GetMapping("/subjects/major/{majorId}")
-    public ResponseEntity<Map<String, String>> getSubjectsByMajorIdForLec(@PathVariable Long majorId){
-        Map<String, String> response = subjectService.getSubjectsByMajorIdForLec(majorId);
+    public ResponseEntity<Set<SubjectResponseTwoFieldDTO>> getSubjectsByMajorIdForLec(@PathVariable Long majorId){
+        Set<SubjectResponseTwoFieldDTO> response = subjectService.getSubjectsByMajorIdForLec(majorId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -339,7 +339,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     //get subjects by majorId for lecturer
     @Override
-    public Map<String, String> getSubjectsByMajorIdForLec(Long majorId) {
+    public Set<SubjectResponseTwoFieldDTO> getSubjectsByMajorIdForLec(Long majorId) {
 
         Major major = majorRepository.findMajorByMajorIdAndStatus(majorId, Constant.OPEN);
         if( major == null) throw new ResourceNotFoundException("Major","id", String.valueOf(majorId));
@@ -348,10 +348,13 @@ public class SubjectServiceImpl implements SubjectService {
 
         if(subjectList == null) throw new RuntimeException("There are no subjects in major : " + majorId);
 
-        Map<String, String> response = new HashMap<>();
+        Set<SubjectResponseTwoFieldDTO> response = new HashSet<>();
 
         for(Subject s: subjectList){
-            response.put(s.getSubjectId(), s.getSubjectName());
+            SubjectResponseTwoFieldDTO subjectResponseTwoFieldDTO = new SubjectResponseTwoFieldDTO();
+            subjectResponseTwoFieldDTO.setSubjectId(s.getSubjectId());
+            subjectResponseTwoFieldDTO.setSubjectName(s.getSubjectName());
+            response.add(subjectResponseTwoFieldDTO);
         }
 
         return response;
