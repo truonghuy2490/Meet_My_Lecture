@@ -3,6 +3,7 @@ package com.springboot.meetMyLecturer.service.impl;
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.MeetingRequest;
+import com.springboot.meetMyLecturer.entity.Notification;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
@@ -10,6 +11,7 @@ import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestForStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
 import com.springboot.meetMyLecturer.repository.MeetingRequestRepository;
+import com.springboot.meetMyLecturer.repository.NotificationRepository;
 import com.springboot.meetMyLecturer.repository.SubjectRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
@@ -45,6 +47,9 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
 
     @Autowired
     NotificationService notificationService;
+
+    @Autowired
+    NotificationRepository notificationRepository;
 
     //student create request DONE-DONE
     @Override
@@ -92,13 +97,11 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         if(meetingRequest.getRequestStatus().equals(Constant.ACCEPTED)){
             throw new RuntimeException("This meeting request is accepted. Please update information in booked slot.");
         }
-
+        Notification notification = notificationRepository.findNotificationByMeetingRequest_RequestId(requestId);
+        // delete FK in Noti
+        notificationRepository.delete(notification);
         meetingRequestRepository.deleteById(requestId);
 
-        // Delete a notification to STUDENT
-        String notificationMessage = "Request was deleted";
-        NotificationType notificationType = NotificationType.RequestDeleteSuccessful;
-        notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
 
 
         return "This meeting request has been deleted!";

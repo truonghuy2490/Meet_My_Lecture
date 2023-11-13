@@ -11,4 +11,6 @@ import org.springframework.data.repository.query.Param;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     @Query("select nt from Notification nt where nt.user.userId =:userId")
     Page<Notification> findNotificationByByUser_UserId(@Param("userId")Long userId, Pageable pageable);
+
+    Notification findNotificationByMeetingRequest_RequestId(Long requestId);
 }
