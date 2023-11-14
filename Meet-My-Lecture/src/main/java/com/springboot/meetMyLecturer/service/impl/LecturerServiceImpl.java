@@ -90,6 +90,7 @@ public class LecturerServiceImpl implements LecturerService {
                     lecturerSubject.setLecturerSubjectId(ls);
                     lecturerSubject.setLecturer(lecturer);
                     lecturerSubject.setSubject(subject);
+                    lecturerSubject.setStatus(Constant.OPEN);
                     lecturerSubjectRepository.save(lecturerSubject);
 
                     LecturerSubjectResponseDTO lecturerSubjectResponse = modelMapper.map(lecturerSubject, LecturerSubjectResponseDTO.class);
