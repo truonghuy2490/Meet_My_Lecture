@@ -224,7 +224,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
         );
 
-        if(emptySlot.getDateStart().after(Date.valueOf(LocalDate.now()))){
+        if(emptySlotDTO.getDateStart().before(Date.valueOf(LocalDate.now()))){
             throw new RuntimeException("This slot occurred. Cannot reschedule!");
         }
 
