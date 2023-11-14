@@ -60,7 +60,9 @@ public class SecurityConfig {
                 })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers(
                         "/api/v1/payment",
                                 "/api/v1/user/**",
-                                "/api/v1/schedule/**")
+                                "/api/v1/schedule/**",
+                                "/api/v1/major/admin/**",
+                                "/api/v1/semester/admin/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests

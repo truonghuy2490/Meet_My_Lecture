@@ -71,18 +71,19 @@ public class LecturerServiceImpl implements LecturerService {
 
                     LecturerSubject lecturerSubjectDB = lecturerSubjectRepository.findLecturerSubjectByLecturerSubjectId(ls);
 
+                    if(lecturerSubjectDB != null){
+                        if(lecturerSubjectDB.getStatus().equals(Constant.CLOSED) ){
+                            lecturerSubjectDB.setStatus(Constant.OPEN);
+                            lecturerSubjectRepository.save(lecturerSubjectDB);
 
-                    if(lecturerSubjectDB.getStatus().equals(Constant.CLOSED) ){
-                        lecturerSubjectDB.setStatus(Constant.OPEN);
-                        lecturerSubjectRepository.save(lecturerSubjectDB);
+                            LecturerSubjectResponseDTO lecturerSubjectDTO = modelMapper.map(lecturerSubjectDB, LecturerSubjectResponseDTO.class);
+                            lecturerSubjectDTO.setUnique(lecturer.getUnique());
 
-                        LecturerSubjectResponseDTO lecturerSubjectDTO = modelMapper.map(lecturerSubjectDB, LecturerSubjectResponseDTO.class);
-                        lecturerSubjectDTO.setUnique(lecturer.getUnique());
+                            return lecturerSubjectDTO;
 
-                        return lecturerSubjectDTO;
-
-                    }else if(lecturerSubjectDB.getStatus().equals(Constant.OPEN)){
-                        throw new RuntimeException("You already teach this subject.");
+                        }else if(lecturerSubjectDB.getStatus().equals(Constant.OPEN)){
+                            throw new RuntimeException("You already teach this subject.");
+                        }
                     }
 
                     LecturerSubject lecturerSubject = new LecturerSubject();

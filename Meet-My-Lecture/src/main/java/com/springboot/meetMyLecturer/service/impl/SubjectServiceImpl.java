@@ -4,9 +4,7 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SubjectResponse;
-import com.springboot.meetMyLecturer.modelDTO.SubjectDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectForAminDTO;
 import com.springboot.meetMyLecturer.repository.*;
 import com.springboot.meetMyLecturer.service.SubjectService;
@@ -117,7 +115,7 @@ public class SubjectServiceImpl implements SubjectService {
                 ()-> new ResourceNotFoundException("Admin","id",String.valueOf(adminId))
         );
 
-        Subject subjectDB = subjectRepository.findSubjectNameBySubjectId(subjectDTO.getSubjectId());
+        Subject subjectDB = subjectRepository.findSubjectBySubjectId(subjectDTO.getSubjectId());
         if(subjectDB != null){
             if(subjectDB.getStatus().equals(Constant.CLOSED)){
                 subjectDB.setStatus(Constant.OPEN);

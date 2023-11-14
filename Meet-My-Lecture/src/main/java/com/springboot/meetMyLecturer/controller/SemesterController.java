@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/semester/admin")
+@RequestMapping("/api/v1/semester/admin")
 public class SemesterController {
 
     @Autowired
@@ -61,6 +61,12 @@ public class SemesterController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
+    @PostMapping()
+    public ResponseEntity<String> copySubjects(@RequestParam Long oldSemesterId,
+                                               @RequestParam Long newSemesterId){
+        String responseDTO = semesterService.copySubjects(oldSemesterId, newSemesterId);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
 
     
 }

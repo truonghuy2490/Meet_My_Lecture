@@ -233,6 +233,43 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterResponse;
     }
 
+    @Override
+    public String copySubjects(Long oldSemesterId, Long newSemesterId) {
+
+        Semester oldSemester = semesterRepository.findById(oldSemesterId).orElseThrow(
+                ()-> new ResourceNotFoundException("Major","id", String.valueOf(oldSemesterId))
+        );
+
+        Semester newSemester = semesterRepository.findById(newSemesterId).orElseThrow(
+                ()-> new ResourceNotFoundException("Major","id", String.valueOf(newSemesterId))
+        );
+
+        List<String> subjectList = subjectSemesterRepository.findSubjectIdByMajorId(oldSemesterId);
+
+        for (String s : subjectList){
+
+            Subject subject = subjectRepository.findSubjectBySubjectId(s);
+
+            SubjectSemester subjectSemester = new SubjectSemester();
+            SubjectSemesterId subjectSemesterId = new SubjectSemesterId();
+
+            subjectSemesterId.setSemesterId(newSemesterId);
+            subjectSemesterId.setSubjectId(s);
+
+            SubjectSemester subjectSemesterDB = subjectSemesterRepository.findSubjectSemesterBySubjectSemesterId(subjectSemesterId);
+
+            if(subjectSemesterDB == null){
+                subjectSemester.setStatus(Constant.OPEN);
+                subjectSemester.setSubjectSemesterId(subjectSemesterId);
+                subjectSemester.setSubject(subject);
+                subjectSemester.setSemester(newSemester);
+                subjectSemesterRepository.save(subjectSemester);
+            }
+        }
+
+        return "Successfully";
+    }
+
     @Scheduled(cron = "0 0 0 1 1,5,9 ?")
     //@Scheduled(cron = "0 33 03 * * ?")
     public void automatedCreateSemester(){

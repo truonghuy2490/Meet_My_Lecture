@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -223,6 +224,10 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
         );
 
+        if(emptySlot.getDateStart().after(Date.valueOf(LocalDate.now()))){
+            throw new RuntimeException("This slot occurred. Cannot reschedule!");
+        }
+
         int SlotTimeId = emptySlotDTO.getSlotTimeId();
         SlotTime slotTime = slotTimeRepository.findById(SlotTimeId).orElseThrow(
                 () -> new ResourceNotFoundException("Slot time", "id", String.valueOf(SlotTimeId))
@@ -327,6 +332,14 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         EmptySlot emptySlot = emptySlotRepository.findById(emptySlotDTO.getEmptySlotId()).orElseThrow(
                 ()-> new ResourceNotFoundException("Empty slot","id", String.valueOf(emptySlotDTO.getEmptySlotId()))
         );
+
+        if(emptySlot.getStudent() != null){
+            throw new RuntimeException("This slot has been booked by student.");
+        }
+
+        if(emptySlot.getDateStart().before(Date.valueOf(LocalDate.now()))){
+            throw new RuntimeException("This slot was occurred.");
+        }
 
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))

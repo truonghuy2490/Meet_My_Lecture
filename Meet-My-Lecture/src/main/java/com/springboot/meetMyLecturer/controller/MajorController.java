@@ -71,5 +71,4 @@ public class MajorController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-
 }

@@ -3,11 +3,9 @@ package com.springboot.meetMyLecturer.repository;
 import com.springboot.meetMyLecturer.entity.Major;
 import com.springboot.meetMyLecturer.entity.Subject;
 import com.springboot.meetMyLecturer.entity.User;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,7 +30,7 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
     @Query("select u from User u join LecturerSubject ls on ls.lecturer.userId = u.userId and ls.subject.subjectId = :subjectId")
     List<User> findLecturerBySubjectId(String subjectId);
     @Query("select s from Subject s where s.subjectId =:subjectId")
-    Subject findSubjectNameBySubjectId(String subjectId);
+    Subject findSubjectBySubjectId(String subjectId);
 
     @Query("select s from Subject s join SubjectMajor sm on sm.subject.subjectId = s.subjectId and sm.major.majorId = :majorId where s.status =:status")
     List<Subject> findSubjectsByMajorId(Long majorId, String status);
@@ -55,6 +53,7 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
 
     @Query("SELECT s FROM Subject s WHERE s.subjectId LIKE %:subjectId%")
     List<Subject> findSubjectById(@Param("subjectId") String subjectId);
+
 
 
 

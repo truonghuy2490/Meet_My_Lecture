@@ -67,6 +67,11 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
                             ()-> new ResourceNotFoundException("Slot", "id", String.valueOf(t.getSlotTimeId()))
                     );
 
+                    Long checkId = teachingScheduleRepository.findIdByDate(t.getDate());
+                    if(checkId != null){
+                        throw new RuntimeException("There is already existed this date: " + t.getDate());
+                    }
+
                     TeachingSchedule teachingSchedule = new TeachingSchedule();
                     teachingSchedule.setSubject(subject);
                     teachingSchedule.setSlot(slot);
