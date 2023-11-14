@@ -426,7 +426,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
 
                         // Check if newStartTime is within the existing time slot
-                        if ((newStartTime.isAfter(startTime) || newStartTime.equals(startTime)) && newStartTime.isBefore(endTimeExist)) {
+                        if (!((newStartTime.isAfter(startTime) || newStartTime.equals(startTime)) && newStartTime.isBefore(endTimeExist))) {
+
 
                             if (emptySlots.get(i).getRoom().getRoomId().equals(emptySlotDTO.getRoomId())) {
                                 // Check if newStartTime is within the existing time slot
@@ -434,6 +435,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                                     throw new RuntimeException("Slot have been booked already !");
 
                             }
+                        }else{
+                            throw new RuntimeException("There are existed slots.");
                         }
 
                 }
