@@ -21,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -30,6 +31,10 @@ public class SecurityConfig {
 
     @Autowired
     RoleRepository roleRepository;
+
+    List<String> allowedOrigins = Arrays.asList(
+            "http://localhost:3000","https://meet-my-lecture.vercel.app"
+    );
 
 
     @Bean
@@ -49,7 +54,7 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        config.setAllowedOrigins(allowedOrigins);
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
@@ -58,17 +63,11 @@ public class SecurityConfig {
                         return config;
                     }
                 })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers(
-                        "/api/v1/payment",
-                                "/api/v1/user/**",
-                                "/api/v1/schedule/**",
-                                "/api/v1/major/admin/**",
-                                "/api/v1/semester/admin/**",
-                                "/api/v1/slots/**",
-                                "/api/v1/lecturer/**")
+                        "/api/v1/payment")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
-                        /*.requestMatchers("/api/v1/user/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
+                        .requestMatchers("/api/v1/user/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
                         .requestMatchers("/api/v1/student/searching/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
                         .requestMatchers("/api/v1/report-error**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
 
@@ -83,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/room/admin/**").hasRole(Constant.ADMIN)
                         .requestMatchers("/api/v1/subject/admin/**").hasRole(Constant.ADMIN)
                         .requestMatchers("/api/v1/semester/admin/**").hasRole(Constant.ADMIN)
-                        .requestMatchers("/api/v1/major/admin/**").hasRole(Constant.ADMIN)*/
+                        .requestMatchers("/api/v1/major/admin/**").hasRole(Constant.ADMIN)
 
                         .anyRequest().permitAll())
                .oauth2ResourceServer(oauth2ResourceServerCustomizer ->
