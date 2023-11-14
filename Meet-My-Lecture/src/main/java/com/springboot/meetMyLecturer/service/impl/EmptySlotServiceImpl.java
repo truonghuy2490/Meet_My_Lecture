@@ -230,7 +230,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         );
 
         if(emptySlotDTO.getDateStart().before(Date.valueOf(LocalDate.now()))){
-            throw new RuntimeException("This slot occurred. Cannot reschedule!");
+            throw new RuntimeException("Cannot reschedule into the past!");
         }
 
         int SlotTimeId = emptySlotDTO.getSlotTimeId();
