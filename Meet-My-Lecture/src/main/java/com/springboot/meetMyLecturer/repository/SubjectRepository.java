@@ -38,7 +38,7 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
     @Query("SELECT s FROM Subject s JOIN SubjectMajor sm ON sm.major.majorId = :majorId AND sm.status =:status")
     Page<Subject> findSubjectsByMajorIdAndStatus(Pageable pageable, Long majorId, String status);
 
-    @Query("SELECT s FROM Subject s JOIN SubjectMajor sm ON sm.major.majorId = :majorId")
+    @Query("SELECT s FROM Subject s JOIN SubjectMajor sm ON sm.major.majorId = :majorId and sm.subject.subjectId = s.subjectId")
     Page<Subject> findSubjectsByMajorIdAndStatus(Pageable pageable, Long majorId);
 
     Page<Subject> findSubjectByStatus(String status, Pageable pageable);
