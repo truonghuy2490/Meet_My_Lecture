@@ -19,7 +19,7 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
     @Query("select s from Subject s where s.subjectId like %:keyword% or s.subjectName like %:keyword% and s.status =:status")
     List<Subject> findSubjectBySubjectIdContainsAndStatus(String keyword, String status);
 
-    @Query("select s from Subject s join LecturerSubject ls on ls.subject.subjectId = s.subjectId and ls.lecturer.userId = :lecturerId where s.status =:status")
+    @Query("select s from Subject s join LecturerSubject ls on ls.subject.subjectId = s.subjectId and ls.lecturer.userId = :lecturerId  where ls.status =:status")
     List<Subject> findSubjectsByLecturerIdAndStatus(long lecturerId, String status);
 
     @Query("select u from User u join LecturerSubject ls on ls.lecturer.userId = u.userId and ls.subject.subjectId = :subjectId where u.status =:status")
