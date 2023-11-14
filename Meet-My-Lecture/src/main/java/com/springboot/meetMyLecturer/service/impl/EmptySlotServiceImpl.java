@@ -75,6 +75,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
+        List<Long> slotOPEN = emptySlotRepository.findEmptySlotsByStatus(Constant.OPEN);
+        List<Long> slotBOOKED = emptySlotRepository.findEmptySlotsByStatus(Constant.BOOKED);
 
         // SAVE TO REPO
         Page<EmptySlot> slots = emptySlotRepository.findAll(pageable);
@@ -88,6 +90,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
 
         SlotResponse slotResponse = new SlotResponse();
         slotResponse.setContent(content);
+        slotResponse.setTotalOPEN(slotOPEN.size());
+        slotResponse.setTotalBOOKED(slotBOOKED.size());
         slotResponse.setTotalPage(slots.getTotalPages());
         slotResponse.setTotalElement(slots.getTotalElements());
         slotResponse.setPageNo(slots.getNumber());

@@ -14,6 +14,8 @@ public class SlotResponse {
     private List<EmptySlotResponseDTO> content;
     private int pageNo;
     private int pageSize;
+    private int totalOPEN;
+    private int totalBOOKED;
     private Long totalElement;
     private int totalPage;
     private boolean last;
