@@ -48,11 +48,8 @@ public interface SubjectRepository extends JpaRepository<Subject,String> {
     @Query("select m from Major m join SubjectMajor sm on sm.major.majorId = m.majorId and sm.subject.subjectId =:subjectId")
     Set<Major> getMajorNamesForSubject(String subjectId);
 
-    @Query("SELECT s FROM Subject s WHERE  s.subjectName LIKE %:subjectName%")
-    List<Subject> findSubjectByName(@Param("subjectName") String subjectName);
-
-    @Query("SELECT s FROM Subject s WHERE s.subjectId LIKE %:subjectId%")
-    List<Subject> findSubjectById(@Param("subjectId") String subjectId);
+    @Query("SELECT s FROM Subject s WHERE  s.subjectName LIKE %:keyword% or s.subjectId like %:keyword%")
+    List<Subject> findSubjects(String keyword);
 
 
 

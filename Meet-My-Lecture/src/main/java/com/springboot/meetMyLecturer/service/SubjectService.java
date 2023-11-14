@@ -29,7 +29,7 @@ public interface SubjectService {
 
     LecturersMajorsResponseDTO getLecturersAndMajorsBySubjectId(String subjectId);
 
-    List<SubjectResponseDTO> searchSubjectForAdmin(String subjectId, String subjectName);
+    List<SubjectResponseDTO> searchSubjectForAdmin(String keyword);
 
     Set<SubjectResponseTwoFieldDTO> getSubjectsByMajorIdForLec(Long majorId);
 

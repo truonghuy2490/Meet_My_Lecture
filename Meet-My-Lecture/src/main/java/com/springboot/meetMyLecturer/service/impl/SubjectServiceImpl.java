@@ -317,17 +317,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     // search subject for admin DONE-DONE
     @Override
-    public List<SubjectResponseDTO> searchSubjectForAdmin(String subjectId, String subjectName) {
+    public List<SubjectResponseDTO> searchSubjectForAdmin(String keyword) {
 
-        List<Subject> subjectList;
-
-        if(subjectId.isEmpty()){
-            subjectList = subjectRepository.findSubjectByName(subjectName);
-        }else if(subjectName.isEmpty()){
-            subjectList = subjectRepository.findSubjectById(subjectId);
-        }else{
-            subjectList = null;
-        }
+        List<Subject> subjectList = subjectRepository.findSubjects(keyword);
 
         if (subjectList == null) throw new RuntimeException("There are no subjects");
         return subjectList.stream().map(

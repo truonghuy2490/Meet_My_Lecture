@@ -78,10 +78,9 @@ public class SubjectController {
 
     @GetMapping("/searching")
     public ResponseEntity<List<SubjectResponseDTO>> searchSubject(
-            @RequestParam(defaultValue = "", required = false) String subjectId,
-            @RequestParam(defaultValue = "",required = false) String subjectName
+            @RequestParam String keyword
     ){
-        List<SubjectResponseDTO> responseDTOList = subjectService.searchSubjectForAdmin(subjectId,subjectName);
+        List<SubjectResponseDTO> responseDTOList = subjectService.searchSubjectForAdmin(keyword);
         return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
     }
 
