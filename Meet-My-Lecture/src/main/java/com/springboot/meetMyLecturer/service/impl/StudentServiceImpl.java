@@ -85,7 +85,7 @@ public class StudentServiceImpl implements StudentService {
     //view booked slot calendar DONE - DONE
     @Override
     public List<EmptySlotResponseDTO> viewBookedSlotCalendar(Long lecturerId) {
-        List<EmptySlot> emptySlotList  = emptySlotRepository.findEmptySlotByLecturer_UserIdAndStatus(lecturerId, Constant.OPEN);
+        List<EmptySlot> emptySlotList  = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
 
         if(emptySlotList.isEmpty()){
             throw  new RuntimeException("There are no booked slots!");
