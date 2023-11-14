@@ -2,9 +2,11 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.SubjectResponseDTO;
 import com.springboot.meetMyLecturer.entity.SubjectLecturerStudentId;
 import com.springboot.meetMyLecturer.modelDTO.BookSlotDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
+import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.StudentService;
 import com.springboot.meetMyLecturer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class StudentController {
 
     @Autowired
     StudentService studentService;
+    @Autowired
+    EmptySlotService slotService;
 
     @Autowired
     UserService userService;
@@ -104,6 +108,12 @@ public class StudentController {
 
         return new ResponseEntity<>(emptySlotResponseDTO, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/subjects/lecturer/{lecturerId}")
+    public ResponseEntity<List<SubjectResponseDTO>> getSubjectsOfLecturer(@PathVariable Long lecturerId){
+        List<SubjectResponseDTO> responseDTOList = slotService.getSubjectsOfLecturer(lecturerId);
+        return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
     }
 
 
