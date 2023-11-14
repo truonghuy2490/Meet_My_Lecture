@@ -40,12 +40,5 @@ public class User {
 
     private int absentCount;
 
-    /*@ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "lecturer_subject",
-            joinColumns = @JoinColumn(name = "lecturer_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id")
-    )
-    private Set<Subject> subjectSet;*/
-
 
 }
