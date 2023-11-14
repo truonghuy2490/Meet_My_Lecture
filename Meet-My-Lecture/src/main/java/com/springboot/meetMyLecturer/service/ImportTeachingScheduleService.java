@@ -10,4 +10,6 @@ public interface ImportTeachingScheduleService {
     List<TeachingScheduleDTO> getTeachingScheduleByLectureId(Long lecturerId);
     Set<TeachingScheduleDTO> createTeachingSchedule(Set<TeachingScheduleDTO> teachingScheduleDTO, Long lecturerId);
     void deleteSchedule(Long lecturerId, Long scheduleId);
+
+    String setStatusForTeachingSchedule(Long lecturerId, String status);
 }

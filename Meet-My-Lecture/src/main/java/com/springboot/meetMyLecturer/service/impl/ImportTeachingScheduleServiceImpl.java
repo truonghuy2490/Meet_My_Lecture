@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,7 +73,7 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
                     teachingSchedule.setLecturer(lecturer);
                     teachingSchedule.setRoomId(t.getRoomId());
                     teachingSchedule.setDate(t.getDate());
-                    teachingSchedule.setStatus(Constant.OPEN);
+                    teachingSchedule.setStatus(Constant.PUBLIC);
 
 
                     teachingScheduleRepository.save(teachingSchedule);
@@ -94,6 +95,43 @@ public class ImportTeachingScheduleServiceImpl implements ImportTeachingSchedule
             throw new RuntimeException("there no schedule for this lecture");
         }
         teachingScheduleRepository.delete(teachingSchedules);
+    }
+
+    @Override
+    public String setStatusForTeachingSchedule(Long lecturerId, String status) {
+
+        User lecturer = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+        if(lecturer == null) throw new ResourceNotFoundException("Lecturer","id", String.valueOf(lecturerId));
+
+        List<Long> teachingScheduleIdSet = new ArrayList<>();
+
+        if(status.equalsIgnoreCase(Constant.PUBLIC)){
+            teachingScheduleIdSet = teachingScheduleRepository.getIdByLecturerIdAndStatus(lecturerId, Constant.PRIVATE);
+
+            for (Long t: teachingScheduleIdSet){
+                TeachingSchedule teachingSchedule = teachingScheduleRepository.findById(t).orElseThrow(
+                        ()-> new ResourceNotFoundException("TeachingSchedule","id", String.valueOf(t))
+                );
+
+                teachingSchedule.setStatus(Constant.PUBLIC);
+                teachingScheduleRepository.save(teachingSchedule);
+            }
+            return "Everything is PUBLIC";
+        }else if(status.equalsIgnoreCase(Constant.PRIVATE)){
+            teachingScheduleIdSet = teachingScheduleRepository.getIdByLecturerIdAndStatus(lecturerId, Constant.PUBLIC);
+
+            for (Long t: teachingScheduleIdSet){
+                TeachingSchedule teachingSchedule = teachingScheduleRepository.findById(t).orElseThrow(
+                        ()-> new ResourceNotFoundException("TeachingSchedule","id", String.valueOf(t))
+                );
+
+                teachingSchedule.setStatus(Constant.PRIVATE);
+                teachingScheduleRepository.save(teachingSchedule);
+            }
+            return "Everything is PRIVATE";
+        }else{
+            throw new RuntimeException("Invalid status.");
+        }
     }
 
 }

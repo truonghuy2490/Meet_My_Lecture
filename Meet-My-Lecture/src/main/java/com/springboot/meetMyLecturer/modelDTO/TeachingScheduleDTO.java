@@ -20,4 +20,6 @@ public class TeachingScheduleDTO {
     private String meetingURL;
 
     private int slotTimeId;
+
+    private String status;
 }

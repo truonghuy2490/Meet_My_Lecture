@@ -58,11 +58,13 @@ public class SecurityConfig {
                         return config;
                     }
                 })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers(
-                        "/api/v1/payment")
+                        "/api/v1/payment",
+                                "/api/v1/user/**",
+                                "/api/v1/schedule/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
-                        .requestMatchers("/api/v1/user/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
+                        /*.requestMatchers("/api/v1/user/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
                         .requestMatchers("/api/v1/student/searching/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
                         .requestMatchers("/api/v1/report-error**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
 
@@ -77,7 +79,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/room/admin/**").hasRole(Constant.ADMIN)
                         .requestMatchers("/api/v1/subject/admin/**").hasRole(Constant.ADMIN)
                         .requestMatchers("/api/v1/semester/admin/**").hasRole(Constant.ADMIN)
-                        .requestMatchers("/api/v1/major/admin/**").hasRole(Constant.ADMIN)
+                        .requestMatchers("/api/v1/major/admin/**").hasRole(Constant.ADMIN)*/
 
                         .anyRequest().permitAll())
                .oauth2ResourceServer(oauth2ResourceServerCustomizer ->

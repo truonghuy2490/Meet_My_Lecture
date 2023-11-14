@@ -34,4 +34,13 @@ public class TeachingScheduleController {
         importTeachingScheduleService.deleteSchedule(lecturerId, scheduleId);
         return new ResponseEntity<>("Delete successfully!", HttpStatus.OK);
     }
+
+    @PutMapping("lecturer/{lecturerId}")
+    public ResponseEntity<String> setStatusForTeachingSchedule(@PathVariable Long lecturerId,
+                                               @RequestParam String status){
+        String result = importTeachingScheduleService.setStatusForTeachingSchedule(lecturerId, status);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
 }

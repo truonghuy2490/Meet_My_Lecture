@@ -15,6 +15,7 @@ public class Constant {
     public static final String ADMIN = "ADMIN";
     public static String EMAIL;
     public static final String PRIVATE = "PRIVATE";
+    public static final String PUBLIC = "PUBLIC";
     public static final String APPROVED = "APPROVED";
     public static final String PENDING = "PENDING";
     public static final String ACCEPTED = "ACCEPTED";
