@@ -75,12 +75,12 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // CREATE PAGEABLE INSTANCE
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-        List<Long> slotOPEN = emptySlotRepository.findEmptySlotsByStatus(Constant.OPEN);
-        List<Long> slotBOOKED = emptySlotRepository.findEmptySlotsByStatus(Constant.BOOKED);
 
         // SAVE TO REPO
         Page<EmptySlot> slots = emptySlotRepository.findAll(pageable);
 
+        List<Long> slotOPEN = emptySlotRepository.findEmptySlotsByStatus(Constant.OPEN);
+        List<Long> slotBOOKED = emptySlotRepository.findEmptySlotsByStatus(Constant.BOOKED);
 
         // get content for page object
         List<EmptySlot> listOfSlots = slots.getContent();
@@ -229,8 +229,8 @@ public class EmptySlotServiceImpl implements EmptySlotService {
                 () -> new ResourceNotFoundException("Slot", "id", String.valueOf(emptySlotId))
         );
 
-        if(emptySlotDTO.getDateStart().before(Date.valueOf(LocalDate.now()))){
-            throw new RuntimeException("Cannot reschedule into the past!");
+        if(emptySlot.getDateStart().before(Date.valueOf(LocalDate.now()))){
+            throw new RuntimeException("This slot occurred. Cannot reschedule!");
         }
 
         int SlotTimeId = emptySlotDTO.getSlotTimeId();
@@ -342,9 +342,9 @@ public class EmptySlotServiceImpl implements EmptySlotService {
             throw new RuntimeException("This slot has been booked by student.");
         }
 
-        /*if(emptySlot.getDateStart().before(Date.valueOf(LocalDate.now()))){
+        if(emptySlot.getDateStart().after(Date.valueOf(LocalDate.now()))){
             throw new RuntimeException("This slot was occurred.");
-        }*/
+        }
 
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
