@@ -81,8 +81,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         // SAVE TO REPO
         Page<EmptySlot> slots = emptySlotRepository.findAll(pageable);
 
-        List<Long> slotOPEN = emptySlotRepository.findEmptySlotsByStatus(Constant.OPEN);
-        List<Long> slotBOOKED = emptySlotRepository.findEmptySlotsByStatus(Constant.BOOKED);
 
         // get content for page object
         List<EmptySlot> listOfSlots = slots.getContent();
