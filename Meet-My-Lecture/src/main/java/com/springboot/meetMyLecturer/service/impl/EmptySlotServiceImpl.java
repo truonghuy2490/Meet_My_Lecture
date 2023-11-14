@@ -342,6 +342,10 @@ public class EmptySlotServiceImpl implements EmptySlotService {
             throw new RuntimeException("This slot has been booked by student.");
         }
 
+        /*if(emptySlot.getDateStart().before(Date.valueOf(LocalDate.now()))){
+            throw new RuntimeException("This slot was occurred.");
+        }*/
+
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
         );
@@ -415,7 +419,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         for(int i = 0; i < emptySlots.size(); i++){
 
             // check status
-            if(emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.OPEN) || emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.BOOKED) || emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.PRIVATE)){
+            if(emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.OPEN) || emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.BOOKED)){
 
                 // check Slot
                 if(emptySlots.get(i).getSlotTime().getSlotTimeId() == emptySlotDTO.getSlotTimeId()){
