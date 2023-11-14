@@ -82,4 +82,14 @@ public class EmptySlotController {
 
         return ResponseEntity.ok(responseSlot);
     }
+
+    @PutMapping("/{slotId}/lecturer/{lecturerId}/student/{studentId}")
+    public ResponseEntity<String> countAbsence(@PathVariable Long slotId,
+                                               @PathVariable Long studentId,
+                                               @PathVariable Long lecturerId){
+
+        String result = slotService.countAbsence(slotId, studentId, lecturerId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

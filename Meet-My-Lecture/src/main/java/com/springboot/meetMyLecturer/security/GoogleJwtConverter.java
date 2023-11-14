@@ -51,7 +51,7 @@ public class GoogleJwtConverter implements Converter<Jwt, Collection<GrantedAuth
 
 
 
-        if (userExisted.getAbsentCount() == 3) {
+        if (userExisted.getAbsentCount() >= 3) {
             userExisted.setStatus(Constant.BANNED);
             Constant.EMAIL = jwt.getClaim("email");
             userRepository.save(userExisted);

@@ -75,4 +75,5 @@ public class LecturerController {
         List<MeetingRequestResponseDTO> requestDTOList = meetingRequestService.getRequestByLecturerId(lecturerId);
         return new ResponseEntity<>(requestDTOList, HttpStatus.OK);
     }
+
 }

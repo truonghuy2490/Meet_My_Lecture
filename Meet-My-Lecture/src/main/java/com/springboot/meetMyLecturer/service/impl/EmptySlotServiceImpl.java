@@ -387,6 +387,25 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         return mapper.map(emptySlot, EmptySlotResponseDTO.class);
     }
 
+    @Override
+    public String countAbsence(Long slotId, Long studentId, Long lecturerId) {
+
+        EmptySlot emptySlot = emptySlotRepository.findById(slotId).orElseThrow(
+                ()-> new ResourceNotFoundException("EmptySlot","id",String.valueOf(slotId))
+        );
+
+        if(emptySlot.getStudent().getUserId().equals(studentId) && emptySlot.getLecturer().getUserId().equals(lecturerId)){
+            User student = userRepository.findUserByUserIdAndStatus(studentId, Constant.OPEN);
+            if(student == null) throw new ResourceNotFoundException("Student","id", String.valueOf(studentId));
+            int count = student.getAbsentCount();
+            count++;
+            student.setAbsentCount(count);
+            userRepository.save(student);
+            return "Ok";
+        }
+        return "Not Ok";
+    }
+
     public boolean isSlotAvailable(EmptySlotDTO emptySlotDTO){
         boolean check = true;
         // check date

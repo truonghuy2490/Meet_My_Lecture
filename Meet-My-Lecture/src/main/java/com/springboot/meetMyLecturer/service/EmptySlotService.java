@@ -27,5 +27,7 @@ public interface EmptySlotService {
 
     EmptySlotResponseDTO updateEmptySlot(Long lecturerId, EmptySlotDTO emptySlotDTO);
 
+    String countAbsence(Long slotId, Long studentId, Long lecturerId);
+
 
 }
