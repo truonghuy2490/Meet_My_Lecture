@@ -38,6 +38,9 @@ public class StudentServiceImpl implements StudentService {
     LecturerSubjectRepository lecturerSubjectRepository;
 
     @Autowired
+    UserMajorRepository userMajorRepository;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Autowired
@@ -194,12 +197,24 @@ public class StudentServiceImpl implements StudentService {
         Major major = majorRepository.findMajorByMajorIdAndStatus(majorId, Constant.OPEN);
         if(major == null) throw new ResourceNotFoundException("Major","id",String.valueOf(majorId));
 
-        if(student.getMajor().equals(major)){
-            throw new RuntimeException("You already have this major.");
-        }
-        student.setMajor(major);
+        List<Long> majorIdSet = userMajorRepository.findId(studentId);
 
-        userRepository.save(student);
+        for (Long m: majorIdSet){
+            if(m.equals(majorId)){
+                throw new RuntimeException("You already have this major.");
+            }
+        }
+
+        UserMajor userMajor = new UserMajor();
+        UserMajorId userMajorId = new UserMajorId();
+        userMajorId.setMajorId(majorId);
+        userMajorId.setUserId(studentId);
+        userMajor.setMajor(major);
+        userMajor.setUser(student);
+        userMajor.setStatus(Constant.OPEN);
+        userMajor.setUserMajorId(userMajorId);
+
+        userMajorRepository.save(userMajor);
 
         return majorId;
     }

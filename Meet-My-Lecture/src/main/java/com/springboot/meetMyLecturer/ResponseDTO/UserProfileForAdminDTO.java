@@ -2,6 +2,8 @@ package com.springboot.meetMyLecturer.ResponseDTO;
 
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 public class UserProfileForAdminDTO {
     private long userId;
@@ -11,5 +13,5 @@ public class UserProfileForAdminDTO {
     private int roleId;
     private int absentCount;
     private String status;
-    private String majorName;
+    private Set<String> majorName;
 }

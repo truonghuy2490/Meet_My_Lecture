@@ -31,9 +31,9 @@ public class User {
     @Column(name = "status")
     private String status;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "major_id")
-    private Major major;
+    private Major major;*/
 
     @Column(name = "nick_name")
     private String unique;

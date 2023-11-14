@@ -50,6 +50,9 @@ public class UserServiceImpl implements UserService {
     SubjectLecturerStudentRepository subjectLecturerStudentRepository;
 
     @Autowired
+    UserMajorRepository userMajorRepository;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Autowired
@@ -85,8 +88,9 @@ public class UserServiceImpl implements UserService {
         );
 
         UserProfileForAdminDTO userProfileForAdminDTO = modelMapper.map(user, UserProfileForAdminDTO.class);
-        if(user.getMajor() != null){
-            userProfileForAdminDTO.setMajorName(user.getMajor().getMajorName());
+        Set<String> majorName = userMajorRepository.getMajorName(userProfileForAdminDTO.getUserId());
+        if(majorName != null){
+            userProfileForAdminDTO.setMajorName(majorName);
         }
         return userProfileForAdminDTO;
     }
@@ -368,7 +372,8 @@ public class UserServiceImpl implements UserService {
         return list.stream().map(
                 u -> {
                     UserProfileForAdminDTO userProfileForAdminDTO = modelMapper.map(u, UserProfileForAdminDTO.class);
-                    userProfileForAdminDTO.setMajorName(u.getMajor().getMajorName());
+                    Set<String> majorName = userMajorRepository.getMajorName(userProfileForAdminDTO.getUserId());
+                    userProfileForAdminDTO.setMajorName(majorName);
                     return userProfileForAdminDTO;
                 }
         ).collect(Collectors.toList());
