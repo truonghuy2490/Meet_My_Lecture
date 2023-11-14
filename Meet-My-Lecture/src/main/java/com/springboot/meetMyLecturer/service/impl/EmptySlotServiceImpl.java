@@ -342,7 +342,6 @@ public class EmptySlotServiceImpl implements EmptySlotService {
             throw new RuntimeException("This slot has been booked by student.");
         }
 
-
         User lecturer = userRepository.findById(lecturerId).orElseThrow(
                 () -> new ResourceNotFoundException("Lecturer", "id", String.valueOf(lecturerId))
         );
