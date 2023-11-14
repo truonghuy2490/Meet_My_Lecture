@@ -252,6 +252,7 @@ public class UserServiceImpl implements UserService {
                     if(subjectLecturerStudentDB != null){
                         subjectLecturerStudentDB.setStatus(Constant.OPEN);
                         subjectLecturerStudentRepository.save(subjectLecturerStudentDB);
+                        return modelMapper.map(subjectLecturerStudentDB, LecturerSubjectResponseDTO.class);
                     }
 
 
