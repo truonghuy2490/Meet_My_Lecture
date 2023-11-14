@@ -342,7 +342,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
             throw new RuntimeException("This slot has been booked by student.");
         }
 
-        if(emptySlot.getDateStart().after(Date.valueOf(LocalDate.now()))){
+        if(emptySlot.getDateStart().before(Date.valueOf(LocalDate.now()))){
             throw new RuntimeException("This slot was occurred.");
         }
 
