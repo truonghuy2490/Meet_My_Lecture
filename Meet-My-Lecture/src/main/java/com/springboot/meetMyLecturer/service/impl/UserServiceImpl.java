@@ -4,10 +4,8 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
 import com.springboot.meetMyLecturer.exception.ResourceNotFoundException;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RoomResponse;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.UserResponse;
-import com.springboot.meetMyLecturer.modelDTO.RoomDTO;
 import com.springboot.meetMyLecturer.modelDTO.SubjectLecturerStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.*;
@@ -19,10 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -88,8 +83,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(userId))
         );
+
         UserProfileForAdminDTO userProfileForAdminDTO = modelMapper.map(user, UserProfileForAdminDTO.class);
-        userProfileForAdminDTO.setMajorName(user.getMajor().getMajorName());
+        if(user.getMajor() != null){
+            userProfileForAdminDTO.setMajorName(user.getMajor().getMajorName());
+        }
         return userProfileForAdminDTO;
     }
 
