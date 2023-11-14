@@ -22,7 +22,7 @@ import java.io.IOException;
 
 
 @RestController
-@RequestMapping("api/v1/payment")
+@RequestMapping("/api/v1/payment")
 public class PayController {
 
     @Autowired

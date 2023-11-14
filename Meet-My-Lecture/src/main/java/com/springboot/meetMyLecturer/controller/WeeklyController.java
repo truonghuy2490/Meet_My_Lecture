@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/weekly")
+@RequestMapping("/api/v1/weekly")
 public class WeeklyController {
     @Autowired
     WeeklyEmptySlotService weeklyEmptySlotService;

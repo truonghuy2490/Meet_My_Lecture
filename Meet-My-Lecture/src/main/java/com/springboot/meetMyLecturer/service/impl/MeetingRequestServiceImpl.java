@@ -1,6 +1,5 @@
 package com.springboot.meetMyLecturer.service.impl;
 
-import com.springboot.meetMyLecturer.ResponseDTO.EmptySlotResponseDTO;
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.entity.*;
@@ -19,10 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -229,8 +225,10 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
         Subject subject = subjectRepository.findSubjectBySubjectIdAndStatus(subjectId, Constant.OPEN);
         if (subject == null) throw new RuntimeException("This subject is not existed.");
 
-        if(!meetingRequest.getRequestStatus().equalsIgnoreCase(Constant.ACCEPTED)){
+        if(meetingRequest.getRequestStatus().equalsIgnoreCase(Constant.ACCEPTED)){
             throw new RuntimeException("This meeting request is accepted. Please update information in booked slot.");
+        }else if(meetingRequest.getRequestStatus().equalsIgnoreCase(Constant.REJECTED)){
+            throw new RuntimeException("This meeting request is rejected.");
         }
 
         if(!meetingRequest.getStudent().getUserId().equals(studentId)){

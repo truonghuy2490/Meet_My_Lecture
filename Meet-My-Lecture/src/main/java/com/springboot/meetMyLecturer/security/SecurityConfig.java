@@ -1,5 +1,6 @@
 package com.springboot.meetMyLecturer.security;
 
+import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.filter.CsrfCookieFilter;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
 import com.springboot.meetMyLecturer.repository.UserRepository;
@@ -56,24 +57,28 @@ public class SecurityConfig {
                         config.setMaxAge(3600L);
                         return config;
                     }
-                })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("api/v1/students/**"
-                                ,"api/v1/requests/**"
-                                ,"api/v1/user/**"
-                                ,"api/v1/slots/**"
-                                ,"api/v1/admin/**"
-                                ,"api/v1/lecturer/**"
-                                ,"api/v1/schedule/**"
-                                ,"api/v1/major/**"
-                                ,"api/v1/subject/admin/**"
-                                ,"api/v1/room/admin/**"
-                                ,"api/v1/report-error/**"
-                                ,"api/v1/semester/**",
-                                "api/v1/student/searching/**",
-                                "api/v1/payment/**")
+                })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers(
+                        "/api/v1/payment")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
-                        .requestMatchers("/v3/api-docs/**","/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/v1/user/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
+                        .requestMatchers("/api/v1/student/searching/**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
+                        .requestMatchers("/api/v1/report-error**").hasAnyRole(Constant.STUDENT, Constant.LECTURER, Constant.ADMIN)
+
+                        .requestMatchers("/api/v1/lecturer/**").hasAnyRole(Constant.LECTURER, Constant.ADMIN)
+                        .requestMatchers("/api/v1/schedule/**").hasAnyRole(Constant.LECTURER, Constant.ADMIN)
+                        .requestMatchers("/api/v1/slots/**").hasAnyRole(Constant.LECTURER, Constant.ADMIN)
+
+                        .requestMatchers("/api/v1/students/**").hasAnyRole(Constant.STUDENT, Constant.ADMIN)
+                        .requestMatchers("/api/v1/requests").hasAnyRole(Constant.STUDENT, Constant.ADMIN)
+
+                        .requestMatchers("/api/v1/admin/**").hasRole(Constant.ADMIN)
+                        .requestMatchers("/api/v1/room/admin/**").hasRole(Constant.ADMIN)
+                        .requestMatchers("/api/v1/subject/admin/**").hasRole(Constant.ADMIN)
+                        .requestMatchers("/api/v1/semester/admin/**").hasRole(Constant.ADMIN)
+                        .requestMatchers("/api/v1/major/admin/**").hasRole(Constant.ADMIN)
+
                         .anyRequest().permitAll())
                .oauth2ResourceServer(oauth2ResourceServerCustomizer ->
                         oauth2ResourceServerCustomizer.jwt(jwtCustomizer -> jwtCustomizer.jwtAuthenticationConverter(jwtAuthenticationConverter)));

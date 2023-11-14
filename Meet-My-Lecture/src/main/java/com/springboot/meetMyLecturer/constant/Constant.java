@@ -12,6 +12,7 @@ public class Constant {
     public static final String BANNED = "BANNED";
     public static final String LECTURER = "LECTURER";
     public static final String STUDENT = "STUDENT";
+    public static final String ADMIN = "ADMIN";
     public static String EMAIL;
     public static final String PRIVATE = "PRIVATE";
     public static final String APPROVED = "APPROVED";

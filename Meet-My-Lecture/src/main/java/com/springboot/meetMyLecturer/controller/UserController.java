@@ -4,8 +4,10 @@ import com.springboot.meetMyLecturer.ResponseDTO.*;
 import com.springboot.meetMyLecturer.constant.Constant;
 import com.springboot.meetMyLecturer.constant.PageConstant;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.NotificationResponse;
+import com.springboot.meetMyLecturer.modelDTO.TeachingScheduleDTO;
 import com.springboot.meetMyLecturer.modelDTO.UserRegister;
 import com.springboot.meetMyLecturer.repository.RoleRepository;
+import com.springboot.meetMyLecturer.service.ImportTeachingScheduleService;
 import com.springboot.meetMyLecturer.service.NotificationService;
 import com.springboot.meetMyLecturer.service.SemesterService;
 import com.springboot.meetMyLecturer.service.UserService;
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     SemesterService semesterService;
+
+    @Autowired
+    ImportTeachingScheduleService importTeachingScheduleService;
 
     @Autowired
     RoleRepository roleRepository;
@@ -86,5 +91,12 @@ public class UserController {
     ){
 
         return notificationService.getAllNotificationByUserId(pageNo, pageSize, sortBy, sortDir, userId);
+    }
+
+    @GetMapping("lecturer/{lecturerId}")
+    public List<TeachingScheduleDTO> getTeachingScheduleByLectureId(
+            @PathVariable Long lecturerId)
+    {
+        return importTeachingScheduleService.getTeachingScheduleByLectureId(lecturerId);
     }
 }

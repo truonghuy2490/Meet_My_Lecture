@@ -1,7 +1,9 @@
 package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.LecturerSubjectResponseDTO;
+import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.entity.LecturerSubjectId;
+import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.service.EmptySlotService;
 import com.springboot.meetMyLecturer.service.LecturerService;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("api/v1/lecturer")
+@RequestMapping("/api/v1/lecturer")
 public class LecturerController {
 
     @Autowired
@@ -54,6 +56,23 @@ public class LecturerController {
         return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
     }
 
+    //DONE
+    @PutMapping("{requestId}/lecturer/{lecturerId}")
+    public ResponseEntity<MeetingRequestResponseDTO> processRequest(
+            @RequestBody MeetingRequestDTO meetingRequestDTO,
+            @PathVariable Long requestId,
+            @PathVariable Long lecturerId
+    )
+    {
+        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(meetingRequestDTO, requestId, lecturerId);
+        return new ResponseEntity<>(meetingRequestResponseDTO, HttpStatus.OK);
+    }
 
-
+    //DONE-DONE
+    @GetMapping("lecturer/{lecturerId}")
+    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByLecturerId(
+            @PathVariable Long lecturerId){
+        List<MeetingRequestResponseDTO> requestDTOList = meetingRequestService.getRequestByLecturerId(lecturerId);
+        return new ResponseEntity<>(requestDTOList, HttpStatus.OK);
+    }
 }

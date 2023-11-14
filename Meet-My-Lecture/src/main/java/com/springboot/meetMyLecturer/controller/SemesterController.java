@@ -40,15 +40,6 @@ public class SemesterController {
         return new ResponseEntity<>(semesterResponseDTO, HttpStatus.OK);
     }
 
-
-    //DONE-DONE
-    @PostMapping("/admin/{adminId}")
-    public ResponseEntity<SemesterResponseDTO> createSemester(@PathVariable Long adminId,
-                                                              @RequestBody SemesterDTO semesterDTO){
-        SemesterResponseDTO responseDTO = semesterService.createSemester(adminId, semesterDTO);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-    }
-
     //DONE-DONE
     @PutMapping("/{semesterId}/admin/{adminId}")
     public ResponseEntity<SemesterResponseDTO> editSemester(@PathVariable Long adminId,@PathVariable Long semesterId,@RequestBody SemesterDTO semesterDTO){

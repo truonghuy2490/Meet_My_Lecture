@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -15,13 +13,6 @@ import java.util.Set;
 public class TeachingScheduleController {
     @Autowired
     ImportTeachingScheduleService importTeachingScheduleService;
-
-    @GetMapping("lecturer/{lecturerId}")
-    public List<TeachingScheduleDTO> getTeachingScheduleByLectureId(
-            @PathVariable Long lecturerId)
-    {
-        return importTeachingScheduleService.getTeachingScheduleByLectureId(lecturerId);
-    }
 
     @PostMapping("lecturer/{lecturerId}")
     public ResponseEntity<Set<TeachingScheduleDTO>> createTeachingScheduleByLecId(

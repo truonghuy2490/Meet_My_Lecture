@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/v1/student/searching")
+@RequestMapping("api/v1/student/searching")
 public class SearchController {
 
     @Autowired

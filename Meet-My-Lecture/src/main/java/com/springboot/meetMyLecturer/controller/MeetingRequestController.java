@@ -2,10 +2,8 @@ package com.springboot.meetMyLecturer.controller;
 
 import com.springboot.meetMyLecturer.ResponseDTO.MeetingRequestResponseDTO;
 import com.springboot.meetMyLecturer.constant.PageConstant;
-import com.springboot.meetMyLecturer.modelDTO.MeetingRequestDTO;
 import com.springboot.meetMyLecturer.modelDTO.MeetingRequestForStudentDTO;
 import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.RequestResponse;
-import com.springboot.meetMyLecturer.modelDTO.ResponseDTO.SlotResponse;
 import com.springboot.meetMyLecturer.service.MeetingRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/requests")
+@RequestMapping("/api/v1/requests")
 public class MeetingRequestController {
     @Autowired
     MeetingRequestService meetingRequestService;
@@ -79,23 +77,4 @@ public class MeetingRequestController {
                 return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
-    //DONE
-    @PutMapping("{requestId}/lecturer/{lecturerId}")
-    public ResponseEntity<MeetingRequestResponseDTO> processRequest(
-            @RequestBody MeetingRequestDTO meetingRequestDTO,
-            @PathVariable Long requestId,
-            @PathVariable Long lecturerId
-    )
-    {
-        MeetingRequestResponseDTO meetingRequestResponseDTO = meetingRequestService.processRequest(meetingRequestDTO, requestId, lecturerId);
-        return new ResponseEntity<>(meetingRequestResponseDTO, HttpStatus.OK);
-    }
-
-    //DONE-DONE
-    @GetMapping("lecturer/{lecturerId}")
-    public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByLecturerId(
-                                            @PathVariable Long lecturerId){
-        List<MeetingRequestResponseDTO> requestDTOList = meetingRequestService.getRequestByLecturerId(lecturerId);
-        return new ResponseEntity<>(requestDTOList, HttpStatus.OK);
-    }
 }

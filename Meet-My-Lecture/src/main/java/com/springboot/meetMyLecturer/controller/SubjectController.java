@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/subject/admin")
+@RequestMapping("api/v1/subject/admin")
 public class SubjectController {
 
     @Autowired

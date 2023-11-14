@@ -78,7 +78,11 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return emptySlotList.stream().map(
-                emptySlot -> modelMapper.map(emptySlot, EmptySlotResponseDTO.class)
+                emptySlot -> {
+                    EmptySlotResponseDTO emptySlotResponseDTO = modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+                    emptySlotResponseDTO.setAddress(emptySlot.getRoom().getAddress());
+                    return emptySlotResponseDTO;
+                }
         ).collect(Collectors.toList());
     }
 
@@ -92,8 +96,11 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return emptySlotList.stream().map(
-                emptySlot ->  modelMapper.map(emptySlot, EmptySlotResponseDTO.class)
-        ).collect(Collectors.toList());
+                emptySlot -> {
+                    EmptySlotResponseDTO emptySlotResponseDTO = modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+                    emptySlotResponseDTO.setAddress(emptySlot.getRoom().getAddress());
+                    return emptySlotResponseDTO;
+                }).collect(Collectors.toList());
     }
 
     //student book an empty slot DONE - DONE
@@ -129,7 +136,10 @@ public class StudentServiceImpl implements StudentService {
 
         emptySlotRepository.save(emptySlot);
 
-        return modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+        EmptySlotResponseDTO emptySlotResponseDTO = modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+        emptySlotResponseDTO.setAddress(emptySlot.getRoom().getAddress());
+
+        return emptySlotResponseDTO;
     }
 
     //student delete bookedSlot DONE - DONE
@@ -221,9 +231,10 @@ public class StudentServiceImpl implements StudentService {
         emptySlot.setSubject(subject);
         emptySlot.setDescription(description);
 
-        emptySlotRepository.save(emptySlot);
+        EmptySlotResponseDTO emptySlotResponseDTO = modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+        emptySlotResponseDTO.setAddress(emptySlot.getRoom().getAddress());
 
-        return modelMapper.map(emptySlot, EmptySlotResponseDTO.class);
+        return emptySlotResponseDTO;
     }
 }
 

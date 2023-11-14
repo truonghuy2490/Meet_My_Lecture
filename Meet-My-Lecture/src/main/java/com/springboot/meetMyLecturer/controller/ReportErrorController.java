@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/report-error")
+@RequestMapping("/api/v1/report-error")
 public class ReportErrorController {
 
     @Autowired
