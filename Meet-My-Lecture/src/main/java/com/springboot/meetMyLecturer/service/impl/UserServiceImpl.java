@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
        );
        if (user == null) throw new RuntimeException("This lecturer is not existed.");
 
-       List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotByLecturer_UserIdAndStatus(lecturerId,Constant.OPEN);
+       List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
 
         return emptySlotList.stream().map(
                 emptySlot -> {
