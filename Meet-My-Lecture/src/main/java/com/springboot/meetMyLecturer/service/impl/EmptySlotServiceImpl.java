@@ -181,7 +181,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         emptySlot.setSubject(meetingRequest.getSubject());
         emptySlot.setStudent(meetingRequest.getStudent());
         emptySlot.setBookedDate(meetingRequest.getCreateAt());
-        emptySlot.setStatus(Constant.BOOKED);
+
         emptySlot.setMeetingRequest(meetingRequest);
         emptySlot.setDescription(meetingRequest.getRequestContent());
         emptySlot.setStatus(Constant.BOOKED);

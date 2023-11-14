@@ -96,10 +96,12 @@ public class UserServiceImpl implements UserService {
     //view empty slot by lecturerId for student and lecturer DONE-DONE
     @Override
     public List<EmptySlotResponseDTO> viewEmptySlot(Long lecturerId) {
-       User user = userRepository.findUserByUserIdAndStatus(lecturerId, Constant.OPEN);
+       User user = userRepository.findById(lecturerId).orElseThrow(
+               () -> new ResourceNotFoundException("Lecturer","Id",String.valueOf(lecturerId))
+       );
        if (user == null) throw new RuntimeException("This lecturer is not existed.");
 
-       List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotsByLecturer_UserId(lecturerId);
+       List<EmptySlot> emptySlotList = emptySlotRepository.findEmptySlotByLecturer_UserIdAndStatus(lecturerId,Constant.OPEN);
 
         return emptySlotList.stream().map(
                 emptySlot -> {
