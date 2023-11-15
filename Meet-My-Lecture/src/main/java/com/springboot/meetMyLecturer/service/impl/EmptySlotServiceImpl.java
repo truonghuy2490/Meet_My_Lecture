@@ -415,7 +415,7 @@ public class EmptySlotServiceImpl implements EmptySlotService {
         for(int i = 0; i < emptySlots.size(); i++){
 
             // check status
-            if(emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.OPEN) || emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.BOOKED)){
+            if(emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.OPEN) || emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.BOOKED) || emptySlots.get(i).getStatus().equalsIgnoreCase(Constant.PRIVATE)){
 
                 // check Slot
                 if(emptySlots.get(i).getSlotTime().getSlotTimeId() == emptySlotDTO.getSlotTimeId()){
