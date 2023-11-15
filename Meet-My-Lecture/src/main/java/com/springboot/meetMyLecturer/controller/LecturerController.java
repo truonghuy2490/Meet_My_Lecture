@@ -69,7 +69,7 @@ public class LecturerController {
     }
 
     //DONE-DONE
-    @GetMapping("lecturer/{lecturerId}")
+    @GetMapping("/{lecturerId}")
     public ResponseEntity<List<MeetingRequestResponseDTO>> getAllRequestByLecturerId(
             @PathVariable Long lecturerId){
         List<MeetingRequestResponseDTO> requestDTOList = meetingRequestService.getRequestByLecturerId(lecturerId);
