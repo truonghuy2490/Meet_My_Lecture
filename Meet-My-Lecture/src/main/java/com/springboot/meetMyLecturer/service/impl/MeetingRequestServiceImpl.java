@@ -131,7 +131,7 @@ public class MeetingRequestServiceImpl implements MeetingRequestService {
                 meetingRequest.getSubject().getSubjectId() +
                 " request to " +
                 meetingRequest.getLecturer().getUserName()  +
-                " was" +
+                " was " +
                 meetingRequest.getRequestStatus();
         NotificationType notificationType = NotificationType.RequestApprovedRejected;
         notificationService.requestNotification(notificationMessage, notificationType, meetingRequest);
