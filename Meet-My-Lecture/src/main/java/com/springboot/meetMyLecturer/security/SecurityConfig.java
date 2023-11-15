@@ -76,7 +76,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/slots/**").hasAnyRole(Constant.LECTURER, Constant.ADMIN)
 
                         .requestMatchers("/api/v1/students/**").hasAnyRole(Constant.STUDENT, Constant.ADMIN)
-                        .requestMatchers("/api/v1/requests").hasAnyRole(Constant.STUDENT, Constant.ADMIN)
+                        .requestMatchers("/api/v1/requests/**").hasAnyRole(Constant.STUDENT, Constant.ADMIN)
 
                         .requestMatchers("/api/v1/admin/**").hasRole(Constant.ADMIN)
                         .requestMatchers("/api/v1/room/admin/**").hasRole(Constant.ADMIN)
